@@ -46,34 +46,42 @@
          "passphraseless":"ssh-rsa",
          "vertical_scaling_policy":"sequential",
          "services":{
+            "init":{
+               "post_start_service":true,
+               "order":1,
+               "cmd":"appctl init"
+            },
+            "start":{   
+               "cmd":"appctl start",
+               "order": 1
+            },
+            "stop": {
+                "cmd": "appctl stop",
+                "order": 3,
+                "timeout": 1800
+            },
+            "get_nodes_order": {
+               "event": ["upgrade", "scale_vertical"],
+               "cmd": "appctl getNodesOrder"
+            },
             "backup": {
                "nodes_to_execute_on": 1,
                "order": 1
             },
-            "init":{
-               "post_start_service":true,
-               "order":1,
-               "cmd":"/opt/app/bin/MongoTrib.py init"
-            },
-            "start":{
-               "cmd":"mkdir -p /data/mongodb /data/info /data/logs /data/caddy/logs /data/zabbix-agent/logs;/opt/app/bin/start-mongod-server.sh && /opt/app/bin/zabbix.sh start"
-            },
-            "stop":{
-               "cmd":"systemctl stop zabbix-agent;/opt/app/bin/stop-mongod-server.sh"
-            },
             "restart":{
-               "cmd":"/opt/app/bin/restart-mongod-server.sh"
+               "cmd":"appctl restart"
             },
             "scale_out":{
                "nodes_to_execute_on":1,
                "order":2,
-               "cmd":"/opt/app/bin/MongoTrib.py reconfig"
+               "cmd":"appctl scaleOut"
             },
             "scale_in":{
                "nodes_to_execute_on":1,
                "order":3,
-               "cmd":"/opt/app/bin/MongoTrib.py reconfig"
+               "cmd":"appctl scaleIn"
             },
+
             "destroy":{
                "nodes_to_execute_on":1,
                "order":2,
@@ -101,10 +109,7 @@
                 "cmd": "/upgrade/upgrade.sh",
                 "timeout": 86400
             },
-            "get_nodes_order": {
-               "event": ["upgrade", "scale_vertical"],
-               "cmd": "if [ -f /upgrade/upgrade.sh ]; then cmd='/upgrade/upgrade.sh getOrder'; else cmd='/opt/app/bin/upgrade.sh getOrder'; fi; $cmd"
-            },
+            
             "rollback": {
                 "cmd": "if [ -d /opt/app-3.6.8 ]; then if [ -d /opt/app ]; then /opt/app/bin/upgrade.sh doRollback; else mv /opt/app-3.6.8 /opt/app; fi; fi"
             },
