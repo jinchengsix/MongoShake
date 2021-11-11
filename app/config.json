@@ -1,0 +1,285 @@
+{
+  "type": "array",
+  "properties": [
+    {
+      "key": "cluster",
+      "description": "MongoDB Replica Set properties",
+      "type": "array",
+      "properties": [
+        {
+          "key": "name",
+          "label": "Name",
+          "description": "The name of the application",
+          "type": "string",
+          "default": "MongoDB Replica Set",
+          "required": "no"
+        },
+        {
+          "key": "description",
+          "label": "Description",
+          "description": "",
+          "type": "string",
+          "default": "",
+          "required": "no"
+        },
+        {
+          "key": "vxnet",
+          "label": "Vxnet",
+          "description": "The vxnet that the Application will join",
+          "type": "string",
+          "default": "",
+          "required": "yes"
+        },
+        {
+          "key": "resource_group",
+          "label": "Express Configuration",
+          "description": "Test: Node * 3, Basic instance, 1c 2g</br>Prod: Node * 3, Enterprise 2 instance, 4c 8g",
+          "type": "string",
+          "default": "Prod",
+          "range": [
+                "Test",
+                "Prod"
+            ]
+        },
+        {
+          "key": "replica",
+          "description": "MongoDB replica properties",
+          "type": "array",
+          "label": "Replica",
+          "properties": [
+            {
+              "key": "cpu",
+              "label": "CPU",
+              "description": "CPUs of each node",
+              "type": "integer",
+              "default": 1,
+              "range": [
+                1,
+                2,
+                4,
+                8,
+                16
+              ],
+              "required": "yes",
+              "resource_group": [1, 4]
+            },
+            {
+              "key": "memory",
+              "label": "Memory",
+              "description": "Memory of each node",
+              "type": "integer",
+              "default": 2048,
+              "range": [
+                1024,
+                2048,
+                4096,
+                8192,
+                16384,
+                32768,
+                65536,
+                131072
+              ],
+              "required": "yes",
+              "resource_group": [2048, 8192]
+            },
+            {
+              "key": "volume_class",
+              "label": "Volume Class",
+              "description": "The volume type for each instance，such as high performance，high performance plus，high capacity",
+              "type": "integer",
+              "default": 200,
+              "range": [
+                100,
+                200,
+                5
+              ],
+              "required": "yes",
+              "resource_group": [100, 200]
+            },
+            {
+              "key": "count",
+              "label": "Count",
+              "description": "Number of nodes for the replication set to create. MongoDB with only one node is just for test, not for production.",
+              "type": "integer",
+              "default": 3,
+              "range": [
+                1,
+                3,
+                5,
+                7
+              ],
+              "required": "yes",
+              "resource_group": [3,3]
+            },
+            {
+              "key": "instance_class",
+              "label": "Resource type",
+              "description": "",
+              "type": "integer",
+              "default": 202,
+              "range": [
+                101,
+                202,
+                301
+              ],
+              "required": "yes",
+              "resource_group": [101, 202]
+            },
+            {
+              "key": "volume_size",
+              "label": "Volume size",
+              "description": "The volume size of each node",
+              "type": "integer",
+              "step": 10,
+              "default": 100,
+              "auto_scale_step": 10,
+              "required": "yes",
+              "resource_group": [10, 100]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "service_params",
+      "description": "Custom service configuration properties",
+      "type": "array",
+      "properties": [
+        {
+          "key": "copy_log",
+          "label": "copy_log",
+          "description": "Download by wget http://IP/mongod.log or check by http://IP in browser",
+          "default": "mongod.log",
+          "range": [
+            "mongod.log"
+          ],
+          "type": "string",
+          "required": "yes"
+        },
+        {
+          "key": "fcv",
+          "label": "Feature compatibility version",
+          "description": "if you upgrade your cluster from 3.6 to current version, fcv remains 3.6. Please test your server&client thoroughly before changing fcv to 4.0!",
+          "default": "4.0",
+          "range": ["3.6", "4.0"],
+          "type": "string",
+          "required": "yes"
+        }
+      ]
+    },
+    {
+      "key": "env",
+      "description": "Application configuration properties",
+      "type": "array",
+      "properties": [
+        {
+          "key": "zabbix.server.addr",
+          "label": "zabbix.server.addr.label",
+          "description": "zabbix.server.addr.description",
+          "type": "string",
+          "required": "no",
+          "default": ""
+        },
+        {
+          "key": "zabbix.agent.port",
+          "label": "zabbix.agent.port.label",
+          "description": "zabbix.agent.port.description",
+          "default": 10050,
+          "type": "integer",
+          "min": 9000,
+          "max": 65534,
+          "required": "no"
+        },
+        {
+          "key": "zabbix.agent.enabled",
+          "label": "zabbix.agent.enabled.label",
+          "description": "zabbix.agent.enabled.description",
+          "default": "no",
+          "type": "string",
+          "range": [
+            "yes",
+            "no"
+          ],
+          "required": "no"
+        },
+        {
+          "key": "user",
+          "label": "User",
+          "description": "We'll create two accounts for you: one with readWriteAnyDatabase rights, one with root rights. If you need to use MongoDB admin rights, you can log in with the root account.",
+          "changeable": false,
+          "pattern": "^((?!root)\\w)+$",
+          "type": "string",
+          "required": "yes"
+        },
+        {
+          "key": "passwd",
+          "label": "Password",
+          "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
+          "changeable": false,
+          "type": "password",
+          "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
+          "default": "Change1Pwd",
+          "required": "yes"
+        },
+        {
+          "key": "maxConns",
+          "label": "maxConns",
+          "description": "max number of simultaneous connections",
+          "type": "integer",
+          "default": 2048,
+          "max": 20480,
+          "min": 1024,
+          "required": "no"
+        },
+        {
+          "description": "cacheSizeUsage_description",
+          "required": "no",
+          "label": "cacheSizeUsage_label",
+          "default": 80,
+          "key": "cacheSizeUsage",
+          "min": 5,
+          "max": 95,
+          "type": "integer"
+        },
+        {
+          "key": "oplogSize",
+          "label": "oplogSize",
+          "description": "size to use (in MiB) for replication op",
+          "type": "integer",
+          "default": 2048,
+          "max": 10240,
+          "min": 2048,
+          "required": "no"
+        },
+        {
+          "key": "port",
+          "label": "port",
+          "description": "specify port number",
+          "type": "integer",
+          "default": 27017,
+          "max": 32767,
+          "min": 4096,
+          "required": "no"
+        },
+        {
+          "key": "caddy_user",
+          "label": "caddy-user",
+          "description": "username for caddy-server",
+          "type": "string",
+          "pattern": "^[^\\x20\\x22\\x27]*$",
+          "default": "caddy",
+          "required": "no"
+        },
+        {
+          "key": "caddy_password",
+          "label": "caddy-password",
+          "description": "password for caddy-server",
+          "type": "password",
+          "default": "caddy",
+          "pattern": "^[^\\x20\\x22\\x27]*$",
+          "required": "no"
+        }
+      ]
+    }
+  ]
+}
