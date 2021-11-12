@@ -11,7 +11,7 @@
           "label": "Name",
           "description": "The name of the application",
           "type": "string",
-          "default": "MongoDB Replica Set",
+          "default": "MongoDB Replica",
           "required": "no"
         },
         {

@@ -1,23 +1,18 @@
 changeConf() {
-  
+  :
 }
 
 scaleIn() {
-
+:
 }
 
 scaleOut() {
-
+:
 }
 
 changeVxnet() {
-
+:
 }
-
-checkConfdChange() {
-
-}
-
 
 # check if node is scaling
 # 1: scaleIn
@@ -186,5 +181,46 @@ doWhenZabbixConfChanged() {
   refreshZabbixAgentStatus
 }
 
+# check if node is scaling
+# 1: scaleIn
+# 0: no change
+# 2: scaleOut
+getScalingStatus() {
+  local oldlist=($(getItemFromFile NODE_LIST $HOSTS_INFO_FILE))
+  local newlist=($(getItemFromFile NODE_LIST $HOSTS_INFO_FILE.new))
+  local oldcnt=${#oldlist[@]}
+  local newcnt=${#newlist[@]}
+  if (($oldcnt < $newcnt)); then
+    echo 2
+  elif (($oldcnt > $newcnt)); then
+    echo 1
+  else
+    echo 0
+  fi
+}
+
+checkConfdChange() {
+  if [ ! -d /data/appctl/logs ]; then
+    log "cluster pre-init"
+    clusterPreInit
+    return 0
+  fi
+
+  if [ -f $BACKUP_FLAG_FILE ]; then
+    log "restore from backup, skipping"
+    return 0
+  fi
+
+  if [ $VERTICAL_SCALING_FLAG = "true" ] || [ $ADDING_HOSTS_FLAG = "true" ] || [ $DELETING_HOSTS_FLAG = "true" ] || [ $CHANGE_VXNET_FLAG = "true" ]; then return 0; fi
+  local sstatus=$(getScalingStatus)
+  case $sstatus in
+    "0") :;;
+    "1") updateHostsInfo; return 0;;
+    "2") return 0;;
+  esac
+  
+  # config changed
+  # do something
+}
 
 

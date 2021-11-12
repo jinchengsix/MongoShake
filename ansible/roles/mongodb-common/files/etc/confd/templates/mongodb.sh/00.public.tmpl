@@ -1,20 +1,15 @@
 # confd variables and funtions
 {{- $nodeRole := getv "/host/role" }}
-{{- $nodeGid := getv "/host/gid" }}
 {{- $nodeIp := getv "/host/ip" }}
-{{- $csPort := getv "/env/cs_node.conf.net.port" }}
-{{- $shardPort := getv "/env/shard_node.conf.net.port" }}
+{{- $nodePort := getv "/env/repl_node.conf.net.port" }}
 {{- $verticalScalingFlag := "" }}
 {{- $changeVxnetFlag := "" }}
-{{- $changeVxnetRoles := "" }}
 {{- $addingHostsFlag := "" }}
-{{- $addingRole := "" }}
 {{- $addingList := "" }}
 {{- $deletingHostsFlag := "" }}
-{{- $deletingRole := "" }}
 {{- $deletingList := "" }}
 {{- $tmpval := "" }}
-{{- $tmpall := "" }}
+{{- $replList := "" }}
 
 {{- if len (ls "/vertical-scaling-roles") }}
   {{- $verticalScalingFlag = "true" }}
@@ -23,7 +18,6 @@
 {{- end }}
 {{- if len (ls "/change-vxnet-audit") }}
   {{- $changeVxnetFlag = "true" }}
-  {{- $changeVxnetRoles = getv "/change-vxnet-audit/roles" }}
 {{- else }}
   {{- $changeVxnetFlag = "false" }}
 {{- end }}
@@ -31,150 +25,49 @@
 {{- $tmpval = "" }}
 {{- if len (ls "/adding-hosts") }}
   {{- $addingHostsFlag = "true" }}
-  {{- $tmpRoles := lsdir "/adding-hosts" }}
-  {{- if eq (len $tmpRoles) 1 }}
-    {{- $addingRole = "mongos_node" }}
-    {{- range lsdir (printf "/adding-hosts/%s" $addingRole) -}}
-      {{- $sid := getv (printf "/adding-hosts/%s/%s/sid" $addingRole .) -}}
-      {{- $ip := getv (printf "/adding-hosts/%s/%s/ip" $addingRole .) -}}
-      {{- $node_id := getv (printf "/adding-hosts/%s/%s/node_id" $addingRole .) -}}
-      {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
-    {{- end -}}
-  {{- else }}
-    {{- $addingRole = "shard_node" }}
-    {{- range lsdir (printf "/adding-hosts/%s" $addingRole) -}}
-      {{- $gid := getv (printf "/adding-hosts/%s/%s/gid" $addingRole .) -}}
-      {{- $tmpval = printf "%s%s " $tmpval $gid }}
-    {{- end }}
-  {{- end }}
+  {{- $tmp0 := printf "/adding-hosts/%s" $nodeRole }}
+  {{- range lsdir $tmp0 -}}
+    {{- $sid := getv (printf "/adding-hosts/%s/%s/sid" $nodeRole .) -}}
+    {{- $ip := getv (printf "/adding-hosts/%s/%s/ip" $nodeRole .) -}}
+    {{- $tmpval = printf "%s%s/%s " $tmpval $sid $ip }}
+  {{- end -}}
   {{- $addingList = $tmpval }}
 {{- else }}
   {{- $addingHostsFlag = "false" }}
-  {{- $addingRole = "" }}
   {{- $addingList = "" }}
 {{- end }}
 
 {{- $tmpval = "" }}
 {{- if len (ls "/deleting-hosts") }}
   {{- $deletingHostsFlag = "true" }}
-  {{- $tmpRoles := lsdir "/deleting-hosts" }}
-  {{- if eq (len $tmpRoles) 1 }}
-    {{- $deletingRole = "mongos_node" }}
-      {{- range lsdir (printf "/deleting-hosts/%s" $deletingRole) -}}
-      {{- $sid := getv (printf "/deleting-hosts/%s/%s/sid" $deletingRole .) -}}
-      {{- $ip := getv (printf "/deleting-hosts/%s/%s/ip" $deletingRole .) -}}
-      {{- $node_id := getv (printf "/deleting-hosts/%s/%s/node_id" $deletingRole .) -}}
-      {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
-    {{- end -}}
-  {{- else }}
-    {{- $deletingRole = "shard_node" }}
-    {{- $tmpval = "" }}
-  {{- end }}
+  {{- $tmp0 := printf "/deleting-hosts/%s" $nodeRole }}
+  {{- range lsdir $tmp0 -}}
+    {{- $sid := getv (printf "/deleting-hosts/%s/%s/sid" $nodeRole .) -}}
+    {{- $ip := getv (printf "/deleting-hosts/%s/%s/ip" $nodeRole .) -}}
+    {{- $tmpval = printf "%s%s/%s " $tmpval $sid $ip }}
+  {{- end -}}
   {{- $deletingList = $tmpval }}
 {{- else }}
   {{- $deletingHostsFlag = "false" }}
-  {{- $deletingRole = "" }}
   {{- $deletingList = "" }}
 {{- end }}
 
-# cs_node
-{{- $cs_node_list := "" }}
-{{- $tmpval = "" }}
-{{- range lsdir "/hosts/cs_node" -}}
-  {{- $ip := getv (printf "/hosts/cs_node/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/cs_node/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/cs_node/%s/node_id" .) -}}
+# repl_node
+{{- range lsdir "/hosts/repl_node" -}}
+  {{- $ip := getv (printf "/hosts/repl_node/%s/ip" .) -}}
+  {{- $sid := getv (printf "/hosts/repl_node/%s/sid" .) -}}
+  {{- $node_id := getv (printf "/hosts/repl_node/%s/node_id" .) -}}
   {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
 {{- end }}
-{{- $cs_node_list = $tmpval }}
-cs_rsname=repl_cs
-
-# mongos_node
-{{- $mongos_node_list := "" }}
-{{- $tmpval = "" }}
-{{- range lsdir "/hosts/mongos_node" -}}
-  {{- $ip := getv (printf "/hosts/mongos_node/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/mongos_node/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/mongos_node/%s/node_id" .) -}}
-  {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
-{{- end }}
-{{- $mongos_node_list = $tmpval }}
-
-# shard_node origin
-{{- $shard_node_list := "" }}
-{{- $tmpval = "" }}
-{{- range lsdir "/hosts/shard_node" -}}
-  {{- $ip := getv (printf "/hosts/shard_node/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/shard_node/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/shard_node/%s/node_id" .) -}}
-  {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
-{{- end }}
-{{- $shard_node_list = $tmpval }}
-
-# shard_node
-# $1 Gid
-# $2 Gid list
-getGidIdx() {
-  local tmpgid=$1
-  shift
-  local tmplist=($@)
-  local tmpcnt=${#tmplist[@]}
-  for((i=0;i<$tmpcnt;i++)); do
-    if [ ${tmplist[i]} = $tmpgid ]; then
-      echo $i
-      return 0
-    fi
-  done
-}
-{{- $group_list := "" }}
-{{- $tmpval = "" }}
-{{- $tmpall = "" }}
-{{- range getvs "/hosts/shard_node/*/gid" -}}
-  {{- $tmpval = printf "%s%s " $tmpval . }}
-{{- end }}
-{{- $group_list = $tmpval }}
-shard_group_list=($(echo {{ $group_list }} | sed 's/ /\n/g' | sort -n))
-{{- $tmpval = "" }}
-{{- range lsdir "/hosts/shard_node" -}}
-  {{- $gid := getv (printf "/hosts/shard_node/%s/gid" .) -}}
-  {{- $ip := getv (printf "/hosts/shard_node/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/shard_node/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/shard_node/%s/node_id" .) -}}
-  {{- $tmpval = printf "%s%s/%s/%s/%s " $tmpval $sid $ip $node_id $gid }}
-  {{- range lsdir "/hosts/shard_node-replica" -}}
-    {{- $gid2 := getv (printf "/hosts/shard_node-replica/%s/gid" .) -}}
-    {{- if eq $gid2 $gid }}
-      {{- $ip2 := getv (printf "/hosts/shard_node-replica/%s/ip" .) -}}
-      {{- $sid2 := getv (printf "/hosts/shard_node-replica/%s/sid" .) -}}
-      {{- $node_id2 := getv (printf "/hosts/shard_node-replica/%s/node_id" .) -}}
-      {{- $tmpval = printf "%s%s/%s/%s/%s " $tmpval $sid2 $ip2 $node_id2 $gid2 }}
-    {{- end }}
-  {{- end }}
-shard_{{ $gid }}_list=({{ $tmpval}})
-shard_{{ $gid }}_rsname=shard_$(getGidIdx {{ $gid }} ${shard_group_list[@]})
-  {{- $tmpall = printf "%s%s " $tmpall $tmpval}}
-  {{- $tmpval = "" }}
-{{- end }}
-shard_all_list=({{ $tmpall }})
+{{- $replList = $tmpval }}
 
 # cluster
 cluster_global_uuid={{ getv "/cluster/global_uuid" }}
 cluster_id={{ getv "/cluster/cluster_id" }}
 
 # host
-host_gid={{ $nodeGid }}
-{{- if eq $nodeRole "cs_node" }}
-host_port={{ getv "/env/cs_node.conf.net.port" }}
+host_port={{ $nodePort }}
 host_service_name=mongod
-host_repl_name=$cs_rsname
-host_node_list=({{ $cs_node_list }})
-{{- else if eq $nodeRole "mongos_node" }}
-host_port={{ getv "/env/mongos_node.conf.net.port" }}
-host_service_name=mongos
-host_node_list=({{ $mongos_node_list }})
-{{- else }}
-host_port={{ getv "/env/shard_node.conf.net.port" }}
-host_service_name=mongod
-host_repl_name=$(eval echo \$shard_${host_gid}_rsname)
-host_node_list=$(eval echo \$\{shard_${host_gid}_list[@]\})
-{{- end }}
+host_repl_name=foobar
+host_node_list=({{ $replList }})
+host_ctl="01_nodectl_lib 02_nodectl_core 03_nodectl_mon 04_nodectl_bs 99_nodectl_config"
