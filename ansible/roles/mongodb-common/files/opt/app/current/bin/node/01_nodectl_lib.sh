@@ -12,6 +12,7 @@ ERR_REPL_NOT_HEALTH=208
 MONGODB_DATA_PATH=/data/mongodb-data
 MONGODB_LOG_PATH=/data/mongodb-logs
 MONGODB_CONF_PATH=/data/mongodb-conf
+MONGOD_BIN=/opt/mongodb/current/bin/mongod
 DB_QC_LOCAL_PASS_FILE=/data/appctl/data/qc_local_pass
 HOSTS_INFO_FILE=/data/appctl/data/hosts.info
 CONF_INFO_FILE=/data/appctl/data/conf.info
@@ -46,6 +47,14 @@ runMongoCmd() {
   done
 
   timeout --preserve-status 5 $cmd --eval "$jsstr"
+}
+
+shellStartMongodForAdmin() {
+  runuser mongod -g svc -s "/bin/bash" -c "$MONGOD_BIN -f $MONGODB_CONF_PATH/mongo-admin.conf --setParameter disableLogicalSessionCacheRefresh=true"
+}
+
+shellStopMongodForAdmin() {
+  runuser mongod -g svc -s "/bin/bash" -c "$MONGOD_BIN -f $MONGODB_CONF_PATH/mongo-admin.conf --shutdown"
 }
 
 # getSid
@@ -83,11 +92,27 @@ sortHostList() {
 }
 
 getInitNodeList() {
-  if [ $MY_ROLE = "cs_node" ] || [ $MY_ROLE = "mongos_node" ]; then
-    echo $(sortHostList ${NODE_LIST[@]})
-  else
-    echo ${NODE_LIST[@]}
-  fi
+  echo ${NODE_LIST[@]}
+}
+
+clearNodeFirstCreateFlag() {
+  if [ -f $NODE_FIRST_CREATE_FLAG_FILE ]; then rm -f $NODE_FIRST_CREATE_FLAG_FILE; fi
+}
+
+isNodeFirstCreate() {
+  test -f $NODE_FIRST_CREATE_FLAG_FILE
+}
+
+enableHealthCheck() {
+  touch $HEALTH_CHECK_FLAG_FILE
+}
+
+disableHealthCheck() {
+  rm -f $HEALTH_CHECK_FLAG_FILE
+}
+
+needHealthCheck() {
+  test -f $HEALTH_CHECK_FLAG_FILE
 }
 
 msGetHostDbVersion() {
@@ -98,6 +123,34 @@ EOF
   runMongoCmd "$jsstr" $@
 }
 
+msIsHostMaster() {
+  local hostinfo=$1
+  shift
+  local tmpstr=$(runMongoCmd "JSON.stringify(rs.status().members)" $@)
+  local state=$(echo $tmpstr | jq '.[] | select(.name=="'$hostinfo'") | .stateStr' | sed s/\"//g)
+  test "$state" = "PRIMARY"
+}
+
+# msIsReplStatusOk
+# check if replia set's status is ok
+# 1 primary, other's secondary
+msIsReplStatusOk() {
+  local allcnt=$1
+  shift
+  local tmpstr=$(runMongoCmd "JSON.stringify(rs.status())" $@ | jq .members[].stateStr)
+  local pcnt=$(echo "$tmpstr" | grep PRIMARY | wc -l)
+  local scnt=$(echo "$tmpstr" | grep SECONDARY | wc -l)
+  test $pcnt -eq 1
+  test $((pcnt+scnt)) -eq $allcnt
+}
+
+msIsHostMaster() {
+  local hostinfo=$1
+  shift
+  local tmpstr=$(runMongoCmd "JSON.stringify(rs.status().members)" $@)
+  local state=$(echo $tmpstr | jq '.[] | select(.name=="'$hostinfo'") | .stateStr' | sed s/\"//g)
+  test "$state" = "PRIMARY"
+}
 
 getNodesOrder() {
   local tmpstr
@@ -175,8 +228,86 @@ getOperationProfilingModeCode() {
   echo $res
 }
 
-
 msGetServerStatus() {
   local tmpstr=$(runMongoCmd "JSON.stringify(db.serverStatus())" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE))
   echo "$tmpstr"
+}
+
+createMongoConf() {
+  local replication_replSetName
+  local storage_engine
+  local net_port
+  local setParameter_cursorTimeoutMillis
+  local operationProfiling_mode
+  local operationProfiling_slowOpThresholdMs
+  local replication_enableMajorityReadConcern
+  local read_concern
+  
+  net_port=$(getItemFromFile net_port $CONF_INFO_FILE)
+  setParameter_cursorTimeoutMillis=$(getItemFromFile setParameter_cursorTimeoutMillis $CONF_INFO_FILE)
+  replication_replSetName=$(getItemFromFile replication_replSetName $CONF_INFO_FILE)
+  storage_engine=$(getItemFromFile storage_engine $CONF_INFO_FILE)
+  operationProfiling_mode=$(getItemFromFile operationProfiling_mode $CONF_INFO_FILE)
+  operationProfiling_slowOpThresholdMs=$(getItemFromFile operationProfiling_slowOpThresholdMs $CONF_INFO_FILE)
+  replication_enableMajorityReadConcern=$(getItemFromFile replication_enableMajorityReadConcern $CONF_INFO_FILE)
+  replication_oplogSizeMB=$(getItemFromFile replication_oplogSizeMB $CONF_INFO_FILE)
+  read_concern="enableMajorityReadConcern: $replication_enableMajorityReadConcern"
+  
+  cat > $MONGODB_CONF_PATH/mongo.conf <<MONGO_CONF
+systemLog:
+  destination: file
+  path: $MONGODB_LOG_PATH/mongo.log
+  logAppend: true
+  logRotate: reopen
+net:
+  port: $net_port
+  bindIp: 0.0.0.0
+security:
+  keyFile: $MONGODB_CONF_PATH/repl.key
+  authorization: enabled
+storage:
+  dbPath: $MONGODB_DATA_PATH
+  journal:
+    enabled: true
+  engine: $storage_engine
+operationProfiling:
+  mode: $operationProfiling_mode
+  slowOpThresholdMs: $operationProfiling_slowOpThresholdMs
+replication:
+  oplogSizeMB: $replication_oplogSizeMB
+  replSetName: $replication_replSetName
+  $read_concern
+setParameter:
+  cursorTimeoutMillis: $setParameter_cursorTimeoutMillis
+MONGO_CONF
+
+    cat > $MONGODB_CONF_PATH/mongo-admin.conf <<MONGO_CONF
+systemLog:
+  destination: syslog
+net:
+  port: $NET_MAINTAIN_PORT
+  bindIp: 0.0.0.0
+storage:
+  dbPath: $MONGODB_DATA_PATH
+  journal:
+    enabled: true
+  engine: $storage_engine
+processManagement:
+  fork: true
+MONGO_CONF
+}
+
+createZabbixConf() {
+  local zServer=$(getItemFromFile Server $CONF_ZABBIX_INFO_FILE)
+  local zListenPort=$(getItemFromFile ListenPort $CONF_ZABBIX_INFO_FILE)
+  cat > $ZABBIX_CONF_PATH/zabbix_agent2.conf <<ZABBIX_CONF
+PidFile=/var/run/zabbix/zabbix_agent2.pid
+LogFile=/data/zabbix-log/zabbix_agent2.log
+LogFileSize=50
+Server=$zServer
+#ServerActive=127.0.0.1
+ListenPort=$zListenPort
+Include=/etc/zabbix/zabbix_agent2.d/*.conf
+UnsafeUserParameters=1
+ZABBIX_CONF
 }

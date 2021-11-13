@@ -14,6 +14,27 @@ changeVxnet() {
 :
 }
 
+clusterPreInit() {
+  # folder
+  mkdir -p $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH
+  chown -R mongod:svc $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH
+  chown -R zabbix:zabbix $ZABBIX_LOG_PATH
+  # first create flag
+  touch $NODE_FIRST_CREATE_FLAG_FILE
+  # repl.key
+  echo "$GLOBAL_UUID" | base64 > "$MONGODB_CONF_PATH/repl.key"
+  chown mongod:svc $MONGODB_CONF_PATH/repl.key
+  chmod 0400 $MONGODB_CONF_PATH/repl.key
+  #qc_local_pass
+  local encrypted=$(echo -n ${GLOBAL_UUID}${CLUSTER_ID} | sha256sum | base64)
+  echo ${encrypted:16:16} > $DB_QC_LOCAL_PASS_FILE
+  #create config files
+  touch $MONGODB_CONF_PATH/mongo.conf
+  chown mongod:svc $MONGODB_CONF_PATH/mongo.conf
+  #disable health check
+  disableHealthCheck
+}
+
 # check if node is scaling
 # 1: scaleIn
 # 0: no change

@@ -13,7 +13,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-7oi7fkhu"
+            "image": "img-fk3ne758"
          },
          "instance_class":{{cluster.repl_node.instance_class}},
          "count":{{cluster.repl_node.count}},
@@ -91,7 +91,7 @@
       }
    },
    "health_check":{
-      "enable": true,
+      "enable": false,
       "interval_sec": 60,
       "timeout_sec": 30,
       "action_timeout_sec": 30,
@@ -101,7 +101,7 @@
       "action_cmd": "appctl revive"
    },
    "monitor":{
-      "enable":true,
+      "enable": false,
       "cmd": "appctl monitor",
       "items": {
                 "op-insert": {
