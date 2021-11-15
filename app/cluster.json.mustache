@@ -134,7 +134,43 @@
                     "statistics_type": "delta",
                     "scale_factor_when_display": 1
                 },
-                "opcounters-command": {
+                "op-command": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "opRepl-insert": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "opRepl-query": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "opRepl-update": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "opRepl-delete": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "opRepl-getmore": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "opRepl-command": {
                     "unit": "",
                     "value_type": "int",
                     "statistics_type": "delta",
@@ -164,13 +200,7 @@
                     "statistics_type": "delta",
                     "scale_factor_when_display": 1
                 },
-                "metrics-cursor-open-multiTarget": {
-                    "unit": "",
-                    "value_type": "int",
-                    "statistics_type": "delta",
-                    "scale_factor_when_display": 1
-                },
-                "metrics-cursor-open-singleTarget": {
+                "cursor-open-noTimeout": {
                     "unit": "",
                     "value_type": "int",
                     "statistics_type": "delta",
@@ -205,18 +235,6 @@
                     "value_type": "int",
                     "statistics_type": "latest",
                     "scale_factor_when_display": 0.1
-                },
-                "sharding-catalogCache-databaseEntries": {
-                    "unit": "",
-                    "value_type": "int",
-                    "statistics_type": "latest",
-                    "scale_factor_when_display": 1
-                },
-                "sharding-catalogCache-collectionEntries": {
-                    "unit": "",
-                    "value_type": "int",
-                    "statistics_type": "latest",
-                    "scale_factor_when_display": 1
                 }
             },
             "groups": {
@@ -225,7 +243,16 @@
                     "op-query",
                     "op-update",
                     "op-delete",
-                    "op-getmore"
+                    "op-getmore",
+                    "op-command"
+                ],
+                "opcountersRepl": [
+                    "opRepl-insert",
+                    "opRepl-query",
+                    "opRepl-update",
+                    "opRepl-delete",
+                    "opRepl-getmore",
+                    "opRepl-command"
                 ],
                 "connections": [
                     "connections-current",
@@ -234,18 +261,13 @@
                 ],
                 "metrics-cursor": [
                     "cursor-timedOut",
-                    "metrics-cursor-open-multiTarget",
-                    "metrics-cursor-open-singleTarget",
+                    "cursor-open-noTimeout",
                     "cursor-open-pinned",
                     "cursor-open-total"
                 ],
                 "network": [
                     "network-bytesIn",
                     "network-bytesOut"
-                ],
-                "sharding-catalogCache": [
-                    "sharding-catalogCache-databaseEntries",
-                    "sharding-catalogCache-collectionEntries"
                 ]
             },
             "display": [
@@ -253,8 +275,7 @@
                 "connections",
                 "metrics-cursor",
                 "network",
-                "conn-usage",
-                "sharding-catalogCache"
+                "conn-usage"
             ],
             "alarm": [
                 "connections-current",
