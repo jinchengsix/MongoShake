@@ -6,28 +6,27 @@
    "incremental_backup_supported": true,
    "multi_zone_policy": "round_robin",
    "advanced_actions": ["change_vxnet", "scale_horizontal"],
-   "nodes":[
-      {
-         "role":"repl_node",
-         "container":{
+   "nodes":[{
+        "role":"repl_node",
+        "container":{
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-fk3ne758"
-         },
-         "instance_class":{{cluster.repl_node.instance_class}},
-         "count":{{cluster.repl_node.count}},
-         "cpu":{{cluster.repl_node.cpu}},
-         "memory":{{cluster.repl_node.memory}},
-         "volume":{
+            "image": "img-2hbxzziw"
+        },
+        "instance_class":{{cluster.repl_node.instance_class}},
+        "count":{{cluster.repl_node.count}},
+        "cpu":{{cluster.repl_node.cpu}},
+        "memory":{{cluster.repl_node.memory}},
+        "volume":{
             "size":{{cluster.repl_node.volume_size}},
             "class":{{cluster.repl_node.volume_class}},
             "mount_point":"/data",
             "filesystem":"ext4"
-         },
-         "passphraseless":"ssh-rsa",
-         "vertical_scaling_policy":"sequential",
-         "services":{
+        },
+        "passphraseless":"ssh-rsa",
+        "vertical_scaling_policy":"sequential",
+        "services":{
             "init": {
                 "cmd": "appctl init",
                 "post_start_service": true
@@ -40,7 +39,7 @@
                 "timeout": 1800
             },
             "get_nodes_order": {
-                "event": ["upgrade", "rollback", "scale_vertical"],
+                "event": ["upgrade", "rollback", "scale_vertical", "stop"],
                 "cmd": "appctl getNodesOrder"
             },
             "scale_out": {
@@ -63,47 +62,11 @@
                 "cmd": "appctl restore",
                 "timeout": 86400
             }
-         }
-      }
-   ],
-   "env": {
-      "conf.userPass": {{env.conf.userPass}},
-        "conf.storage.engine": {{env.conf.storage.engine}},
-        "conf.zabbix.userPass": {{env.conf.zabbix.userPass}},
-        "conf.zabbix.server.addr": {{env.conf.zabbix.server.addr}},
-        "conf.zabbix.agent.port": {{env.conf.zabbix.agent.port}},
-        "conf.zabbix.agent.enabled": {{env.conf.zabbix.agent.enabled}},
-        "repl_node.conf.net.port": {{env.repl_node.conf.net.port}},
-        "repl_node.conf.setParameter.cursorTimeoutMillis": {{env.repl_node.conf.setParameter.cursorTimeoutMillis}},
-        "repl_node.conf.operationProfiling.mode": {{env.repl_node.conf.operationProfiling.mode}},
-        "repl_node.conf.operationProfiling.slowOpThresholdMs": {{env.repl_node.conf.operationProfiling.slowOpThresholdMs}},
-        "repl_node.conf.replication.enableMajorityReadConcern": {{env.repl_node.conf.replication.enableMajorityReadConcern}},
-        "repl_node.conf.replication.oplogSizeMB": {{env.repl_node.conf.replication.oplogSizeMB}}
-   },
-   "endpoints": {
-      "MongoDB": {
-         "port": {{env.repl_node.conf.net.port}},
-         "protocol": "TCP"
-      },
-       "Zabbix Agent2": {
-         "port": {{env.conf.zabbix.agent.port}},
-         "protocol": "TCP"
-      }
-   },
-   "health_check":{
-      "enable": false,
-      "interval_sec": 60,
-      "timeout_sec": 30,
-      "action_timeout_sec": 30,
-      "healthy_threshold": 2,
-      "unhealthy_threshold": 2,
-      "check_cmd": "appctl healthCheck",
-      "action_cmd": "appctl revive"
-   },
-   "monitor":{
-      "enable": false,
-      "cmd": "appctl monitor",
-      "items": {
+        },
+        "monitor":{
+            "enable": false,
+            "cmd": "appctl monitor",
+            "items": {
                 "op-insert": {
                     "unit": "",
                     "value_type": "int",
@@ -282,5 +245,40 @@
                 "connections-available",
                 "conn-usage"
             ]
+        }
+   }],
+   "env": {
+        "conf.userPass": {{env.conf.userPass}},
+        "conf.storage.engine": {{env.conf.storage.engine}},
+        "conf.zabbix.userPass": {{env.conf.zabbix.userPass}},
+        "conf.zabbix.server.addr": {{env.conf.zabbix.server.addr}},
+        "conf.zabbix.agent.port": {{env.conf.zabbix.agent.port}},
+        "conf.zabbix.agent.enabled": {{env.conf.zabbix.agent.enabled}},
+        "repl_node.conf.net.port": {{env.repl_node.conf.net.port}},
+        "repl_node.conf.setParameter.cursorTimeoutMillis": {{env.repl_node.conf.setParameter.cursorTimeoutMillis}},
+        "repl_node.conf.operationProfiling.mode": {{env.repl_node.conf.operationProfiling.mode}},
+        "repl_node.conf.operationProfiling.slowOpThresholdMs": {{env.repl_node.conf.operationProfiling.slowOpThresholdMs}},
+        "repl_node.conf.replication.enableMajorityReadConcern": {{env.repl_node.conf.replication.enableMajorityReadConcern}},
+        "repl_node.conf.replication.oplogSizeMB": {{env.repl_node.conf.replication.oplogSizeMB}}
+   },
+   "endpoints": {
+        "MongoDB": {
+            "port": {{env.repl_node.conf.net.port}},
+            "protocol": "TCP"
+        },
+        "Zabbix Agent2": {
+            "port": {{env.conf.zabbix.agent.port}},
+            "protocol": "TCP"
+        }
+   },
+   "health_check":{
+        "enable": false,
+        "interval_sec": 60,
+        "timeout_sec": 30,
+        "action_timeout_sec": 30,
+        "healthy_threshold": 2,
+        "unhealthy_threshold": 2,
+        "check_cmd": "appctl healthCheck",
+        "action_cmd": "appctl revive"
    }
 }

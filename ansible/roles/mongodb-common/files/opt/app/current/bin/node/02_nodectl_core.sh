@@ -178,9 +178,14 @@ init() {
 
 ########## stop ##########
 stop() {
-:
-}
-
-msForceStepDown() {
-  runMongoCmd "rs.stepDown()" $@ || :
+  local cnt=${#NODE_LIST[@]}
+  if [ "$cnt" -gt 1 ]; then
+    if isMeMaster; then
+      runMongoCmd "rs.stepDown()" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE) || :
+    fi
+    # wait for 30 minutes
+    retry 1800 3 0 isMeNotMaster
+  fi
+  _stop
+  log "node stopped"
 }

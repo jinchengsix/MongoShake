@@ -131,6 +131,14 @@ msIsHostMaster() {
   test "$state" = "PRIMARY"
 }
 
+isMeMaster() {
+  msIsHostMaster "$MY_IP:$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+}
+
+isMeNotMaster() {
+  ! msIsHostMaster "$MY_IP:$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+}
+
 # msIsReplStatusOk
 # check if replia set's status is ok
 # 1 primary, other's secondary
@@ -144,14 +152,6 @@ msIsReplStatusOk() {
   test $((pcnt+scnt)) -eq $allcnt
 }
 
-msIsHostMaster() {
-  local hostinfo=$1
-  shift
-  local tmpstr=$(runMongoCmd "JSON.stringify(rs.status().members)" $@)
-  local state=$(echo $tmpstr | jq '.[] | select(.name=="'$hostinfo'") | .stateStr' | sed s/\"//g)
-  test "$state" = "PRIMARY"
-}
-
 getNodesOrder() {
   local tmpstr
   local cnt
@@ -159,42 +159,23 @@ getNodesOrder() {
   local tmplist
   local tmpip
   local curmaster
-  if [ "$MY_ROLE" = "mongos_node" ]; then
-    tmplist=($(sortHostList ${NODE_LIST[@]}))
-    cnt=${#tmplist[@]}
-    for((i=0;i<$cnt;i++)); do
-      tmpstr="$tmpstr,$(getNodeId ${tmplist[i]})"
-    done
-    tmpstr=${tmpstr:1}
-  elif [ "$MY_ROLE" = "cs_node" ]; then
-    tmplist=(${NODE_LIST[@]})
-    cnt=${#tmplist[@]}
-    for((i=0;i<$cnt;i++)); do
-      tmpip=$(getIp ${tmplist[i]})
-      if msIsHostMaster "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
-        curmaster=$(getNodeId ${tmplist[i]})
-        continue
-      fi
-      tmpstr="$tmpstr,$(getNodeId ${tmplist[i]})"
-    done
-    tmpstr="${tmpstr:1},$curmaster"
+  
+  tmplist=(${NODE_LIST[@]})
+  cnt=${#tmplist[@]}
+  for((i=0;i<$cnt;i++)); do
+    tmpip=$(getIp ${tmplist[i]})
+    if msIsHostMaster "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+      curmaster=$(getNodeId ${tmplist[i]})
+      continue
+    fi
+    tmpstr="$tmpstr,$(getNodeId ${tmplist[i]})"
+  done
+  if [ -z "$tmpstr" ]; then
+    tmpstr="$curmaster"
   else
-    cnt=${#INFO_SHARD_GROUP_LIST[@]}
-    for((i=1;i<=$cnt;i++)); do
-      tmplist=($(eval echo \${INFO_SHARD_${i}_LIST[@]}))
-      subcnt=${#tmplist[@]}
-      for((j=0;j<$subcnt;j++)); do
-        tmpip=$(getIp ${tmplist[j]})
-        if msIsHostMaster "$tmpip:$INFO_SHARD_PORT" -H $tmpip -P $INFO_SHARD_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
-          curmaster=$(getNodeId ${tmplist[j]})
-          continue
-        fi
-        tmpstr="$tmpstr,$(getNodeId ${tmplist[j]})"
-      done
-      tmpstr="$tmpstr,$curmaster"
-    done
-    tmpstr=${tmpstr:1}
+    tmpstr="${tmpstr:1},$curmaster"
   fi
+  
   log "$tmpstr"
   echo $tmpstr
 }
