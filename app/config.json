@@ -214,6 +214,28 @@
           "required": "no"
         },
         {
+          "key": "conf.node.exporter.enabled",
+          "label": "node.exporter.enabled.label",
+          "description": "node.exporter.enabled.description",
+          "default": "no",
+          "type": "string",
+          "range": [
+            "yes",
+            "no"
+          ],
+          "required": "no"
+        },
+        {
+            "key": "conf.node.exporter.port",
+            "label": "node.exporter.port.label",
+            "description": "node.exporter.port.description",
+            "default": 9100,
+            "type": "integer",
+            "min": 1025,
+            "max": 65535,
+            "required": "no"
+        },
+        {
           "key": "repl_node",
           "description": "The role configuration properties of the application",
           "type": "array",
@@ -277,85 +299,7 @@
               "default": "true",
               "range": ["true", "false"],
               "required": "no"
-          },
-          {
-              "key": "node.exporter.enabled",
-              "label": "node.exporter.enabled.label",
-              "description": "node.exporter.enabled.description",
-              "default": "no",
-              "type": "string",
-              "range": [
-                "yes",
-                "no"
-              ],
-              "required": "no"
-          },
-          {
-              "key": "node.exporter.port",
-              "label": "node.exporter.port.label",
-              "description": "node.exporter.port.description",
-              "default": 9100,
-              "type": "integer",
-              "min": 1025,
-              "max": 65535,
-              "required": "no"
-          },
-          {
-              "key": "repl_node",
-              "description": "The role configuration properties of the application",
-              "type": "array",
-              "properties": [{
-                  "key": "conf.net.port",
-                  "label": "Shard's net.port",
-                  "description": "Can NOT be set to 27099, can NOT be changed if the cluster has been created, default value: 27018",
-                  "type": "integer",
-                  "default": 27018,
-                  "pattern": "^(?!27099)(102[4-9]|10[3-9]\\d|1[1-9]\\d\\d|[2-9]\\d{3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$",
-                  "changeable": false,
-                  "required": "no",
-                  "min": 1025,
-                  "max": 65535
-              }, {
-                  "key": "conf.setParameter.cursorTimeoutMillis",
-                  "label": "Shard's setParameter.cursorTimeoutMillis",
-                  "description": "Unit: ms, default value: 600000",
-                  "type": "integer",
-                  "default": 600000,
-                  "required": "no"
-              }, {
-                  "key": "conf.operationProfiling.mode",
-                  "label": "Shard's operationProfiling.mode",
-                  "description": "[off, slowOp, all], default value: off",
-                  "type": "string",
-                  "range": ["off", "slowOp", "all"],
-                  "default": "off",
-                  "required": "no"
-              }, {
-                  "key": "conf.operationProfiling.slowOpThresholdMs",
-                  "label": "Shard's operationProfiling.slowOpThresholdMs",
-                  "description": "Unit: ms, default value: 100",
-                  "type": "integer",
-                  "default": 100,
-                  "required": "no"
-              }, {
-                  "key": "conf.replication.enableMajorityReadConcern",
-                  "label": "Shard's replication.enableMajorityReadConcern",
-                  "description": "Need restart mongod.service if being changed, default value: true",
-                  "type": "string",
-                  "default": "true",
-                  "range": ["true", "false"],
-                  "required": "no"
-              }, {
-                  "key": "conf.replication.oplogSizeMB",
-                  "label": "Shard's replication.oplogSizeMB",
-                  "description": "Unit: MB, defalut value: 20480",
-                  "type": "integer",
-                  "default": 20480,
-                  "required": "no",
-                  "min": 990,
-                  "max": 51200
-              }]
-          }
+            }
           ]
         }
       ]
