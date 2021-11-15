@@ -277,7 +277,6 @@
               "default": "true",
               "range": ["true", "false"],
               "required": "no"
-<<<<<<< HEAD
           },
           {
               "key": "node.exporter.enabled",
@@ -356,8 +355,6 @@
                   "min": 990,
                   "max": 51200
               }]
-=======
->>>>>>> 3a20e5112111049332d775239be0c0d47c95b508
           }
           ]
         }
