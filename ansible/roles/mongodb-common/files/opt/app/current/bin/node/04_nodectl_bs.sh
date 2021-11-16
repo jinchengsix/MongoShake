@@ -1,11 +1,11 @@
 backup() {
-  log "info"
+  log "star backup"
   # set backup flag
   touch $BACKUP_FLAG_FILE
 }
 
 cleanup() {
-  log "info"
+  log "start cleanup"
   # reset backup flag
   rm -rf $BACKUP_FLAG_FILE
 }
@@ -179,4 +179,20 @@ EOF
   )
   runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "operationProfiling changed"
+}
+
+
+getBackupNodeId() {
+  log "start getBackupNodeId"
+
+  local ip=$(getIp ${NODE_LIST[0]})
+  if [ ! $ip = "$MY_IP" ]; then return 0; fi
+  local cnt=${#NODE_LIST[@]}
+  local tmpstr=""
+  local tmpip
+  for((i=0;i<$cnt;i++)); do
+    tmpstr="$tmpstr,$(getNodeId ${NODE_LIST[i]})"
+  done
+  tmpstr="${tmpstr:1}"
+  echo $tmpstr
 }
