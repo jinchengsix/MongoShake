@@ -30,7 +30,66 @@ refreshZabbixAgentStatus() {
   fi
 }
 
+msGetReplCfgFromLocal() {
+  local jsstr=$(cat <<EOF
+mydb = db.getSiblingDB("local")
+JSON.stringify(mydb.system.replset.findOne())
+EOF
+  )
+  runMongoCmd "$jsstr" -P $NET_MAINTAIN_PORT
+}
+
+msUpdateReplCfgToLocal() {
+  local jsstr=$(cat <<EOF
+newlist=[$1]
+mydb = db.getSiblingDB('local')
+cfg = mydb.system.replset.findOne()
+cnt = cfg.members.length
+for(i=0; i<cnt; i++) {
+  cfg.members[i].host=newlist[i]
+}
+mydb.system.replset.update({"_id":"$RS_NAME"},cfg)
+EOF
+  )
+  runMongoCmd "$jsstr" -P $NET_MAINTAIN_PORT
+}
+
+changeReplNodeNetInfo() {
+  # start mongod in admin mode
+  shellStartMongodForAdmin
+
+  local replcfg
+  retry 60 3 0 msGetHostDbVersion -P $NET_MAINTAIN_PORT
+  replcfg=$(msGetReplCfgFromLocal)
+  local cnt=${#NODE_LIST[@]}
+  local oldinfo=$(getItemFromFile NODE_LIST $HOSTS_INFO_FILE)
+  local oldport=$(getItemFromFile PORT $HOSTS_INFO_FILE)
+  local tmpstr
+  local newlist
+  for((i=0;i<$cnt;i++)); do
+    # old ip:port
+    tmpstr=$(echo "$replcfg" | jq ".members[$i] | .host" | sed s/\"//g)
+    # nodeid
+    tmpstr=$(echo "$oldinfo" | sed 's/\/cln-/:'$oldport'\/cln-/g' | sed 's/ /\n/g' | sed -n /$tmpstr/p)
+    tmpstr=$(getNodeId $tmpstr)
+    # newip
+    tmpstr=$(echo ${NODE_LIST[@]} | grep -o '[[:digit:].]\+/'$tmpstr | cut -d'/' -f1)
+    newlist="$newlist\"$tmpstr:$MY_PORT\","
+  done
+  # update replicaset config
+  # js array: "ip:port","ip:port","ip:port"
+  newlist=${newlist:0:-1}
+  msUpdateReplCfgToLocal "$newlist"
+
+  # stop mongod in admin mode
+  shellStopMongodForAdmin
+}
+
 start() {
+  if [ $CHANGE_VXNET_FLAG = "true" ]; then
+    changeReplNodeNetInfo
+    log "vxnet has been changed!"
+  fi
   # updat conf files
   updateHostsInfo
   updateMongoConf
@@ -188,4 +247,15 @@ stop() {
   fi
   _stop
   log "node stopped"
+}
+
+########## precheck ##########
+changeVxnetPreCheck() {
+  local cnt=${#NODE_LIST[@]}
+  if ! msIsReplStatusOk $cnt -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+    log "replica cluster is not health"
+    return $ERR_REPL_NOT_HEALTH
+  fi
+
+  return 0
 }
