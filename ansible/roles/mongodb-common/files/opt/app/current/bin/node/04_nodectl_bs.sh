@@ -11,14 +11,16 @@ cleanup() {
 }
 
 restore() {
+  log "start restore"
   preRestore
   doWhenRestoreRepl
   postRestore
 }
 
 preRestore() {
+  log "restore step 1"
   disableHealthCheck
-
+  log "restore step 2"
   systemctl stop mongod.service || :
   # repl.key
   echo "$GLOBAL_UUID" | base64 > "$MONGODB_CONF_PATH/repl.key"
@@ -30,14 +32,19 @@ preRestore() {
 }
 
 doWhenRestoreRepl() {
-  
+  log "restore step 3"
   # sync from host.info.new & recreate mongo conf
   updateHostsInfo
+  log "restore step 4"
   updateMongoConf
+  log "restore step 5"
 
   local cnt=${#NODE_LIST[@]}
+  log "restore step 6 , cnt :$cnt , nodeList: $NODE_LIST"
   local ip=$(getIp ${NODE_LIST[0]})
+  log "restore step 7 , ip: $ip"
   if [ ! $ip = "$MY_IP" ]; then
+  log "restore step 8"
     rm -rf $MONGODB_DATA_PATH/*
     _start
     return 0
@@ -68,6 +75,7 @@ EOF
   )
   runMongoCmd "$jsstr" -P $NET_MAINTAIN_PORT
 
+  log "restore step 9"
   # stop mongod in admin mode
   shellStopMongodForAdmin
 
@@ -89,10 +97,14 @@ EOF
   )
   runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
 
+  log "restore step 10"
+
   # add other members
   cnt=${#NODE_LIST[@]}
+  log "restore step 11, cnt: $cnt"
   jsstr=""
   for((i=1;i<$cnt;i++)); do
+    log "restore step 12 ,Node: ${NODE_LIST[i]} "
     if [ $i -eq $((cnt-1)) ]; then
       tmpstr="{host:\"$(getIp ${NODE_LIST[i]}):$MY_PORT\",priority: 0, hidden: true}"
     else
@@ -100,8 +112,10 @@ EOF
     fi
     jsstr="$jsstr;rs.add($tmpstr)"
   done
+  log "restore step 13 ,jsstr: $jsstr"
   jsstr="${jsstr:1};"
   runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+  log "restore step 14"
 }
 
 
@@ -116,7 +130,7 @@ postRestore() {
 
 
 doWhenReplPostRestore() {
-  
+  log "restore step 15"
   # waiting for 24 hours to restore data
   local cnt=${#NODE_LIST[@]}
   retry 86400 3 0 msIsReplStatusOk $cnt -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
@@ -125,15 +139,18 @@ doWhenReplPostRestore() {
   local rlist=($(getRollingList))
   local tmpip=$(getIp ${rlist[0]})
   cnt=${#rlist[@]}
+  log "restore step 16 , rlist: $rlist , tmpip: $tmpip , cnt: $cnt , myIp: $MY_IP"
   if [ ! $tmpip = "$MY_IP" ]; then log "$MY_ROLE: skip changing configue"; return 0; fi
   # change oplog
   for((i=0;i<$cnt;i++)); do
     tmpip=$(getIp ${rlist[i]})
+      log "restore step 17 , tmpip: $tmpip"
     ssh root@$tmpip "appctl msReplChangeOplogSize"
   done
   # change other configure
   for((i=0;i<$cnt;i++)); do
     tmpip=$(getIp ${rlist[i]})
+    log "restore step 18 , tmpip: $tmpip"
     ssh root@$tmpip "appctl msReplOnlyChangeConf"
   done
 }

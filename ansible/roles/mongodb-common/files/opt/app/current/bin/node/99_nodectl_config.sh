@@ -3,30 +3,37 @@ changeConf() {
 }
 
 scaleInPreCheck() {
-  log "$MY_IP scaleInPreCheck"
+  log "scaleInPreCheck step 1, myIp:$MY_IP "
 
   local nodeNum=${#NODE_LIST[@]}
   local deleteNum=${#DELETING_LIST[@]}
-  
+  log "scaleInPreCheck step 2, nodeNum: $nodeNum, deleteNum: $deleteNum"
+
   #删除数量必须为偶数个
   if [ `expr $deleteNum % 2` -eq 1 ]; then
+    log "scaleInPreCheck step 3"
     return $ERR_DELETE_NODES_NUM_SHOULD_BE_EVEN;
   fi
   
+  local tmpip;
   #不允许删除主节点
   for((i=0;i<$deleteNum;i++)); do
-    if isMeMaster; then
+    tmpip=$(getIp ${DELETING_LIST[i]})
+    if msIsHostMaster "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+      log "scaleInPreCheck step 3"
       return $ERR_PRIMARY_DELETE_NOT_ALLOWED;
     fi
   done
 
   # 当集群为五节点时，且删除数量为2时，不允许删除hidden节点
   if [ $nodeNum -eq 5 ] && [ $deleteNum -eq 2 ]; then
+    log "scaleInPreCheck step 4"
     checkIfDeleteHidden $deleteNum
   fi
 
   # 当集群为七节点时，且删除数量小于6时，不允许删除hidden节点
   if [ $nodeNum -eq 7 ] && [ $deleteNum -lt 6 ]; then
+    log "scaleInPreCheck step 5"
     checkIfDeleteHidden $deleteNum
   fi
 }
@@ -35,14 +42,14 @@ checkIfDeleteHidden() {
   for((i=0;i<$1;i++)); do
       tmpip=$(getIp ${DELETING_LIST[i]})
       if msIsHostHidden "$tmpip:$MY_PORT" -H $MY_IP -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+        log "scaleInPreCheck checkIfDeleteHidden,hostInfo:$tmpip:$MY_PORT"
         return $ERR_HIDDEN_DELETE_NOT_ALLOWED;
       fi
   done
 }
 
 scaleIn() {
-  log "start to scaleIn"
-  scaleInPreCheck
+  log "scaleIn step 1, myIp:$MY_IP"
   if isMeMaster; then
     retry 60 3 0 deleteNodeForRepl
   fi
@@ -73,8 +80,10 @@ addNodeForRepl() {
 deleteNodeForRepl() {
   local cnt=${#DELETING_LIST[@]}
   local jsstr=""
+  log "scaleIn step 2, cnt:$cnt"
   for((i=0;i<$cnt;i++)); do
     local deleteIp=$(getIp ${DELETING_LIST[i]})
+    log "scaleIn step 3, deleteIp:$deleteIp"
     runMongoCmd "rs.remove($deleteIp):$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   done
 
