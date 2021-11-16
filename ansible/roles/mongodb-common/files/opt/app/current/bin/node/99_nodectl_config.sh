@@ -7,7 +7,22 @@ scaleIn() {
 }
 
 scaleOut() {
-:
+  if isMeMaster; then
+    retry 60 3 0 addNodeToRepl
+  fi
+  updateMongoConf 
+  updateHostsInfo
+}
+
+addNodeToRepl() {
+  local cnt=${#ADDING_LIST[@]}
+  local jsstr=""
+  for((i=0;i<$cnt;i++)); do
+    tmpstr="{host:\"$(getIp ${ADDING_LIST[i]}):$MY_PORT\",priority: 1}"
+    jsstr="$jsstr;rs.add($tmpstr)"
+  done
+  jsstr="${jsstr:1};"
+  runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
 }
 
 changeVxnet() {

@@ -214,6 +214,28 @@
           "required": "no"
         },
         {
+          "key": "conf.node.exporter.enabled",
+          "label": "node.exporter.enabled.label",
+          "description": "node.exporter.enabled.description",
+          "default": "no",
+          "type": "string",
+          "range": [
+            "yes",
+            "no"
+          ],
+          "required": "no"
+        },
+        {
+            "key": "conf.node.exporter.port",
+            "label": "node.exporter.port.label",
+            "description": "node.exporter.port.description",
+            "default": 9100,
+            "type": "integer",
+            "min": 1025,
+            "max": 65535,
+            "required": "no"
+        },
+        {
           "key": "repl_node",
           "description": "The role configuration properties of the application",
           "type": "array",
@@ -277,7 +299,7 @@
               "default": "true",
               "range": ["true", "false"],
               "required": "no"
-          }
+            }
           ]
         }
       ]

@@ -1,0 +1,48 @@
+op-insert//.opcounters.insert
+op-query//.opcounters.query
+op-update//.opcounters.update
+op-delete//.opcounters.delete
+op-getmore//.opcounters.getmore
+op-command//.opcounters.command
+opRepl-insert//.opcountersRepl.insert
+opRepl-query//.opcountersRepl.query
+opRepl-update//.opcountersRepl.update
+opRepl-delete//.opcountersRepl.delete
+opRepl-getmore//.opcountersRepl.getmore
+opRepl-command//.opcountersRepl.command
+connections-current//.connections.current
+connections-totalCreated//.connections.totalCreated
+connections-available//.connections.available
+cursor-timedOut/moRmQuotation/.metrics.cursor.timedOut."$numberLong"
+cursor-open-noTimeout/moRmQuotation/.metrics.cursor.open.noTimeout."$numberLong"
+cursor-open-pinned/moRmQuotation/.metrics.cursor.open.pinned."$numberLong"
+cursor-open-total/moRmQuotation/.metrics.cursor.open.total."$numberLong"
+network-bytesIn/moRmQuotationMB/.network.bytesIn."$numberLong"
+network-bytesOut/moRmQuotationMB/.network.bytesOut."$numberLong"
+
+
+WT-write-out//.wiredTiger.concurrentTransactions.write.out
+WT-write-available//.wiredTiger.concurrentTransactions.write.available
+WT-read-out//.wiredTiger.concurrentTransactions.read.out
+WT-read-available//.wiredTiger.concurrentTransactions.read.available
+scanAndOrder/moRmQuotation/.metrics.operation.scanAndOrder."$numberLong"
+writeConflicts/moRmQuotation/.metrics.operation.writeConflicts."$numberLong"
+doc-deleted/moRmQuotation/.metrics.document.deleted."$numberLong"
+doc-inserted/moRmQuotation/.metrics.document.inserted."$numberLong"
+doc-returned/moRmQuotation/.metrics.document.returned."$numberLong"
+doc-updated/moRmQuotation/.metrics.document.updated."$numberLong"
+scannedKeys/moRmQuotation/.metrics.queryExecutor.scanned."$numberLong"
+scannedDocs/moRmQuotation/.metrics.queryExecutor.scannedObjects."$numberLong"
+deletedDocuments/moRmQuotation/.metrics.ttl.deletedDocuments."$numberLong"
+passes/moRmQuotation/.metrics.ttl.passes."$numberLong"
+moveChunk-donorCount/moRmQuotation/.shardingStatistics.countDonorMoveChunkStarted."$numberLong"
+clients-total//.globalLock.activeClients.total
+clients-readers//.globalLock.activeClients.readers
+clients-writers//.globalLock.activeClients.writers
+queue-total//.globalLock.currentQueue.total
+queue-readers//.globalLock.currentQueue.readers
+queue-writers//.globalLock.currentQueue.writers
+wiredTiger-cache-usage/moCalcPer 1/.wiredTiger.cache."bytes currently in the cache",.wiredTiger.cache."maximum bytes configured"
+wiredTiger-cache-dirty-usage/moCalcPer 1/.wiredTiger.cache."tracked dirty bytes in the cache",.wiredTiger.cache."maximum bytes configured"
+conn-usage/moCalcPer 2/.connections.current,.connections.current,.connections.available
+repl-lag/moCalcTimespan/.repl as {primary:$p, me:$m} | .repl.replicationProgress[] | select(.host==$m or .host==$p) | .optime.ts."$timestamp".t
