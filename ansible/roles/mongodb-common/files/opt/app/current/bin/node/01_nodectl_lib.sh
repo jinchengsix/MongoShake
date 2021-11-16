@@ -7,6 +7,9 @@ ERR_PORT_NOT_LISTENED=205
 ERR_NOTVALID_SHARD_RESTORE=206
 ERR_INVALID_PARAMS_MONGOCMD=207
 ERR_REPL_NOT_HEALTH=208
+ERR_DELETE_NODES_NUM_SHOULD_BE_EVEN=209
+ERR_PRIMARY_DELETE_NOT_ALLOWED=210
+ERR_HIDDEN_DELETE_NOT_ALLOWED=211
 
 # path info
 MONGODB_DATA_PATH=/data/mongodb-data
@@ -137,6 +140,14 @@ isMeMaster() {
 
 isMeNotMaster() {
   ! msIsHostMaster "$MY_IP:$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+}
+
+msIsHostHidden() {
+  local hostinfo=$1
+  shift
+  local tmpstr=$(runMongoCmd "JSON.stringify(rs.conf().members)" $@)
+  local pname=$(echo $tmpstr | jq '.[] | select(.hidden==true) | .host' | sed s/\"//g)
+  test "$pname" = "$hostinfo"
 }
 
 # msIsReplStatusOk
