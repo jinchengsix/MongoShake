@@ -20,10 +20,13 @@ DB_QC_LOCAL_PASS_FILE=/data/appctl/data/qc_local_pass
 HOSTS_INFO_FILE=/data/appctl/data/hosts.info
 CONF_INFO_FILE=/data/appctl/data/conf.info
 NODE_FIRST_CREATE_FLAG_FILE=/data/appctl/data/node.first.create.flag
-REPL_MONITOR_ITEM_FILE=/opt/app/current/bin/node/shard.monitor
+REPL_MONITOR_ITEM_FILE=/opt/app/current/bin/node/repl.monitor
 HEALTH_CHECK_FLAG_FILE=/data/appctl/data/health.check.flag
 BACKUP_FLAG_FILE=/data/appctl/data/backup.flag
 CONF_ZABBIX_INFO_FILE=/data/appctl/data/conf.zabbix
+CONF_CADDY_INFO_FILE=/etc/caddy/Caddyfile
+CONF_CADDY_ENV_INFO_FILE=/data/appctl/data/conf.caddy
+CONF_NODE_EXPORTER_FILE=/data/appctl/data/conf.node_exporter
 ZABBIX_CONF_PATH=/etc/zabbix
 ZABBIX_LOG_PATH=/data/zabbix-log
 
@@ -289,17 +292,17 @@ processManagement:
 MONGO_CONF
 }
 
-createZabbixConf() {
-  local zServer=$(getItemFromFile Server $CONF_ZABBIX_INFO_FILE)
-  local zListenPort=$(getItemFromFile ListenPort $CONF_ZABBIX_INFO_FILE)
-  cat > $ZABBIX_CONF_PATH/zabbix_agent2.conf <<ZABBIX_CONF
-PidFile=/var/run/zabbix/zabbix_agent2.pid
-LogFile=/data/zabbix-log/zabbix_agent2.log
-LogFileSize=50
-Server=$zServer
-#ServerActive=127.0.0.1
-ListenPort=$zListenPort
-Include=/etc/zabbix/zabbix_agent2.d/*.conf
-UnsafeUserParameters=1
-ZABBIX_CONF
-}
+# createZabbixConf() {
+#   local zServer=$(getItemFromFile Server $CONF_ZABBIX_INFO_FILE)
+#   local zListenPort=$(getItemFromFile ListenPort $CONF_ZABBIX_INFO_FILE)
+#   cat > $ZABBIX_CONF_PATH/zabbix_agent2.conf <<ZABBIX_CONF
+# PidFile=/var/run/zabbix/zabbix_agent2.pid
+# LogFile=/data/zabbix-log/zabbix_agent2.log
+# LogFileSize=50
+# Server=$zServer
+# #ServerActive=127.0.0.1
+# ListenPort=$zListenPort
+# Include=/etc/zabbix/zabbix_agent2.d/*.conf
+# UnsafeUserParameters=1
+# ZABBIX_CONF
+# }

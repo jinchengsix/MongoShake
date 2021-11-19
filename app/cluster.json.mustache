@@ -12,7 +12,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-n6333nej"
+            "image": "img-j01iin0k"
         },
         "instance_class":{{cluster.repl_node.instance_class}},
         "count":{{cluster.repl_node.count}},
@@ -254,6 +254,9 @@
         "conf.zabbix.agent.enabled": {{env.conf.zabbix.agent.enabled}},
         "conf.node.exporter.enabled": {{env.conf.node.exporter.enabled}},
         "conf.node.exporter.port": {{env.conf.node.exporter.port}},
+        "conf.caddy.user": {{env.conf.caddy.user}},
+        "conf.caddy.password": {{env.conf.caddy.password}},
+        "conf.caddy.enabled": {{env.conf.caddy.enabled}},
         "repl_node.conf.net.port": {{env.repl_node.conf.net.port}},
         "repl_node.conf.setParameter.cursorTimeoutMillis": {{env.repl_node.conf.setParameter.cursorTimeoutMillis}},
         "repl_node.conf.operationProfiling.mode": {{env.repl_node.conf.operationProfiling.mode}},

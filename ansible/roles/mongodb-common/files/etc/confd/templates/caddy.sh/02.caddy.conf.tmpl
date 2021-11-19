@@ -1,0 +1,14 @@
+flush > /etc/caddy/Caddyfile <<CADDY_CONF
+:8000 {
+    basicauth {
+        $CaddyUser $(caddy hash-password --plaintext $CaddyPwd)
+    }
+    file_server {
+        root  /data/mongodb-logs
+        browse
+    }
+    log  {
+        output file /data/caddy/access.log
+    }
+}
+CADDY_CONF
