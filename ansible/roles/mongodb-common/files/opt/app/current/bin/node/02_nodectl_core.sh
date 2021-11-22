@@ -201,6 +201,9 @@ EOF
 }
 
 init() {
+  # except scaleIn and scaleOut
+  if [ $ADDING_HOSTS_FLAG = "true" ] || [ $DELETING_HOSTS_FLAG = "true" ] ; then return 0; fi
+  
   local slist=($(getInitNodeList))
   if [ ! $(getSid ${slist[0]}) = $MY_SID ]; then return 0; fi
   log "init replicaset begin ..."
