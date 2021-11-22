@@ -6,13 +6,17 @@
    "incremental_backup_supported": true,
    "multi_zone_policy": "round_robin",
    "advanced_actions": ["change_vxnet", "scale_horizontal"],
+   "upgrading_policy": "parallel",
+   "upgrade_policy": [
+        "appv-omli6gvn"
+    ],
    "nodes":[{
         "role":"replica",
         "container":{
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-1qbpfbwd"
+            "image": "img-lztvg26w"
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},
@@ -60,6 +64,14 @@
             },
             "restore": {
                 "cmd": "appctl restore",
+                "timeout": 86400
+            },
+            "upgrade": {
+                "cmd": "appctl upgrade",
+                "timeout": 86400
+            },
+            "rollback": {
+                "cmd": "appctl rollback",
                 "timeout": 86400
             }
         },
@@ -263,6 +275,12 @@
         "replica.conf.operationProfiling.slowOpThresholdMs": {{env.replica.conf.operationProfiling.slowOpThresholdMs}},
         "replica.conf.replication.enableMajorityReadConcern": {{env.replica.conf.replication.enableMajorityReadConcern}},
         "replica.conf.replication.oplogSizeMB": {{env.replica.conf.replication.oplogSizeMB}}
+   },
+   "advanced_services": {
+      "update_nodes_names": {
+         "cmd": "/opt/mongodb/bin/mongo-trib.py get_nodes_names",
+         "timeout": 10
+      }
    },
    "endpoints": {
         "MongoDB": {
