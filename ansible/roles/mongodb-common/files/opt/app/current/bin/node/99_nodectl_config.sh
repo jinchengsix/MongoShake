@@ -2,19 +2,71 @@ changeConf() {
   :
 }
 
-scaleIn() {
-:
+scaleInPreCheck() {
+  log "scaleInPreCheck step 1, myIp:$MY_IP "
+
+  local nodeNum=${#NODE_LIST[@]}
+  local deleteNum=${#DELETING_LIST[@]}
+  log "scaleInPreCheck step 2, nodeNum: $nodeNum, deleteNum: $deleteNum"
+
+  #删除数量必须为偶数个
+  if [ `expr $deleteNum % 2` -eq 1 ]; then
+    log "scaleInPreCheck step 3"
+    return $ERR_DELETE_NODES_NUM_SHOULD_BE_EVEN;
+  fi
+  
+  local tmpip;
+  #不允许删除主节点
+  for((i=0;i<$deleteNum;i++)); do
+    tmpip=$(getIp ${DELETING_LIST[i]})
+    if msIsHostMaster "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+      log "scaleInPreCheck step 3"
+      return $ERR_PRIMARY_DELETE_NOT_ALLOWED;
+    fi
+  done
+
+  # 当集群为五节点时，且删除数量为2时，不允许删除hidden节点
+  if [ $nodeNum -eq 5 ] && [ $deleteNum -eq 2 ]; then
+    log "scaleInPreCheck step 4"
+    checkIfDeleteHidden $deleteNum
+  fi
+
+  # 当集群为七节点时，且删除数量小于6时，不允许删除hidden节点
+  if [ $nodeNum -eq 7 ] && [ $deleteNum -lt 6 ]; then
+    log "scaleInPreCheck step 5"
+    checkIfDeleteHidden $deleteNum
+  fi
 }
 
-scaleOut() {
+checkIfDeleteHidden() {
+  for((i=0;i<$1;i++)); do
+      tmpip=$(getIp ${DELETING_LIST[i]})
+      if msIsHostHidden "$tmpip:$MY_PORT" -H $MY_IP -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+        log "scaleInPreCheck checkIfDeleteHidden,hostInfo:$tmpip:$MY_PORT"
+        return $ERR_HIDDEN_DELETE_NOT_ALLOWED;
+      fi
+  done
+}
+
+scaleIn() {
+  log "scaleIn step 1, myIp:$MY_IP"
   if isMeMaster; then
-    retry 60 3 0 addNodeToRepl
+    retry 60 3 0 deleteNodeForRepl
   fi
   updateMongoConf 
   updateHostsInfo
 }
 
-addNodeToRepl() {
+scaleOut() {
+  log "start to scaleOut"
+  if isMeMaster; then
+    retry 60 3 0 addNodeForRepl
+  fi
+  updateMongoConf 
+  updateHostsInfo
+}
+
+addNodeForRepl() {
   local cnt=${#ADDING_LIST[@]}
   local jsstr=""
   for((i=0;i<$cnt;i++)); do
@@ -23,6 +75,18 @@ addNodeToRepl() {
   done
   jsstr="${jsstr:1};"
   runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+}
+
+deleteNodeForRepl() {
+  local cnt=${#DELETING_LIST[@]}
+  local jsstr=""
+  log "scaleIn step 2, cnt:$cnt"
+  for((i=0;i<$cnt;i++)); do
+    local deleteIp=$(getIp ${DELETING_LIST[i]})
+    log "scaleIn step 3, deleteIp:$deleteIp"
+    runMongoCmd "rs.remove($deleteIp):$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+  done
+
 }
 
 changeVxnet() {
@@ -257,6 +321,43 @@ checkConfdChange() {
   
   # config changed
   # do something
+  
+}
+
+doWhenReplConfChanged() {
+  if diff $CONF_INFO_FILE $CONF_INFO_FILE.new; then return 0; fi
+  local rlist=($(getRollingList))
+  local cnt=${#rlist[@]}
+  local tmpcnt
+  local tmpip
+  tmpip=$(getIp ${rlist[0]})
+  if [ ! $tmpip = "$MY_IP" ]; then log "$MY_ROLE: skip changing configue"; return 0; fi
+
+  if isMongodNeedRestart; then
+    # oplogSizeMB check first
+    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep oplogSizeMB | wc -l) || :
+    if (($tmpcnt > 0)); then
+      for((i=0;i<$cnt;i++)); do
+        tmpip=$(getIp ${rlist[i]})
+        ssh root@$tmpip "appctl msReplChangeOplogSize"
+      done
+    fi
+
+    log "rolling restart mongod.service"
+    for((i=0;i<$cnt;i++)); do
+      tmpip=$(getIp ${rlist[i]})
+      if msIsHostMaster "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+        msForceStepDown -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+      fi
+      ssh root@$tmpip "appctl updateMongoConf && systemctl restart mongod.service"
+      retry 60 3 0 msIsReplStatusOk $cnt -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    done
+  else
+    for((i=0;i<$cnt;i++)); do
+      tmpip=$(getIp ${rlist[i]})
+      ssh root@$tmpip "appctl msReplChangeConf && appctl updateMongoConf"
+    done
+  fi
 }
 
 

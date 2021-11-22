@@ -33,17 +33,56 @@
 #     update_cache: yes
 #     state: latest
 
-# - name: install mongodb binaries
-#   include_role:
-#     name: install-1.0.6
-#   vars:
-#     opts:
-#       pkg_name: mongodb
-#       pkg_version: "{{ mongodb_version }}"
-#       pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-{{ mongodb_version }}.tgz
-#       pkg_type: tgz
-#       creates: bin
-#       extracts: yes
+# - name: prepare for installing caddy
+#   shell: apt install -y debian-keyring debian-archive-keyring apt-transport-https; curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | tee /etc/apt/trusted.gpg.d/caddy-stable.asc; curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list; apt update
+
+- name: apt install caddy
+  apt:
+    name: caddy
+    state: latest
+
+- name: stop caddy
+  systemd:
+    name: caddy
+    enabled: no
+    state: stopped
+
+- name: install mongoshake binaries
+  include_role:
+    name: install-1.0.6
+  vars:
+    opts:
+      pkg_name: mongo-shake
+      pkg_version: "{{ mongo_shake_version }}"
+      pkg_url: https://github.com/alibaba/MongoShake/releases/download/release-v{{ mongo_shake_version }}-20210723-1/mongo-shake-v{{ mongo_shake_version }}.tar.gz
+      pkg_type: tar.gz
+      creates: bin
+      extracts: yes
+
+- name: install node exporter binaries
+  include_role:
+    name: install-1.0.6
+  vars:
+    opts:
+      pkg_name: node_exporter
+      pkg_version: "{{ node_exporter_version }}"
+      pkg_url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+      pkg_type: tar.gz
+      creates: bin
+      extracts: yes
+
+
+- name: install mongodb binaries
+  include_role:
+    name: install-1.0.6
+  vars:
+    opts:
+      pkg_name: mongodb
+      pkg_version: "{{ mongodb_version }}"
+      pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-{{ mongodb_version }}.tgz
+      pkg_type: tgz
+      creates: bin
+      extracts: yes
 
 - name: copy app files
   copy:

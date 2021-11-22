@@ -236,6 +236,36 @@
             "required": "no"
         },
         {
+          "key": "conf.caddy.user",
+          "label": "caddy-user",
+          "description": "username for caddy-server",
+          "type": "string",
+          "pattern": "^[^\\x20\\x22\\x27]*$",
+          "default": "caddy",
+          "required": "no"
+        },
+        {
+          "key": "conf.caddy.password",
+          "label": "caddy-password",
+          "description": "password for caddy-server",
+          "type": "password",
+          "default": "caddy",
+          "pattern": "^[^\\x20\\x22\\x27]*$",
+          "required": "no"
+        },
+        {
+          "key": "conf.caddy.enabled",
+          "label": "caddy.enabled.label",
+          "description": "caddy.enabled.description",
+          "default": "no",
+          "type": "string",
+          "range": [
+            "yes",
+            "no"
+          ],
+          "required": "no"
+        },
+        {
           "key": "repl_node",
           "description": "The role configuration properties of the application",
           "type": "array",

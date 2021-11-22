@@ -1,6 +1,5 @@
 flush > /data/appctl/data/conf.info.new << CONF_INFO_NEW
 replication_replSetName=$host_repl_name
-zabbix_pass={{ getv "/env/conf.zabbix.userPass" }}
 user_pass={{ getv "/env/conf.userPass" }}
 storage_engine={{ getv "/env/conf.storage.engine" }}
 {{- range gets (printf "/env/%s.*" $nodeRole) }}

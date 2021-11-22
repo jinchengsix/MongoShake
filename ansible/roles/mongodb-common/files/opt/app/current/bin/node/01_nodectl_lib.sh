@@ -7,6 +7,9 @@ ERR_PORT_NOT_LISTENED=205
 ERR_NOTVALID_SHARD_RESTORE=206
 ERR_INVALID_PARAMS_MONGOCMD=207
 ERR_REPL_NOT_HEALTH=208
+ERR_DELETE_NODES_NUM_SHOULD_BE_EVEN=209
+ERR_PRIMARY_DELETE_NOT_ALLOWED=210
+ERR_HIDDEN_DELETE_NOT_ALLOWED=211
 
 # path info
 MONGODB_DATA_PATH=/data/mongodb-data
@@ -17,10 +20,13 @@ DB_QC_LOCAL_PASS_FILE=/data/appctl/data/qc_local_pass
 HOSTS_INFO_FILE=/data/appctl/data/hosts.info
 CONF_INFO_FILE=/data/appctl/data/conf.info
 NODE_FIRST_CREATE_FLAG_FILE=/data/appctl/data/node.first.create.flag
-REPL_MONITOR_ITEM_FILE=/opt/app/current/bin/node/shard.monitor
+REPL_MONITOR_ITEM_FILE=/opt/app/current/bin/node/repl.monitor
 HEALTH_CHECK_FLAG_FILE=/data/appctl/data/health.check.flag
 BACKUP_FLAG_FILE=/data/appctl/data/backup.flag
 CONF_ZABBIX_INFO_FILE=/data/appctl/data/conf.zabbix
+CONF_CADDY_INFO_FILE=/etc/caddy/Caddyfile
+CONF_CADDY_ENV_INFO_FILE=/data/appctl/data/conf.caddy
+CONF_NODE_EXPORTER_FILE=/data/appctl/data/conf.node_exporter
 ZABBIX_CONF_PATH=/etc/zabbix
 ZABBIX_LOG_PATH=/data/zabbix-log
 
@@ -137,6 +143,14 @@ isMeMaster() {
 
 isMeNotMaster() {
   ! msIsHostMaster "$MY_IP:$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+}
+
+msIsHostHidden() {
+  local hostinfo=$1
+  shift
+  local tmpstr=$(runMongoCmd "JSON.stringify(rs.conf().members)" $@)
+  local pname=$(echo $tmpstr | jq '.[] | select(.hidden==true) | .host' | sed s/\"//g)
+  test "$pname" = "$hostinfo"
 }
 
 # msIsReplStatusOk
@@ -278,17 +292,17 @@ processManagement:
 MONGO_CONF
 }
 
-createZabbixConf() {
-  local zServer=$(getItemFromFile Server $CONF_ZABBIX_INFO_FILE)
-  local zListenPort=$(getItemFromFile ListenPort $CONF_ZABBIX_INFO_FILE)
-  cat > $ZABBIX_CONF_PATH/zabbix_agent2.conf <<ZABBIX_CONF
-PidFile=/var/run/zabbix/zabbix_agent2.pid
-LogFile=/data/zabbix-log/zabbix_agent2.log
-LogFileSize=50
-Server=$zServer
-#ServerActive=127.0.0.1
-ListenPort=$zListenPort
-Include=/etc/zabbix/zabbix_agent2.d/*.conf
-UnsafeUserParameters=1
-ZABBIX_CONF
-}
+# createZabbixConf() {
+#   local zServer=$(getItemFromFile Server $CONF_ZABBIX_INFO_FILE)
+#   local zListenPort=$(getItemFromFile ListenPort $CONF_ZABBIX_INFO_FILE)
+#   cat > $ZABBIX_CONF_PATH/zabbix_agent2.conf <<ZABBIX_CONF
+# PidFile=/var/run/zabbix/zabbix_agent2.pid
+# LogFile=/data/zabbix-log/zabbix_agent2.log
+# LogFileSize=50
+# Server=$zServer
+# #ServerActive=127.0.0.1
+# ListenPort=$zListenPort
+# Include=/etc/zabbix/zabbix_agent2.d/*.conf
+# UnsafeUserParameters=1
+# ZABBIX_CONF
+# }

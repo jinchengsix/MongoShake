@@ -12,23 +12,6 @@ updateHostsInfo() {
   fi
 }
 
-updateZabbixConf() {
-  if ! diff $CONF_ZABBIX_INFO_FILE $CONF_ZABBIX_INFO_FILE.new; then
-    cat $CONF_ZABBIX_INFO_FILE.new > $CONF_ZABBIX_INFO_FILE
-    createZabbixConf
-  fi
-}
-
-refreshZabbixAgentStatus() {
-  zEnabled=$(getItemFromFile Enabled $CONF_ZABBIX_INFO_FILE)
-  if [ $zEnabled = "yes" ]; then
-    systemctl restart zabbix-agent2.service || :
-    log "zabbix-agent2 restarted"
-  else
-    systemctl stop zabbix-agent2.service || :
-    log "zabbix-agent2 stopped"
-  fi
-}
 
 msGetReplCfgFromLocal() {
   local jsstr=$(cat <<EOF
@@ -97,8 +80,8 @@ start() {
   if ! isNodeFirstCreate; then enableHealthCheck; fi
   clearNodeFirstCreateFlag
   # start zabbix-agent2
-  updateZabbixConf
-  refreshZabbixAgentStatus
+  # updateZabbixConf
+  # refreshZabbixAgentStatus
 }
 
 ########## init ##########
@@ -184,12 +167,13 @@ EOF
 }
 
 msAddUserZabbix() {
-  local zabbix_pass="$(getItemFromFile zabbix_pass $CONF_INFO_FILE)"
+  local zabbix_pass="$(getItemFromFile zabbix_pass $CONF_ZABBIX_INFO_FILE)"
+  local zabbix_user="$(getItemFromFile zabbix_user $CONF_ZABBIX_INFO_FILE)"
   local jsstr=$(cat <<EOF
 admin = db.getSiblingDB("admin")
 admin.createUser(
   {
-    user: "$DB_ZABBIX_USER",
+    user: "$zabbix_user",
     pwd: "$zabbix_pass",
     roles: [ { role: "clusterMonitor", db: "admin" } ]
   }
