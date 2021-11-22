@@ -1,7 +1,7 @@
   reloadZabbix() {
     log "start to reload zabbix"
     local zEnabled=$(getItemFromFile zEnabled $CONF_ZABBIX_INFO_FILE)
-    if [ $zEnabled="yes" ]; then
+    if [ $zEnabled = "yes" ]; then
       systemctl restart zabbix-agent2.service || :
       log "zabbix-agent2 restarted"
     else
