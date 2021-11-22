@@ -112,25 +112,13 @@ msInitRepl() {
   done
   memberstr=${memberstr:0:-1}
 
-  local initjs=''
-  if [ $MY_ROLE = "cs_node" ]; then
-    initjs=$(cat <<EOF
-rs.initiate({
-  _id:"$RS_NAME",
-  configsvr: true,
-  members:[$memberstr]
-})
-EOF
-    )
-  else
-    initjs=$(cat <<EOF
+  local initjs=$(cat <<EOF
 rs.initiate({
   _id:"$RS_NAME",
   members:[$memberstr]
 })
 EOF
-    )
-  fi
+  )
 
   runMongoCmd "$initjs" -P $MY_PORT
 }

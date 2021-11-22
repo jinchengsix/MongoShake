@@ -7,20 +7,20 @@
    "multi_zone_policy": "round_robin",
    "advanced_actions": ["change_vxnet", "scale_horizontal"],
    "nodes":[{
-        "role":"repl_node",
+        "role":"replica",
         "container":{
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-3g6snzj5"
+            "image": "img-1qbpfbwd"
         },
-        "instance_class":{{cluster.repl_node.instance_class}},
-        "count":{{cluster.repl_node.count}},
-        "cpu":{{cluster.repl_node.cpu}},
-        "memory":{{cluster.repl_node.memory}},
+        "instance_class":{{cluster.replica.instance_class}},
+        "count":{{cluster.replica.count}},
+        "cpu":{{cluster.replica.cpu}},
+        "memory":{{cluster.replica.memory}},
         "volume":{
-            "size":{{cluster.repl_node.volume_size}},
-            "class":{{cluster.repl_node.volume_class}},
+            "size":{{cluster.replica.volume_size}},
+            "class":{{cluster.replica.volume_class}},
             "mount_point":"/data",
             "filesystem":"ext4"
         },
@@ -257,16 +257,16 @@
         "conf.caddy.user": {{env.conf.caddy.user}},
         "conf.caddy.password": {{env.conf.caddy.password}},
         "conf.caddy.enabled": {{env.conf.caddy.enabled}},
-        "repl_node.conf.net.port": {{env.repl_node.conf.net.port}},
-        "repl_node.conf.setParameter.cursorTimeoutMillis": {{env.repl_node.conf.setParameter.cursorTimeoutMillis}},
-        "repl_node.conf.operationProfiling.mode": {{env.repl_node.conf.operationProfiling.mode}},
-        "repl_node.conf.operationProfiling.slowOpThresholdMs": {{env.repl_node.conf.operationProfiling.slowOpThresholdMs}},
-        "repl_node.conf.replication.enableMajorityReadConcern": {{env.repl_node.conf.replication.enableMajorityReadConcern}},
-        "repl_node.conf.replication.oplogSizeMB": {{env.repl_node.conf.replication.oplogSizeMB}}
+        "replica.conf.net.port": {{env.replica.conf.net.port}},
+        "replica.conf.setParameter.cursorTimeoutMillis": {{env.replica.conf.setParameter.cursorTimeoutMillis}},
+        "replica.conf.operationProfiling.mode": {{env.replica.conf.operationProfiling.mode}},
+        "replica.conf.operationProfiling.slowOpThresholdMs": {{env.replica.conf.operationProfiling.slowOpThresholdMs}},
+        "replica.conf.replication.enableMajorityReadConcern": {{env.replica.conf.replication.enableMajorityReadConcern}},
+        "replica.conf.replication.oplogSizeMB": {{env.replica.conf.replication.oplogSizeMB}}
    },
    "endpoints": {
         "MongoDB": {
-            "port": {{env.repl_node.conf.net.port}},
+            "port": {{env.replica.conf.net.port}},
             "protocol": "TCP"
         },
         "Zabbix Agent2": {

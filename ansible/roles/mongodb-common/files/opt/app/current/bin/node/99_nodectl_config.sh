@@ -239,7 +239,6 @@ EOF
 }
 
 doWhenReplConfChanged() {
-  if [ $MY_ROLE = "mongos_node" ]; then return 0; fi
   if diff $CONF_INFO_FILE $CONF_INFO_FILE.new; then return 0; fi
   local rlist=($(getRollingList))
   local cnt=${#rlist[@]}

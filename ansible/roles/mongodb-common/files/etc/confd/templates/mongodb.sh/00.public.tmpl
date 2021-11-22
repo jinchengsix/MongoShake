@@ -1,7 +1,7 @@
 # confd variables and funtions
 {{- $nodeRole := getv "/host/role" }}
 {{- $nodeIp := getv "/host/ip" }}
-{{- $nodePort := getv "/env/repl_node.conf.net.port" }}
+{{- $nodePort := getv "/env/replica.conf.net.port" }}
 {{- $verticalScalingFlag := "" }}
 {{- $changeVxnetFlag := "" }}
 {{- $addingHostsFlag := "" }}
@@ -53,10 +53,10 @@
 {{- end }}
 
 # repl_node
-{{- range lsdir "/hosts/repl_node" -}}
-  {{- $ip := getv (printf "/hosts/repl_node/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/repl_node/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/repl_node/%s/node_id" .) -}}
+{{- range lsdir "/hosts/replica" -}}
+  {{- $ip := getv (printf "/hosts/replica/%s/ip" .) -}}
+  {{- $sid := getv (printf "/hosts/replica/%s/sid" .) -}}
+  {{- $node_id := getv (printf "/hosts/replica/%s/node_id" .) -}}
   {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
 {{- end }}
 {{- $replList = $tmpval }}
