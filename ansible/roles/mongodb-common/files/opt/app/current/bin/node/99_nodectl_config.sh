@@ -299,7 +299,13 @@ getScalingStatus() {
 }
 
 checkConfdChange() {
+  if [ $UPGRADING_FLAG = "true" ]; then
+    log "cluster upgrading, skipping"
+    return 0
+  fi
+
   if [ ! -d /data/appctl/logs ]; then
+    # first create
     log "cluster pre-init"
     clusterPreInit
     return 0
@@ -310,7 +316,7 @@ checkConfdChange() {
     return 0
   fi
 
-  if [ $VERTICAL_SCALING_FLAG = "true" ] || [ $ADDING_HOSTS_FLAG = "true" ] || [ $DELETING_HOSTS_FLAG = "true" ] || [ $CHANGE_VXNET_FLAG = "true" ] || [ $UPGRADING_FLAG = "true" ]; then return 0; fi
+  if [ $VERTICAL_SCALING_FLAG = "true" ] || [ $ADDING_HOSTS_FLAG = "true" ] || [ $DELETING_HOSTS_FLAG = "true" ] || [ $CHANGE_VXNET_FLAG = "true" ]; then return 0; fi
   local sstatus=$(getScalingStatus)
   case $sstatus in
     "0") :;;

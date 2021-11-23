@@ -221,6 +221,7 @@ stop() {
     retry 1800 3 0 isMeNotMaster
   fi
   _stop
+  disableHealthCheck
   log "node stopped"
 }
 
