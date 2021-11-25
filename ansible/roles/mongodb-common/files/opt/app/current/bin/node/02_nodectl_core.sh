@@ -168,12 +168,11 @@ EOF
 
 msAddUserZabbix() {
   local zabbix_pass="$(getItemFromFile zabbix_pass $CONF_ZABBIX_INFO_FILE)"
-  local zabbix_user="$(getItemFromFile zabbix_user $CONF_ZABBIX_INFO_FILE)"
   local jsstr=$(cat <<EOF
 admin = db.getSiblingDB("admin")
 admin.createUser(
   {
-    user: "$zabbix_user",
+    user: "$DB_ZABBIX_USER",
     pwd: "$zabbix_pass",
     roles: [ { role: "clusterMonitor", db: "admin" } ]
   }
