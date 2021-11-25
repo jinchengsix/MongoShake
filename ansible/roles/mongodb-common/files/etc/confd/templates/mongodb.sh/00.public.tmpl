@@ -1,8 +1,9 @@
 # confd variables and funtions
 {{- $nodeRole := getv "/host/role" }}
 {{- $nodeIp := getv "/host/ip" }}
-{{- $nodePort := getv "/env/repl_node.conf.net.port" }}
+{{- $nodePort := getv "/env/replica.conf.net.port" }}
 {{- $verticalScalingFlag := "" }}
+{{- $upgradingFlag := "" }}
 {{- $changeVxnetFlag := "" }}
 {{- $addingHostsFlag := "" }}
 {{- $addingList := "" }}
@@ -20,6 +21,11 @@
   {{- $changeVxnetFlag = "true" }}
 {{- else }}
   {{- $changeVxnetFlag = "false" }}
+{{- end }}
+{{- if len (ls "/upgrade-audit") }}
+  {{- $upgradingFlag = "true" }}
+{{- else }}
+  {{- $upgradingFlag = "false" }}
 {{- end }}
 
 {{- $tmpval = "" }}
@@ -53,10 +59,10 @@
 {{- end }}
 
 # repl_node
-{{- range lsdir "/hosts/repl_node" -}}
-  {{- $ip := getv (printf "/hosts/repl_node/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/repl_node/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/repl_node/%s/node_id" .) -}}
+{{- range lsdir "/hosts/replica" -}}
+  {{- $ip := getv (printf "/hosts/replica/%s/ip" .) -}}
+  {{- $sid := getv (printf "/hosts/replica/%s/sid" .) -}}
+  {{- $node_id := getv (printf "/hosts/replica/%s/node_id" .) -}}
   {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
 {{- end }}
 {{- $replList = $tmpval }}
@@ -70,4 +76,4 @@ host_port={{ $nodePort }}
 host_service_name=mongod
 host_repl_name=foobar
 host_node_list=({{ $replList }})
-host_ctl="01_nodectl_lib,02_nodectl_core,03_nodectl_mon,04_nodectl_bs,05_nodectl_third,99_nodectl_config"
+host_ctl="01_nodectl_lib,02_nodectl_core,03_nodectl_mon,04_nodectl_bs,05_nodectl_third,06_nodectl_up,99_nodectl_config"

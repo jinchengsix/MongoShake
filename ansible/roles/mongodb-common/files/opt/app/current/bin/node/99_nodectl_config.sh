@@ -264,7 +264,13 @@ getScalingStatus() {
 }
 
 checkConfdChange() {
+  if [ $UPGRADING_FLAG = "true" ]; then
+    log "cluster upgrading, skipping"
+    return 0
+  fi
+
   if [ ! -d /data/appctl/logs ]; then
+    # first create
     log "cluster pre-init"
     clusterPreInit
     return 0

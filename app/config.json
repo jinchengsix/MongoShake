@@ -42,7 +42,7 @@
           ]
         },
         {
-          "key": "repl_node",
+          "key": "replica",
           "description": "Properties for config server node",
           "label": "Replica Node",
           "type": "array",
@@ -266,7 +266,7 @@
           "required": "no"
         },
         {
-          "key": "repl_node",
+          "key": "replica",
           "description": "The role configuration properties of the application",
           "type": "array",
           "properties": [
