@@ -1,0 +1,8 @@
+[template]
+src = "mongoshake.sh.tmpl"
+dest = "/opt/app/current/bin/tmpl/mongoshake.sh"
+mode = "0700"
+keys = [
+    "/",
+]
+reload_cmd = "/opt/app/current/bin/tmpl/mongoshake.sh; appctl reloadMongoShake"

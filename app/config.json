@@ -252,6 +252,96 @@
             "required": "no"
         },
         {
+          "key": "conf.mongodb.exporter.enabled",
+          "label": "mongodb.exporter.enabled.label",
+          "description": "mongodb.exporter.enabled.description",
+          "default": "no",
+          "type": "string",
+          "range": [
+            "yes",
+            "no"
+          ],
+          "required": "no"
+        },
+        {
+            "key": "conf.mongodb.exporter.port",
+            "label": "mongodb.exporter.port.label",
+            "description": "mongodb.exporter.port.description",
+            "default": 9001,
+            "type": "integer",
+            "min": 1025,
+            "max": 65535,
+            "required": "no"
+        },
+
+        {
+            "key": "conf.mongoshake.enabled",
+            "label": "mongoshake.enabled.label",
+            "description": "mongoshake.enabled.description",
+            "default": "no",
+            "type": "string",
+            "range": [
+              "yes",
+              "no"
+            ],
+            "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.type",
+          "label": "mongoshake.type.label",
+          "description": "mongoshake.type.description",
+          "default": "all",
+          "type": "string",
+          "range": [
+            "all",
+            "document",
+            "oplog"
+          ],
+          "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.source",
+          "label": "mongoshake.source.label",
+          "description": "mongoshake.source.description",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.source.user",
+          "label": "mongoshake.source.user.label",
+          "description": "mongoshake.source.user.description",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.source.password",
+          "label": "mongoshake.source.password.label",
+          "description": "mongoshake.source.password.description",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.destination",
+          "label": "mongoshake.destination.label",
+          "description": "mongoshake.destination.description",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.destination.user",
+          "label": "mongoshake.destination.user.label",
+          "description": "mongoshake.destination.user.description",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "conf.mongoshake.destination.password",
+          "label": "mongoshake.destination.password.label",
+          "description": "mongoshake.destination.password.description",
+          "type": "string",
+          "required": "no"
+        },
+        {
           "key": "conf.caddy.user",
           "label": "caddy-user",
           "description": "username for caddy-server",

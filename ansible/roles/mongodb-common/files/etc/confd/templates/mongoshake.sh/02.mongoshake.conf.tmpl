@@ -1,0 +1,8 @@
+#源端连接串信息，逗号分隔不同的mongod
+mongo_urls = mongodb://{{ getv "/env/conf.mongoshake.source.user" }}:{{ getv "/env/conf.mongoshake.source.password" }}@{{ getv "/env/conf.mongoshake.source" }}
+
+# all 表示全量+增量，document表示仅全量，oplog表示仅增量
+sync_mode = {{ getv "/env/conf.mongoshake.type" }}
+
+#目的端连接串信息，逗号分隔不同的mongod
+tunnel.address = mongodb://{{ getv "/env/conf.mongoshake.destination.user" }}:{{ getv "/env/conf.mongoshake.destination.password" }}@{{ getv "/env/conf.mongoshake.destination" }}
