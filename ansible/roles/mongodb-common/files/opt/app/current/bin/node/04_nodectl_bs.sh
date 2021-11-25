@@ -1,5 +1,5 @@
 backup() {
-  log "star backup"
+  log "start backup"
   # set backup flag
   touch $BACKUP_FLAG_FILE
 }
@@ -43,13 +43,15 @@ doWhenRestoreRepl() {
   log "restore step 6 , cnt :$cnt , nodeList: $NODE_LIST"
   local ip=$(getIp ${NODE_LIST[0]})
   log "restore step 7 , ip: $ip"
-  if [ ! $ip = "$MY_IP" ]; then
+  if [ ! $ip = $MY_IP ]; then
   log "restore step 8"
     rm -rf $MONGODB_DATA_PATH/*
     _start
     return 0
   fi
 
+  # 先杀掉mongo进程
+  # kill `netstat -nultp | grep mongod | awk '{print $7}' | awk -F "/" '{print $1}'`   || :
   # start mongod in admin mode
   shellStartMongodForAdmin
 
@@ -58,7 +60,7 @@ doWhenRestoreRepl() {
 
   # change qc_master and zabbix's passowrd
   local newpass=$(cat $DB_QC_LOCAL_PASS_FILE)
-  local zabbix_pass=$(getItemFromFile zabbix_pass $CONF_INFO_FILE.new)
+  local zabbix_pass=$(getItemFromFile zabbix_pass $CONF_ZABBIX_INFO_FILE)
   jsstr=$(cat <<EOF
 mydb = db.getSiblingDB("admin");
 mydb.changeUserPassword("$DB_QC_USER", "$newpass");
@@ -123,9 +125,6 @@ postRestore() {
   doWhenReplPostRestore
   rm -rf $BACKUP_FLAG_FILE
   enableHealthCheck
-  # refresh zabbix's status
-  updateZabbixConf
-  refreshZabbixAgentStatus
 }
 
 
@@ -202,14 +201,21 @@ EOF
 getBackupNodeId() {
   log "start getBackupNodeId"
 
-  local ip=$(getIp ${NODE_LIST[0]})
-  if [ ! $ip = "$MY_IP" ]; then return 0; fi
   local cnt=${#NODE_LIST[@]}
-  local tmpstr=""
-  local tmpip
-  for((i=0;i<$cnt;i++)); do
-    tmpstr="$tmpstr,$(getNodeId ${NODE_LIST[i]})"
-  done
-  tmpstr="${tmpstr:1}"
-  echo $tmpstr
+  local tmpip=""
+
+  if [ $cnt -eq 1 ] ; then 
+    # 如果是单节点 就直接返回节点id
+    echo "$(getNodeId ${NODE_LIST[0]})"
+    return 0
+  else
+    for((i=0;i<$cnt;i++)); do
+      tmpip=$(getIp ${NODE_LIST[i]})
+      # 返回 hidden 节点的id
+      if msIsHostHidden "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
+        echo "$(getNodeId ${NODE_LIST[i]})"
+        return 0
+      fi
+    done
+  fi
 }

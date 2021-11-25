@@ -27,10 +27,12 @@ NODE_FIRST_CREATE_FLAG_FILE=/data/appctl/data/node.first.create.flag
 REPL_MONITOR_ITEM_FILE=/opt/app/current/bin/node/repl.monitor
 HEALTH_CHECK_FLAG_FILE=/data/appctl/data/health.check.flag
 BACKUP_FLAG_FILE=/data/appctl/data/backup.flag
-CONF_ZABBIX_INFO_FILE=/data/appctl/data/conf.zabbix
+CONF_ZABBIX_INFO_FILE=/opt/app/current/bin/envs/zabbix.env
+
 CONF_CADDY_INFO_FILE=/etc/caddy/Caddyfile
-CONF_CADDY_ENV_INFO_FILE=/data/appctl/data/conf.caddy
-CONF_NODE_EXPORTER_FILE=/data/appctl/data/conf.node_exporter
+CONF_CADDY_ENV_INFO_FILE=/opt/app/current/bin/envs/caddy.env
+CONF_NODE_EXPORTER_FILE=/opt/app/current/bin/envs/node_exporter.env
+
 ZABBIX_CONF_PATH=/etc/zabbix
 ZABBIX_LOG_PATH=/data/zabbix-log
 

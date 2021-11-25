@@ -69,7 +69,14 @@ scaleOut() {
 addNodeForRepl() {
   local cnt=${#ADDING_LIST[@]}
   local jsstr=""
+  local num=${#NODE_LIST[@]}
+
   for((i=0;i<$cnt;i++)); do
+    if [ $((num-cnt)) -eq 1 ] && [ $i -eq 0 ]; then 
+      tmpstr="{host:\"$(getIp ${ADDING_LIST[i]}):$MY_PORT\",priority: 0, hidden: true}"
+      jsstr="$jsstr;rs.add($tmpstr)"
+      continue
+    fi
     tmpstr="{host:\"$(getIp ${ADDING_LIST[i]}):$MY_PORT\",priority: 1}"
     jsstr="$jsstr;rs.add($tmpstr)"
   done
@@ -84,7 +91,7 @@ deleteNodeForRepl() {
   for((i=0;i<$cnt;i++)); do
     local deleteIp=$(getIp ${DELETING_LIST[i]})
     log "scaleIn step 3, deleteIp:$deleteIp"
-    runMongoCmd "rs.remove($deleteIp):$MY_PORT" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    runMongoCmd "rs.remove(\"$deleteIp:$MY_PORT\")" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   done
 
 }
@@ -238,48 +245,6 @@ EOF
   fi
 }
 
-doWhenReplConfChanged() {
-  if diff $CONF_INFO_FILE $CONF_INFO_FILE.new; then return 0; fi
-  local rlist=($(getRollingList))
-  local cnt=${#rlist[@]}
-  local tmpcnt
-  local tmpip
-  tmpip=$(getIp ${rlist[0]})
-  if [ ! $tmpip = "$MY_IP" ]; then log "$MY_ROLE: skip changing configue"; return 0; fi
-
-  if isMongodNeedRestart; then
-    # oplogSizeMB check first
-    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep oplogSizeMB | wc -l) || :
-    if (($tmpcnt > 0)); then
-      for((i=0;i<$cnt;i++)); do
-        tmpip=$(getIp ${rlist[i]})
-        ssh root@$tmpip "appctl msReplChangeOplogSize"
-      done
-    fi
-
-    log "rolling restart mongod.service"
-    for((i=0;i<$cnt;i++)); do
-      tmpip=$(getIp ${rlist[i]})
-      if msIsHostMaster "$tmpip:$MY_PORT" -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
-        msForceStepDown -H $tmpip -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
-      fi
-      ssh root@$tmpip "appctl updateMongoConf && systemctl restart mongod.service"
-      retry 60 3 0 msIsReplStatusOk $cnt -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
-    done
-  else
-    for((i=0;i<$cnt;i++)); do
-      tmpip=$(getIp ${rlist[i]})
-      ssh root@$tmpip "appctl msReplChangeConf && appctl updateMongoConf"
-    done
-  fi
-}
-
-doWhenZabbixConfChanged() {
-  if diff $CONF_ZABBIX_INFO_FILE $CONF_ZABBIX_INFO_FILE.new; then return 0; fi
-  updateZabbixConf
-  refreshZabbixAgentStatus
-}
-
 # check if node is scaling
 # 1: scaleIn
 # 0: no change
@@ -326,7 +291,7 @@ checkConfdChange() {
   
   # config changed
   # do something
-  
+  doWhenReplConfChanged
 }
 
 doWhenReplConfChanged() {
