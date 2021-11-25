@@ -58,13 +58,13 @@ doWhenRestoreRepl() {
   local jsstr
   retry 60 3 0 msGetHostDbVersion -P $NET_MAINTAIN_PORT
 
-  # change qc_master and zabbix's passowrd
+  # change qc_master and qc_monitor's passowrd
   local newpass=$(cat $DB_QC_LOCAL_PASS_FILE)
-  local zabbix_pass=$(getItemFromFile zabbix_pass $CONF_ZABBIX_INFO_FILE)
+  local monitor_pass=$(getItemFromFile monitor_pass $CONF_INFO_FILE)
   jsstr=$(cat <<EOF
 mydb = db.getSiblingDB("admin");
 mydb.changeUserPassword("$DB_QC_USER", "$newpass");
-mydb.changeUserPassword("$DB_ZABBIX_USER", "$zabbix_pass");
+mydb.changeUserPassword("$DB_MONITOR_USER", "$monitor_pass");
 EOF
   )
   runMongoCmd "$jsstr" -P $NET_MAINTAIN_PORT

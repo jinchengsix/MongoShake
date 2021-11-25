@@ -16,7 +16,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-pzijcows"
+            "image": "img-9659ztgg"
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},
@@ -266,8 +266,8 @@
    }],
    "env": {
         "conf.userPass": {{env.conf.userPass}},
+        "conf.monitor.userPass": {{env.conf.monitor.userPass}},
         "conf.storage.engine": {{env.conf.storage.engine}},
-        "conf.zabbix.userPass": {{env.conf.zabbix.userPass}},
         "conf.zabbix.server.addr": {{env.conf.zabbix.server.addr}},
         "conf.zabbix.agent.port": {{env.conf.zabbix.agent.port}},
         "conf.zabbix.agent.enabled": {{env.conf.zabbix.agent.enabled}},

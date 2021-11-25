@@ -1,7 +1,3 @@
-changeConf() {
-  :
-}
-
 scaleInPreCheck() {
   log "scaleInPreCheck step 1, myIp:$MY_IP "
 
@@ -176,17 +172,30 @@ EOF
   log "replication.oplogSizeMB changed"
 }
 
-# change zabbix_pass
-msReplChangeZabbixPass() {
-  if ! isMeMaster; then log "change zabbix_pass, skip"; return 0; fi
-  local zabbix_pass="$(getItemFromFile zabbix_pass $CONF_INFO_FILE.new)"
+# change user_pass(root)
+msReplChangeRootPass() {
+  if ! isMeMaster; then log "change DB_ROOT_PWD, skip"; return 0; fi
+  local user_pass=$(getItemFromFile user_pass $CONF_INFO_FILE.new)
   local jsstr=$(cat <<EOF
 admin = db.getSiblingDB("admin")
-admin.changeUserPassword("$DB_ZABBIX_USER", "$zabbix_pass")
+admin.changeUserPassword("$DB_ROOT_USER", "$user_pass")
 EOF
   )
   runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
-  log "user zabbix's password has been changed"
+  log "user $DB_ROOT_USER's password has been changed"
+}
+
+# change monitor_pass
+msReplChangeMonitorPass() {
+  if ! isMeMaster; then log "change DB_MONITOR_PWD, skip"; return 0; fi
+  local monitor_pass=$(getItemFromFile monitor_pass $CONF_INFO_FILE.new)
+  local jsstr=$(cat <<EOF
+admin = db.getSiblingDB("admin")
+admin.changeUserPassword("$DB_MONITOR_USER", "$monitor_pass")
+EOF
+  )
+  runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+  log "user $DB_MONITOR_USER's password has been changed"
 }
 
 # change conf according to $CONF_INFO_FILE.new
@@ -198,10 +207,17 @@ msReplChangeConf() {
   local operationProfiling_mode_code
   local operationProfiling_slowOpThresholdMs
 
-  # zabbix_pass
-  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep zabbix_pass | wc -l) || :
+  # user_pass (root)
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep user_pass | wc -l) || :
   if (($tmpcnt > 0)); then
-    msReplChangeZabbixPass
+    msReplChangeRootPass
+    return 0
+  fi
+
+  # monitor_pass
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep monitor_pass | wc -l) || :
+  if (($tmpcnt > 0)); then
+    msReplChangeMonitorPass
     return 0
   fi
 
@@ -289,8 +305,7 @@ checkConfdChange() {
     "2") return 0;;
   esac
   
-  # config changed
-  # do something
+  # replicaset config changed
   doWhenReplConfChanged
 }
 

@@ -27,7 +27,6 @@ NODE_FIRST_CREATE_FLAG_FILE=/data/appctl/data/node.first.create.flag
 REPL_MONITOR_ITEM_FILE=/opt/app/current/bin/node/repl.monitor
 HEALTH_CHECK_FLAG_FILE=/data/appctl/data/health.check.flag
 BACKUP_FLAG_FILE=/data/appctl/data/backup.flag
-CONF_ZABBIX_INFO_FILE=/opt/app/current/bin/envs/zabbix.env
 
 CONF_CADDY_INFO_FILE=/etc/caddy/Caddyfile
 CONF_CADDY_ENV_INFO_FILE=/opt/app/current/bin/envs/caddy.env
@@ -297,18 +296,3 @@ processManagement:
   fork: true
 MONGO_CONF
 }
-
-# createZabbixConf() {
-#   local zServer=$(getItemFromFile Server $CONF_ZABBIX_INFO_FILE)
-#   local zListenPort=$(getItemFromFile ListenPort $CONF_ZABBIX_INFO_FILE)
-#   cat > $ZABBIX_CONF_PATH/zabbix_agent2.conf <<ZABBIX_CONF
-# PidFile=/var/run/zabbix/zabbix_agent2.pid
-# LogFile=/data/zabbix-log/zabbix_agent2.log
-# LogFileSize=50
-# Server=$zServer
-# #ServerActive=127.0.0.1
-# ListenPort=$zListenPort
-# Include=/etc/zabbix/zabbix_agent2.d/*.conf
-# UnsafeUserParameters=1
-# ZABBIX_CONF
-# }

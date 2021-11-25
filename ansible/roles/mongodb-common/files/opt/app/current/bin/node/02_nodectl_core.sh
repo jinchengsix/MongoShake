@@ -154,14 +154,14 @@ EOF
   runMongoCmd "$jsstr" $@
 }
 
-msAddUserZabbix() {
-  local zabbix_pass="$(getItemFromFile zabbix_pass $CONF_ZABBIX_INFO_FILE)"
+msAddUserMonitor() {
+  local monitor_pass="$(getItemFromFile monitor_pass $CONF_INFO_FILE)"
   local jsstr=$(cat <<EOF
 admin = db.getSiblingDB("admin")
 admin.createUser(
   {
-    user: "$DB_ZABBIX_USER",
-    pwd: "$zabbix_pass",
+    user: "$DB_MONITOR_USER",
+    pwd: "$monitor_pass",
     roles: [ { role: "clusterMonitor", db: "admin" } ]
   }
 )
@@ -202,7 +202,7 @@ init() {
   log "add root user"
   retry 60 3 0 msAddUserRoot -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "add zabbix user"
-  retry 60 3 0 msAddUserZabbix -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+  retry 60 3 0 msAddUserMonitor -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "update QingCloudControl database"
   msUpdateQingCloudControl -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "init replicaset done"
