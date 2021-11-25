@@ -1,7 +1,9 @@
+tmp_caddy_user={{ getv "/env/conf.caddy.user" }}
+tmp_caddy_pwd=$(caddy hash-password --plaintext "{{ getv "/env/conf.caddy.password"}}")
 flush > /etc/caddy/Caddyfile <<CADDY_CONF
 :8000 {
     basicauth {
-        $CaddyUser $(caddy hash-password --plaintext $CaddyPwd)
+        $tmp_caddy_user $tmp_caddy_pwd
     }
     file_server {
         root  /data/mongodb-logs

@@ -25,9 +25,7 @@ reloadNodeExporter() {
 }
 
 reloadCaddy() {
-  log "start to reload caddy"
-  local cEnabled=$(getItemFromFile cEnabled $CONF_CADDY_ENV_INFO_FILE)
-  if [ $cEnabled = "yes" ]; then
+  if [ $CADDY_ENABLED = "yes" ]; then
     caddy start --config $CONF_CADDY_INFO_FILE
     log "caddy restarted"
   else
