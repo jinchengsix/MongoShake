@@ -77,11 +77,8 @@ start() {
   updateHostsInfo
   updateMongoConf
   _start
-  if ! isNodeFirstCreate; then enableHealthCheck; fi
+  enableHealthCheck
   clearNodeFirstCreateFlag
-  # start zabbix-agent2
-  # updateZabbixConf
-  # refreshZabbixAgentStatus
 }
 
 ########## init ##########
