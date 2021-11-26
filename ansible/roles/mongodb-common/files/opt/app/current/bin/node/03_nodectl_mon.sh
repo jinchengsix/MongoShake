@@ -4,6 +4,51 @@ isSingleThread() {
   test $tmpcnt -eq 2
 }
 
+# remove " from jq results
+moRmQuotation() {
+  echo $@ | sed 's/"//g'
+}
+
+# remove " from jq results and calculate MB value
+moRmQuotationMB() {
+  local tmpstr=$(echo $@ | sed 's/"//g')
+  echo "scale=0;$tmpstr/1024/1024" | bc
+}
+
+# calculate timespan, unit: minute
+# scale_factor_when_display=0.1
+moCalcTimespan() {
+  local tmpstr=$(echo $@)
+  local res=$(echo "scale=0;($tmpstr)/6" | sed 's/ /-/g' | bc | sed 's/-//g')
+  echo $res
+}
+
+# unit "%"
+# scale_factor_when_display=0.1
+moCalcPer() {
+  local type=$1
+  shift
+  local tmpstr=$(echo $@ | sed 's/"//g')
+  local divisor
+  local dividend
+  local res
+  if [ "$type" = 1 ]; then
+    divisor=${tmpstr% *}
+    dividend=${tmpstr##* }
+    res=$(echo "scale=0;($divisor)*1000/$dividend" | sed 's/ /+/g' | bc)
+  else
+    divisor=${tmpstr%% *}
+    dividend=${tmpstr#* }
+    res=$(echo "scale=0;$divisor*1000/($dividend)" | sed 's/ /+/g' | bc)
+  fi
+  echo $res
+}
+
+msGetServerStatusForMonitor() {
+  local tmpstr=$(runMongoCmd "JSON.stringify(db.serverStatus({\"repl\":1}))" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE))
+  echo "$tmpstr"
+}
+
 monitor() {
   if ! isSingleThread monitor; then log "a monitor is already running!"; return 1; fi
   local monpath=$REPL_MONITOR_ITEM_FILE
@@ -48,48 +93,24 @@ healthCheck() {
   return 0
 }
 
-
-# remove " from jq results
-moRmQuotation() {
-  echo $@ | sed 's/"//g'
-}
-
-# remove " from jq results and calculate MB value
-moRmQuotationMB() {
-  local tmpstr=$(echo $@ | sed 's/"//g')
-  echo "scale=0;$tmpstr/1024/1024" | bc
-}
-
-# calculate timespan, unit: minute
-# scale_factor_when_display=0.1
-moCalcTimespan() {
-  local tmpstr=$(echo $@)
-  local res=$(echo "scale=0;($tmpstr)/6" | sed 's/ /-/g' | bc | sed 's/-//g')
-  echo $res
-}
-
-# unit "%"
-# scale_factor_when_display=0.1
-moCalcPer() {
-  local type=$1
-  shift
-  local tmpstr=$(echo $@ | sed 's/"//g')
-  local divisor
-  local dividend
-  local res
-  if [ "$type" = 1 ]; then
-    divisor=${tmpstr% *}
-    dividend=${tmpstr##* }
-    res=$(echo "scale=0;($divisor)*1000/$dividend" | sed 's/ /+/g' | bc)
+revive() {
+  if ! isSingleThread revive; then log "a revive is already running!"; return 1; fi
+  log "invoke revive"
+  local srv=$(echo $SERVICES | cut -d'/' -f1).service
+  local port=$(echo $SERVICES | cut -d':' -f2)
+  if ! systemctl is-active $srv -q; then
+    systemctl restart $srv
+    log "$srv has been restarted!"
   else
-    divisor=${tmpstr%% *}
-    dividend=${tmpstr#* }
-    res=$(echo "scale=0;$divisor*1000/($dividend)" | sed 's/ /+/g' | bc)
+    if [ ! $MY_ROLE = "mongos_node" ]; then
+      if [ ! $(lsof -b -i -s TCP:LISTEN | grep ':'$port | wc -l) = "1" ]; then
+        log "port $port is not listened! do nothing"
+      elif msIsReplOther -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+        systemctl restart $srv
+        log "status: OTHER, $srv has been restarted!"
+      else
+        log "status: NOT OTHER, do nothing"
+      fi
+    fi
   fi
-  echo $res
-}
-
-msGetServerStatusForMonitor() {
-  local tmpstr=$(runMongoCmd "JSON.stringify(db.serverStatus({\"repl\":1}))" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE))
-  echo "$tmpstr"
 }

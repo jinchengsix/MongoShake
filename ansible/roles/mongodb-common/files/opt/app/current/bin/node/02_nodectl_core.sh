@@ -162,7 +162,7 @@ admin.createUser(
   {
     user: "$DB_MONITOR_USER",
     pwd: "$monitor_pass",
-    roles: [ { role: "clusterMonitor", db: "admin" } ]
+    roles: [ { role: "clusterMonitor", db: "admin" }, { role: "read", db: "local" } ]
   }
 )
 EOF
