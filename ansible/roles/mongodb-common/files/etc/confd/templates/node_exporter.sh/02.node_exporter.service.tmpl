@@ -1,0 +1,19 @@
+flush > /etc/systemd/system/node_exporter.service <<NODE_EXPORTER_SERVICE
+[Unit]
+Description=Node Exporter
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+ExecStart=/usr/bin/node_exporter --web.listen-address=":$NODE_EXPORTER_PORT"
+
+SyslogIdentifier=Node_exporter
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
+NODE_EXPORTER_SERVICE

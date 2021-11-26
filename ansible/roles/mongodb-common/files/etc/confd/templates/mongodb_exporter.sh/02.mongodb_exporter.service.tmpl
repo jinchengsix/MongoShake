@@ -1,0 +1,28 @@
+flush > /etc/systemd/system/mongodb_exporter.service <<MONGODB_EXPORTER_SERVICE
+[Unit]
+Description=MongoDB Exporter
+After=network-online.target
+StartLimitInterval=0
+
+[Service]
+Type=simple
+User=root
+Group=root
+
+ExecStart=/usr/bin/mongodb_exporter --mongodb.uri=mongodb://qc_monitor:{{ getv "/env/conf.monitor.userPass" }}@localhost:27017 --web.listen-address=:{{ getv "/env/conf.mongodb.exporter.port" }}
+
+SyslogIdentifier=mongodb_exporter
+Restart=always
+RestartSec=1
+
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+ProtectSystem=strict
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=yes
+
+[Install]
+WantedBy=multi-user.target
+MONGODB_EXPORTER_SERVICE
