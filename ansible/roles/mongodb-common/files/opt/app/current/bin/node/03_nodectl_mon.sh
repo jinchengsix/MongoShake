@@ -102,15 +102,13 @@ revive() {
     systemctl restart $srv
     log "$srv has been restarted!"
   else
-    if [ ! $MY_ROLE = "mongos_node" ]; then
-      if [ ! $(lsof -b -i -s TCP:LISTEN | grep ':'$port | wc -l) = "1" ]; then
-        log "port $port is not listened! do nothing"
-      elif msIsReplOther -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
-        systemctl restart $srv
-        log "status: OTHER, $srv has been restarted!"
-      else
-        log "status: NOT OTHER, do nothing"
-      fi
+    if [ ! $(lsof -b -i -s TCP:LISTEN | grep ':'$port | wc -l) = "1" ]; then
+      log "port $port is not listened! do nothing"
+    elif msIsReplOther -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then
+      systemctl restart $srv
+      log "status: OTHER, $srv has been restarted!"
+    else
+      log "status: NOT OTHER, do nothing"
     fi
   fi
 }

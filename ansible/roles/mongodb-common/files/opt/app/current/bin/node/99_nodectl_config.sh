@@ -92,10 +92,6 @@ deleteNodeForRepl() {
 
 }
 
-changeVxnet() {
-:
-}
-
 clusterPreInit() {
   # folder
   mkdir -p $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH

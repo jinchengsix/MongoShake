@@ -83,7 +83,7 @@
             }
         },
         "monitor":{
-            "enable": false,
+            "enable": true,
             "cmd": "appctl monitor",
             "items": {
                 "op-insert": {
@@ -212,11 +212,149 @@
                     "statistics_type": "delta",
                     "scale_factor_when_display": 1
                 },
+                "WT-write-out": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "WT-write-available": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "WT-read-out": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "WT-read-available": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "repl-lag": {
+                    "unit": "minute",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 0.1
+                },
                 "conn-usage": {
                     "unit": "%",
                     "value_type": "int",
                     "statistics_type": "latest",
                     "scale_factor_when_display": 0.1
+                },
+                "scanAndOrder": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "writeConflicts": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "wiredTiger-cache-usage": {
+                    "unit": "%",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 0.1
+                },
+                "wiredTiger-cache-dirty-usage": {
+                    "unit": "%",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 0.1
+                },
+                "doc-deleted": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "doc-inserted": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "doc-returned": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "doc-updated": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "scannedKeys": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "scannedDocs": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "deletedDocuments": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "passes": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "delta",
+                    "scale_factor_when_display": 1
+                },
+                "clients-total": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "clients-readers": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "clients-writers": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "queue-total": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "queue-readers": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
+                },
+                "queue-writers": {
+                    "unit": "",
+                    "value_type": "int",
+                    "statistics_type": "latest",
+                    "scale_factor_when_display": 1
                 }
             },
             "groups": {
@@ -248,14 +386,62 @@
                 "network": [
                     "network-bytesIn",
                     "network-bytesOut"
+                ],
+                                "wiredTiger-concurrentTransactions": [
+                    "WT-write-out",
+                    "WT-write-available",
+                    "WT-read-out",
+                    "WT-read-available"
+                ],
+                "metrics-operation": [
+                    "scanAndOrder",
+                    "writeConflicts"
+                ],
+                "wiredTiger-cache": [
+                    "wiredTiger-cache-usage",
+                    "wiredTiger-cache-dirty-usage"
+                ],
+                "metrics-document": [
+                    "doc-deleted",
+                    "doc-inserted",
+                    "doc-returned",
+                    "doc-updated"
+                ],
+                "metrics-queryExecutor": [
+                    "scannedKeys",
+                    "scannedDocs"
+                ],
+                "metrics-ttl": [
+                    "deletedDocuments",
+                    "passes"
+                ],
+                "globalLock-activeClients": [
+                    "clients-total",
+                    "clients-readers",
+                    "clients-writers"
+                ],
+                "globalLock-currentQueue": [
+                    "queue-total",
+                    "queue-readers",
+                    "queue-writers"
                 ]
             },
             "display": [
                 "opcounters",
+                "opcountersRepl",
                 "connections",
                 "metrics-cursor",
                 "network",
-                "conn-usage"
+                "wiredTiger-concurrentTransactions",
+                "repl-lag",
+                "conn-usage",
+                "metrics-operation",
+                "wiredTiger-cache",
+                "metrics-document",
+                "metrics-queryExecutor",
+                "metrics-ttl",
+                "globalLock-activeClients",
+                "globalLock-currentQueue"
             ],
             "alarm": [
                 "connections-current",
@@ -326,7 +512,7 @@
         }
    },
    "health_check":{
-        "enable": false,
+        "enable": true,
         "interval_sec": 60,
         "timeout_sec": 30,
         "action_timeout_sec": 30,

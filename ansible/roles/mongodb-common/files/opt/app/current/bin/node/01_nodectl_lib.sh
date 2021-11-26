@@ -173,6 +173,12 @@ msIsReplStatusOk() {
   test $((pcnt+scnt)) -eq $allcnt
 }
 
+msIsReplOther() {
+  local res=$(runMongoCmd "JSON.stringify(rs.status())" $@ | jq .ok)
+  if [ -z "$res" ] || [ $res -eq 0 ]; then return 0; fi
+  return 1
+}
+
 getNodesOrder() {
   local tmpstr
   local cnt
