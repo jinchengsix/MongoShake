@@ -79,7 +79,7 @@
     opts:
       pkg_name: mongodb
       pkg_version: "{{ mongodb_version }}"
-      pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-{{ mongodb_version }}.tgz
+      pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-{{ mongodb_version }}.tgz
       pkg_type: tgz
       creates: bin
       extracts: yes

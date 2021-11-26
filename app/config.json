@@ -294,8 +294,8 @@
           "type": "string",
           "range": [
             "all",
-            "document",
-            "oplog"
+            "full",
+            "incr"
           ],
           "required": "no"
         },
@@ -304,6 +304,7 @@
           "label": "mongoshake.source.label",
           "description": "mongoshake.source.description",
           "type": "string",
+          "default": "127.0.0.1:27017",
           "required": "no"
         },
         {
@@ -311,13 +312,15 @@
           "label": "mongoshake.source.user.label",
           "description": "mongoshake.source.user.description",
           "type": "string",
+          "default": "root",
           "required": "no"
         },
         {
           "key": "conf.mongoshake.source.password",
           "label": "mongoshake.source.password.label",
           "description": "mongoshake.source.password.description",
-          "type": "string",
+          "type": "password",
+          "default": "Change1Pwd",
           "required": "no"
         },
         {
@@ -325,6 +328,7 @@
           "label": "mongoshake.destination.label",
           "description": "mongoshake.destination.description",
           "type": "string",
+          "default": "127.0.0.1:27017",
           "required": "no"
         },
         {
@@ -332,13 +336,15 @@
           "label": "mongoshake.destination.user.label",
           "description": "mongoshake.destination.user.description",
           "type": "string",
+          "default": "root",
           "required": "no"
         },
         {
           "key": "conf.mongoshake.destination.password",
           "label": "mongoshake.destination.password.label",
           "description": "mongoshake.destination.password.description",
-          "type": "string",
+          "type": "password",
+          "default": "Change1Pwd",
           "required": "no"
         },
         {

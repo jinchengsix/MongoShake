@@ -35,7 +35,8 @@ reloadCaddy() {
 reloadMongoDBExporter () {
   log "start to reload mongodb_exporter"
   if [ $MONGODB_EXPORTER_ENABLED = "yes" ]; then
-    nohup /usr/bin/mongodb_exporter --mongodb.uri=mongodb://$DB_MONITOR_USER:$DB_MONITOR_PWD@localhost:27017 --web.listen-address=:$MONGODB_EXPORTER_PORT &
+    kill `netstat -nultp | grep mongodb_exporter | awk '{print $7}' | awk -F "/" '{print $1}'`   || :
+    nohup /usr/bin/mongodb_exporter --mongodb.uri=mongodb://$DB_MONITOR_USER:$DB_MONITOR_PWD@localhost:$MY_PORT --web.listen-address=:$MONGODB_EXPORTER_PORT &
     log "mongodb_exporter restarted"
   else
     kill `netstat -nultp | grep $MONGODB_EXPORTER_PORT | awk '{print $7}' | awk -F "/" '{print $1}'`   || :
@@ -44,8 +45,13 @@ reloadMongoDBExporter () {
 }
 
 reloadMongoShake() {
-
-
-
+  log "start to reload mongoshake"
+  kill `netstat -nultp | grep collector.li | awk '{print $7}' | awk -F "/" '{print $1}'`   || :
+  if [ $MONGOSHAKE_ENABLED = "yes" ]; then
+    touch $MONGOSHAKE_FLAG_FILE
+    nohup /opt/mongo-shake/current/mongo-shake-v2.6.5/collector.linux -conf=$CONF_MONGOSHAKE_FILE &
+    log "mongoshake started"
+  fi
+  rm -rf $MONGOSHAKE_FLAG_FILE || : 
 
 }
