@@ -73,7 +73,22 @@ changeMemberNetPort() {
   msUpdateReplCfgWhenUpgrade "$newlist"
 }
 
+checkDiskUsage() {
+  local tmpstr=$(df /data | tail -n1 | sed 's/\s\+/ /g' | cut -d' ' -f4)
+  local size=$(echo "$tmpstr/1024/1024" | bc)
+  if [ $size -le 20 ]; then
+    return 1
+  fi
+
+  return 0
+}
+
 upgrade() {
+  log "check disk usage"
+  if ! checkDiskUsage; then
+    log "Not enough disk space"
+    return $ERR_UPGRADE_DISK_SPACE
+  fi
   log "upgrade: init folders and files"
   clusterPreInit
   mkdir -p /data/upback34 && cp /data/pitrix.pwd /data/mongod_env /data/upback34

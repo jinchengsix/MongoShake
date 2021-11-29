@@ -68,6 +68,18 @@ changeReplNodeNetInfo() {
   shellStopMongodForAdmin
 }
 
+refreshOplogSize() {
+  local rlist=($(getRollingList))
+  local cnt=${#rlist[@]}
+  local tmpip
+  tmpip=$(getIp ${rlist[0]})
+  if [ ! $tmpip = "$MY_IP" ]; then log "$MY_ROLE: skip refresh oplog"; return 0; fi
+  for((i=0;i<$cnt;i++)); do
+    tmpip=$(getIp ${rlist[i]})
+    ssh root@$tmpip "appctl msReplChangeOplogSize"
+  done
+}
+
 start() {
   if [ $CHANGE_VXNET_FLAG = "true" ]; then
     changeReplNodeNetInfo
@@ -77,6 +89,11 @@ start() {
   updateHostsInfo
   updateMongoConf
   _start
+  if [ $UPGRADING_FLAG = "true" ]; then
+    retry 60 3 0 msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    refreshOplogSize
+  fi
+
   if ! isNodeFirstCreate; then enableHealthCheck; fi
   clearNodeFirstCreateFlag
 }
