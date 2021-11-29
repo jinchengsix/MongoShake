@@ -45,8 +45,14 @@ reloadMongoDBExporter () {
 
 reloadMongoShake() {
   log "start to reload mongoshake"
-
+  # 当副本数量大于1时， mongoshake只能在hidden节点上开启
+  local cnt=${#NODE_LIST[@]}
   if [ $MONGOSHAKE_ENABLED = "yes" ]; then
+    if [ "$cnt" -gt 1 ]; then
+      if ! msIsHostHidden "$MY_IP:$MY_PORT" -H $MY_IP -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
+        return $ERR_MONGOSHAKE_ON_HIDDEN
+      fi
+    fi
     touch $MONGOSHAKE_FLAG_FILE
     systemctl restart mongoshake.service || :
     log "mongoshake started"

@@ -59,6 +59,18 @@
       creates: bin
       extracts: yes
 
+- name: install mongodb exporter binaries
+  include_role:
+    name: install-1.0.6
+  vars:
+    opts:
+      pkg_name: mongodb_exporter
+      pkg_version: "{{ mongodb_exporter_version }}"
+      pkg_url: https://github.com/percona/mongodb_exporter/releases/download/v{{ mongodb_exporter_version }}/mongodb_exporter-{{ mongodb_exporter_version }}.linux-amd64.tar.gz
+      pkg_type: tar.gz
+      creates: bin
+      extracts: yes
+
 - name: install node exporter binaries
   include_role:
     name: install-1.0.6
@@ -96,6 +108,9 @@
 - name: modify /opt/app/current/bin/ctl.sh
   shell: sed -i 's/local f; for f in $(find \/opt\/app\/current\/bin\/node\/ -name "$fileNames.sh"); do . $f; done/local f; for f in $(eval echo "{$fileNames}.sh"); do . \/opt\/app\/current\/bin\/node\/$f; done/' /opt/app/current/bin/ctl.sh
   
+- name: cp command
+  shell: cp /opt/mongo-shake/current/mongo-shake-v2.6.5/collector.linux /usr/bin/mongoshake; cp /opt/node_exporter/current/node_exporter-1.2.2.linux-amd64/node_exporter /usr/bin/node_exporter; cp /opt/mongodb_exporter/current/mongodb_exporter-0.20.9.linux-amd64/mongodb_exporter /usr/bin/mongodb_exporter
+
 - name: install confd files
   include_role:
     name: confd-files-1.1.0
