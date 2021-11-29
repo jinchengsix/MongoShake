@@ -77,7 +77,7 @@ start() {
   updateHostsInfo
   updateMongoConf
   _start
-  enableHealthCheck
+  if ! isNodeFirstCreate; then enableHealthCheck; fi
   clearNodeFirstCreateFlag
 }
 
@@ -185,6 +185,7 @@ EOF
 }
 
 init() {
+  enableHealthCheck
   # except scaleIn and scaleOut
   if [ $ADDING_HOSTS_FLAG = "true" ] || [ $DELETING_HOSTS_FLAG = "true" ] ; then return 0; fi
   
@@ -203,7 +204,6 @@ init() {
   log "update QingCloudControl database"
   msUpdateQingCloudControl -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "init replicaset done"
-  enableHealthCheck
 }
 
 ########## stop ##########
