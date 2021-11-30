@@ -12,26 +12,26 @@
     name: ['ca-certificates']
     state: latest
 
-# - name: install zabbix repo config
-#   shell: cd /tmp ;wget https://repo.zabbix.com/zabbix/5.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.4-1+ubuntu20.04_all.deb && dpkg -i zabbix-release_5.4-1+ubuntu20.04_all.deb; apt update
+- name: add zabbix repo config
+  shell: curl -o - https://mirrors.aliyun.com/zabbix/zabbix-official-repo.key | apt-key add -; echo deb https://mirrors.aliyun.com/zabbix/zabbix/5.4/ubuntu $(lsb_release -cs) main >> /etc/apt/sources.list; apt update
 
-# - name: apt install zabbix-agent2
-#   apt:
-#     update_cache: yes
-#     name: ['zabbix-agent2', 'zabbix-get', 'zabbix-sender']
-#     state: present
+- name: apt install zabbix-agent2
+  apt:
+    update_cache: yes
+    name: ['zabbix-agent2', 'zabbix-get', 'zabbix-sender']
+    state: present
 
-# - name: stop zabbix-agent
-#   systemd:
-#     name: zabbix-agent2
-#     enabled: no
-#     state: stopped
+- name: stop zabbix-agent
+  systemd:
+    name: zabbix-agent2
+    enabled: no
+    state: stopped
 
-# - name: apt install needed packages
-#   apt:
-#     name: jq
-#     update_cache: yes
-#     state: latest
+- name: apt install needed packages
+  apt:
+    name: jq
+    update_cache: yes
+    state: latest
 
 - name: prepare for installing caddy
   shell: apt install -y debian-keyring debian-archive-keyring apt-transport-https; curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | tee /etc/apt/trusted.gpg.d/caddy-stable.asc; curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list; apt update
