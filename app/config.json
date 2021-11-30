@@ -222,7 +222,7 @@
         },
         {
           "key": "conf.zabbix.agent.port",
-          "label": "Zabbix agent's listening port",
+          "label": "Zabbix agent2's listening port",
           "description": "Default value: 10050",
           "type": "integer",
           "default": 10050,
@@ -244,7 +244,7 @@
         },
         {
           "key": "conf.node.exporter.enabled",
-          "label": "node.exporter.enabled.label",
+          "label": "Enable node exporter or not",
           "description": "Default value false",
           "default": "no",
           "type": "string",
@@ -256,7 +256,7 @@
         },
         {
             "key": "conf.node.exporter.port",
-            "label": "node.exporter.port.label",
+            "label": "Node exporter's port",
             "description": "Default value 9500",
             "default": 9500,
             "type": "integer",
@@ -266,7 +266,7 @@
         },
         {
           "key": "conf.mongodb.exporter.enabled",
-          "label": "mongodb.exporter.enabled.label",
+          "label": "Enabled mongodb exporter or not",
           "description": "Default value false",
           "default": "no",
           "type": "string",
@@ -278,7 +278,7 @@
         },
         {
             "key": "conf.mongodb.exporter.port",
-            "label": "mongodb.exporter.port.label",
+            "label": "Mongodb exporter's port",
             "description": "Default value 9001",
             "default": 9001,
             "type": "integer",
@@ -289,7 +289,7 @@
 
         {
             "key": "conf.mongoshake.enabled",
-            "label": "mongoshake.enabled.label",
+            "label": "Enabled mongoshake or not",
             "description": "Default value false",
             "default": "no",
             "type": "string",
@@ -301,7 +301,7 @@
         },
         {
           "key": "conf.mongoshake.type",
-          "label": "mongoshake.type.label",
+          "label": "Mongoshake: sync type",
           "description": "[all, full, incr], default value all",
           "default": "all",
           "type": "string",
@@ -314,7 +314,7 @@
         },
         {
           "key": "conf.mongoshake.source",
-          "label": "mongoshake.source.label",
+          "label": "Mongoshake: source address of MongoDB",
           "description": "Format: ip:port, for example: 1.1.1.1:27017",
           "type": "string",
           "default": "127.0.0.1:27017",
@@ -322,7 +322,7 @@
         },
         {
           "key": "conf.mongoshake.source.user",
-          "label": "mongoshake.source.user.label",
+          "label": "Mongoshake: source's user of MongoDB",
           "description": "Source's user",
           "type": "string",
           "default": "root",
@@ -330,7 +330,7 @@
         },
         {
           "key": "conf.mongoshake.source.password",
-          "label": "mongoshake.source.password.label",
+          "label": "Mongoshake: source user's password of MongoDB",
           "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
@@ -339,7 +339,7 @@
         },
         {
           "key": "conf.mongoshake.destination",
-          "label": "mongoshake.destination.label",
+          "label": "Mongoshake: destination address of MongoDB",
           "description": "Format: ip:port, for example: 1.1.1.1:27017",
           "type": "string",
           "default": "127.0.0.1:27017",
@@ -347,7 +347,7 @@
         },
         {
           "key": "conf.mongoshake.destination.user",
-          "label": "mongoshake.destination.user.label",
+          "label": "Mongoshake: destination's user of MongoDB",
           "description": "Destination's user",
           "type": "string",
           "default": "root",
@@ -355,7 +355,7 @@
         },
         {
           "key": "conf.mongoshake.destination.password",
-          "label": "mongoshake.destination.password.label",
+          "label": "Mongoshake: destination user's password of MongoDB",
           "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
@@ -382,7 +382,7 @@
         },
         {
           "key": "conf.caddy.enabled",
-          "label": "caddy.enabled.label",
+          "label": "Enabled caddy or not",
           "description": "Default value false",
           "default": "no",
           "type": "string",
