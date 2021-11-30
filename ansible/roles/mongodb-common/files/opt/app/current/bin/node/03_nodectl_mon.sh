@@ -1,7 +1,7 @@
 APPCTL_CMD_PATH=/usr/bin/appctl
 isSingleThread() {
   local tmpcnt=$(pgrep -fa "$APPCTL_CMD_PATH $1" | wc -l)
-  test $tmpcnt -eq 2
+  test $tmpcnt -le 5
 }
 
 # remove " from jq results

@@ -59,6 +59,7 @@
 {{- end }}
 
 # repl_node
+{{- $tmpval = "" }}
 {{- range lsdir "/hosts/replica" -}}
   {{- $ip := getv (printf "/hosts/replica/%s/ip" .) -}}
   {{- $sid := getv (printf "/hosts/replica/%s/sid" .) -}}
