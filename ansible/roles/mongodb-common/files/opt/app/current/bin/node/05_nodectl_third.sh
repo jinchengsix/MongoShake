@@ -1,12 +1,13 @@
-reloadZabbix() {
-  if [ $ZABBIX_ENABLED = "yes" ]; then
-    systemctl restart zabbix-agent2.service || :
-    log "zabbix-agent2 restarted"
-  else
-    systemctl stop zabbix-agent2.service || :
-    log "zabbix-agent2 stopped"
-  fi
-}
+# reloadZabbix() {
+  # log "temporarily ingore zabbix agent2 for ubuntu20.04 "
+  # if [ $ZABBIX_ENABLED = "yes" ]; then
+  #   systemctl restart zabbix-agent2.service || :
+  #   log "zabbix-agent2 restarted"
+  # else
+  #   systemctl stop zabbix-agent2.service || :
+  #   log "zabbix-agent2 stopped"
+  # fi
+# }
 
 reloadNodeExporter() {
   systemctl daemon-reload

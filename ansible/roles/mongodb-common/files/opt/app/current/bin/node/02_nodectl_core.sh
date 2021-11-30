@@ -199,7 +199,7 @@ init() {
   retry 60 3 0 msAddLocalSysUser
   log "add root user"
   retry 60 3 0 msAddUserRoot -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
-  log "add zabbix user"
+  log "add qc_monitor user"
   retry 60 3 0 msAddUserMonitor -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "update QingCloudControl database"
   msUpdateQingCloudControl -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
