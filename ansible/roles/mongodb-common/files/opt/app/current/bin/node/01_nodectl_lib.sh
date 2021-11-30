@@ -36,8 +36,8 @@ CONF_CADDY_ENV_INFO_FILE=/opt/app/current/bin/envs/caddy.env
 CONF_NODE_EXPORTER_FILE=/opt/app/current/bin/envs/node_exporter.env
 CONF_MONGOSHAKE_FILE=/data/appctl/data/mongoshake.conf
 
-# ZABBIX_CONF_PATH=/etc/zabbix
-# ZABBIX_LOG_PATH=/data/zabbix-log
+ZABBIX_CONF_PATH=/etc/zabbix
+ZABBIX_LOG_PATH=/data/zabbix-log
 
 # runMongoCmd
 # desc run mongo shell
