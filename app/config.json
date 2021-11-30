@@ -33,7 +33,7 @@
         {
           "key": "resource_group",
           "label": "Express Configuration",
-          "description": "Test: Replica Node * 1</br>Prod: Replica Node * 3",
+          "description": "Test: Replica Node * 1, 2c8g, 200G</br>Prod: Replica Node * 3, 1c2g, 50G",
           "type": "string",
           "default": "Prod",
           "range": [
@@ -70,7 +70,11 @@
               "type": "integer",
               "range": [
                 1,
-                2
+                2,
+                4,
+                8,
+                16,
+                32
               ],
               "default": 2,
               "required": "yes",
@@ -86,13 +90,19 @@
               "type": "integer",
               "range": [
                 2048,
-                4096
+                4096,
+                8192,
+                16384,
+                32768,
+                65536,
+                131072,
+                262144
               ],
-              "default": 4096,
+              "default": 8192,
               "required": "yes",
               "resource_group": [
                 2048,
-                4096
+                8192
               ]
             },
             {
@@ -118,11 +128,14 @@
               "label": "Volume Size",
               "description": "The volume size for each instance",
               "type": "integer",
-              "default": 20,
-              "min": 20,
-              "max": 50,
+              "default": 200,
+              "min": 30,
               "step": 10,
-              "required": "yes"
+              "required": "yes",
+              "resource_group": [
+                50,
+                200
+              ]
             },
             {
               "key": "count",
