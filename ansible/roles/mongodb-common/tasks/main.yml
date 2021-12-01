@@ -6,14 +6,14 @@
     shell: /sbin/nologin
     create_home: false
 
-- name: re-install ca-certificates
+- name: re-install ca-certificates,jq,bc
   apt:
     update_cache: yes
-    name: ['ca-certificates']
+    name: ['ca-certificates','jq','bc']
     state: latest
 
 - name: add zabbix repo config
-  shell: curl -o - https://mirrors.aliyun.com/zabbix/zabbix-official-repo.key | apt-key add -; echo deb https://mirrors.aliyun.com/zabbix/zabbix/5.4/ubuntu $(lsb_release -cs) main >> /etc/apt/sources.list; apt update
+  shell: curl -o - https://mirrors.aliyun.com/zabbix/zabbix-official-repo.key | apt-key add -; echo deb https://mirrors.aliyun.com/zabbix/zabbix/5.4/ubuntu $(lsb_release -cs) main > /etc/apt/sources.list.d/zabbix-aliyun.list; apt update
 
 - name: apt install zabbix-agent2
   apt:
@@ -27,25 +27,59 @@
     enabled: no
     state: stopped
 
-- name: apt install needed packages
-  apt:
-    name: jq
-    update_cache: yes
-    state: latest
+- name: download app-agent
+  include_role:
+    name: install-1.0.6
+  vars:
+    opts:
+      pkg_name: app-agent
+      pkg_version: "{{ appagent_version }}"
+      pkg_url: https://github.com/QingCloudAppcenter/AppcenterAgent/releases/download/v{{ appagent_version }}/app-agent-linux-{{ arch1 }}.tar.gz
+      pkg_type: tar.gz
+      extracts: no
 
-- name: prepare for installing caddy
-  shell: apt install -y debian-keyring debian-archive-keyring apt-transport-https; curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | tee /etc/apt/trusted.gpg.d/caddy-stable.asc; curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list; apt update
+- name: remove app-agent's tar.gz
+  file:
+    path: /opt/app-agent
+    state: absent
 
-- name: apt install caddy
-  apt:
+- name: unarchive app-agent
+  unarchive:
+    src: "{{ local_cache_path }}/{{ role_name }}/app-agent-{{ appagent_version }}.tar.gz"
+    dest: /tmp
+    remote_src: no
+
+- name: install app-agent
+  shell: /tmp/app-agent-linux-{{ arch1 }}/install.sh
+  become: true
+  become_user: root
+  args:
+    chdir: /tmp/app-agent-linux-{{ arch1 }}/
+    creates: /opt/qingcloud/app-agent
+
+- name: create group caddy
+  group:
     name: caddy
-    state: latest
+    state: present
 
-- name: stop caddy
-  systemd:
+- name: create user caddy
+  user:
     name: caddy
-    enabled: no
-    state: stopped
+    groups: caddy
+    shell: /sbin/nologin
+    create_home: false
+
+- name: install caddy binaries
+  include_role:
+    name: install-1.0.6
+  vars:
+    opts:
+      pkg_name: caddy
+      pkg_version: "{{ caddy_version }}"
+      pkg_url: https://github.com/caddyserver/caddy/releases/download/v{{ caddy_version }}/caddy_{{ caddy_version }}_linux_{{ arch1 }}.tar.gz
+      pkg_type: tar.gz
+      creates: bin
+      extracts: yes
 
 - name: install mongoshake binaries
   include_role:
@@ -58,6 +92,8 @@
       pkg_type: tar.gz
       creates: bin
       extracts: yes
+      extra_opts:
+        - "--strip-components=1"
 
 - name: install mongodb exporter binaries
   include_role:
@@ -66,10 +102,12 @@
     opts:
       pkg_name: mongodb_exporter
       pkg_version: "{{ mongodb_exporter_version }}"
-      pkg_url: https://github.com/percona/mongodb_exporter/releases/download/v{{ mongodb_exporter_version }}/mongodb_exporter-{{ mongodb_exporter_version }}.linux-amd64.tar.gz
+      pkg_url: https://github.com/percona/mongodb_exporter/releases/download/v{{ mongodb_exporter_version }}/mongodb_exporter-{{ mongodb_exporter_version }}.linux-{{ arch1 }}.tar.gz
       pkg_type: tar.gz
       creates: bin
       extracts: yes
+      extra_opts:
+        - "--strip-components=1"
 
 - name: install node exporter binaries
   include_role:
@@ -78,11 +116,12 @@
     opts:
       pkg_name: node_exporter
       pkg_version: "{{ node_exporter_version }}"
-      pkg_url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+      pkg_url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-{{ arch1 }}.tar.gz
       pkg_type: tar.gz
       creates: bin
       extracts: yes
-
+      extra_opts:
+        - "--strip-components=1"
 
 - name: install mongodb binaries
   include_role:
@@ -91,10 +130,12 @@
     opts:
       pkg_name: mongodb
       pkg_version: "{{ mongodb_version }}"
-      pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-{{ mongodb_version }}.tgz
+      pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-{{ arch2 }}-{{ mongodb_version }}.tgz
       pkg_type: tgz
       creates: bin
       extracts: yes
+      extra_opts:
+        - "--strip-components=1"
 
 - name: copy app files
   copy:
@@ -108,9 +149,6 @@
 - name: modify /opt/app/current/bin/ctl.sh
   shell: sed -i 's/local f; for f in $(find \/opt\/app\/current\/bin\/node\/ -name "$fileNames.sh"); do . $f; done/local f; for f in $(eval echo "{$fileNames}.sh"); do . \/opt\/app\/current\/bin\/node\/$f; done/' /opt/app/current/bin/ctl.sh
   
-- name: cp command
-  shell: cp /opt/mongo-shake/current/mongo-shake-v2.6.5/collector.linux /usr/bin/mongoshake; cp /opt/node_exporter/current/node_exporter-1.2.2.linux-amd64/node_exporter /usr/bin/node_exporter; cp /opt/mongodb_exporter/current/mongodb_exporter-0.20.9.linux-amd64/mongodb_exporter /usr/bin/mongodb_exporter
-
 - name: install confd files
   include_role:
     name: confd-files-1.1.0
