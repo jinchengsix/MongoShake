@@ -50,7 +50,8 @@ reloadMongoShake() {
   if [ $MONGOSHAKE_ENABLED = "yes" ]; then
     if [ "$cnt" -gt 1 ]; then
       if ! msIsHostHidden "$MY_IP:$MY_PORT" -H $MY_IP -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
-        return $ERR_MONGOSHAKE_ON_HIDDEN
+        log "Mongoshake must be run on Hidden"
+        return 0
       fi
     fi
     touch $MONGOSHAKE_FLAG_FILE
