@@ -509,6 +509,18 @@
         "Zabbix Agent2": {
             "port": {{env.conf.zabbix.agent.port}},
             "protocol": "TCP"
+        },
+        "Node Exporter": {
+            "port": {{env.conf.node.exporter.port}},
+            "protocol": "TCP"
+        },
+        "MongoDB Exporter": {
+            "port": {{env.conf.mongodb.exporter.port}},
+            "protocol": "TCP"
+        },
+        "Caddy": {
+            "port": 8000,
+            "protocol": "TCP"
         }
    },
    "health_check":{
