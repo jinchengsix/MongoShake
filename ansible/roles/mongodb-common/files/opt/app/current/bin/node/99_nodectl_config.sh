@@ -1,5 +1,9 @@
 scaleInPreCheck() {
   log "scaleInPreCheck step 1, myIp:$MY_IP "
+  # health check
+  if ! msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT; then 
+     return $ERR_HEALTH_CHECK
+  fi
 
   local nodeNum=${#NODE_LIST[@]}
   local deleteNum=${#DELETING_LIST[@]}
