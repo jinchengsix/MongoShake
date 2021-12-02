@@ -9,7 +9,7 @@ Type=simple
 User=root
 Group=root
 
-ExecStart=/usr/bin/mongodb_exporter --mongodb.uri=mongodb://qc_monitor:{{ getv "/env/conf.monitor.userPass" }}@localhost:27017 --web.listen-address=:{{ getv "/env/conf.mongodb.exporter.port" }}
+ExecStart=/opt/mongodb_exporter/current/mongodb_exporter --mongodb.uri=mongodb://qc_monitor:{{ getv "/env/conf.monitor.userPass" }}@localhost:27017 --web.listen-address=:{{ getv "/env/conf.mongodb.exporter.port" }}
 
 SyslogIdentifier=mongodb_exporter
 Restart=always
