@@ -16,7 +16,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-ztgleqlk"
+            "image": "img-527scmva"
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},
@@ -490,7 +490,7 @@
    "display_tabs": {
         "FCV": {
             "cmd": "appctl showFcv",
-            "description": "Feature compatibility version, can be changed through 'changeFcv' menu, please refer to [official documents](https://docs.mongodb.com/v4.0/reference/command/setFeatureCompatibilityVersion/) to get more information.<br/>Caution1: if you use 4.0 features in your database configuration, you can't downgrade to fcv 3.6 anymore!<br/>Caution2: if you upgrade your cluster from 3.6 to current version, fcv remains 3.6. Please test your server&client thoroughly before changing fcv to 4.0!"
+            "description": "Feature compatibility version, can be changed through 'changeFcv' menu, please refer to [official documents](https://docs.mongodb.com/v3.6/reference/command/setFeatureCompatibilityVersion/) to get more information.<br/>Caution1: if you use 3.6 features in your database configuration, you can't downgrade to fcv 3.4 anymore!<br/>Caution2: if you upgrade your cluster from 3.4 to current version, fcv remains 3.4. Please test your server&client thoroughly before changing fcv to 3.6!"
         },
         "Node Status": {
             "cmd": "appctl showNodeStatus",
