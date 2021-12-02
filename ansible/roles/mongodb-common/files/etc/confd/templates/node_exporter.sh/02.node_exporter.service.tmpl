@@ -8,7 +8,7 @@ Type=simple
 User=root
 Group=root
 
-ExecStart=/usr/bin/node_exporter --web.listen-address=:{{ getv "/env/conf.node.exporter.port" }}
+ExecStart=/opt/node_exporter/current/node_exporter --web.listen-address=:{{ getv "/env/conf.node.exporter.port" }}
 
 SyslogIdentifier=Node_exporter
 Restart=always

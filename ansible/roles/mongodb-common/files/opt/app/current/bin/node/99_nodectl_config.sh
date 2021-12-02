@@ -101,6 +101,7 @@ clusterPreInit() {
   mkdir -p $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH
   chown -R mongod:svc $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH
   chown -R zabbix:zabbix $ZABBIX_LOG_PATH
+  chown -R caddy:caddy $CADDY_LOG_PATH
   # first create flag
   touch $NODE_FIRST_CREATE_FLAG_FILE
   # repl.key
@@ -207,17 +208,20 @@ msReplChangeConf() {
   local operationProfiling_mode_code
   local operationProfiling_slowOpThresholdMs
 
-  # user_pass (root)
-  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep user_pass | wc -l) || :
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep _pass | wc -l) || :
   if (($tmpcnt > 0)); then
-    msReplChangeRootPass
-    return 0
-  fi
+    # user_pass (root)
+    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep user_pass | wc -l) || :
+    if (($tmpcnt > 0)); then
+      msReplChangeRootPass
+    fi
 
-  # monitor_pass
-  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep monitor_pass | wc -l) || :
-  if (($tmpcnt > 0)); then
-    msReplChangeMonitorPass
+    # monitor_pass
+    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep monitor_pass | wc -l) || :
+    if (($tmpcnt > 0)); then
+      msReplChangeMonitorPass
+    fi
+    
     return 0
   fi
 
