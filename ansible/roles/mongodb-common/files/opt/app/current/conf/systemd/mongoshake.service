@@ -1,4 +1,3 @@
-flush > /etc/systemd/system/mongoshake.service <<MONGOSHAKE_SERVICE
 [Unit]
 Description=MongoShake
 After=network-online.target
@@ -9,7 +8,7 @@ Type=simple
 User=root
 Group=root
 
-ExecStart=/usr/bin/mongoshake -conf=/data/appctl/data/mongoshake.conf
+ExecStart=/usr/bin/mongoshake -conf=/opt/app/currrent/conf/mongoshake/mongoshake.conf
 
 SyslogIdentifier=MongoShake
 Restart=always
@@ -17,4 +16,3 @@ RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
-MONGOSHAKE_SERVICE

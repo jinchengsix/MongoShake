@@ -1,8 +1,8 @@
 if [ ! -d "/data/appctl/data" ]; then mkdir -p /data/appctl/data; fi
 if [ ! -d "/data/mongodb-conf" ]; then mkdir -p /data/mongodb-conf; fi
-if [ ! -d "/data/zabbix-log" ]; then mkdir -p /data/zabbix-log; fi
+if [ ! -d "/data/zabbix-logs" ]; then mkdir -p /data/zabbix-logs; fi
 if [ ! -d "/data/mongodb-logs" ]; then mkdir -p /data/mongodb-logs; fi
-if [ ! -d "/data/caddy" ]; then mkdir -p /data/caddy; fi
+if [ ! -d "/data/caddy-logs" ]; then mkdir -p /data/caddy-logs; fi
 
 flush > /data/appctl/data/hosts.info.new << HOSTS_INFO_NEW
 PORT=$host_port

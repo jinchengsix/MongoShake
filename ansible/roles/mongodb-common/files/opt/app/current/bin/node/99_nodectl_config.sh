@@ -101,6 +101,7 @@ clusterPreInit() {
   mkdir -p $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH
   chown -R mongod:svc $MONGODB_DATA_PATH $MONGODB_LOG_PATH $MONGODB_CONF_PATH
   chown -R zabbix:zabbix $ZABBIX_LOG_PATH
+  chown -R caddy:caddy $CADDY_LOG_PATH
   # first create flag
   touch $NODE_FIRST_CREATE_FLAG_FILE
   # repl.key
@@ -211,7 +212,6 @@ msReplChangeConf() {
   tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep user_pass | wc -l) || :
   if (($tmpcnt > 0)); then
     msReplChangeRootPass
-    return 0
   fi
 
   # monitor_pass
