@@ -208,16 +208,20 @@ msReplChangeConf() {
   local operationProfiling_mode_code
   local operationProfiling_slowOpThresholdMs
 
-  # user_pass (root)
-  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep user_pass | wc -l) || :
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep _pass | wc -l) || :
   if (($tmpcnt > 0)); then
-    msReplChangeRootPass
-  fi
+    # user_pass (root)
+    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep user_pass | wc -l) || :
+    if (($tmpcnt > 0)); then
+      msReplChangeRootPass
+    fi
 
-  # monitor_pass
-  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep monitor_pass | wc -l) || :
-  if (($tmpcnt > 0)); then
-    msReplChangeMonitorPass
+    # monitor_pass
+    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep monitor_pass | wc -l) || :
+    if (($tmpcnt > 0)); then
+      msReplChangeMonitorPass
+    fi
+    
     return 0
   fi
 
