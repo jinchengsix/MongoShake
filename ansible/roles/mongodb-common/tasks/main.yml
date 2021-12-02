@@ -117,3 +117,6 @@
 
 - name: clear syslog
   shell: ": > /var/log/syslog"
+
+- name: transparent hugepage
+  shell: echo "never" | tee /sys/kernel/mm/transparent_hugepage/defrag
