@@ -8,7 +8,10 @@
    "advanced_actions": ["change_vxnet", "scale_horizontal"],
    "upgrading_policy": "parallel",
    "upgrade_policy": [
-        "appv-omli6gvn"
+        "appv-omli6gvn",
+        "appv-7nc8ujnc",
+        "appv-fg61yxt0",
+        "appv-x5gq8om1"
     ],
    "nodes":[{
         "role":"replica",
@@ -16,7 +19,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-527scmva"
+            "image": "img-vwsych75"
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},

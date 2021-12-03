@@ -1,6 +1,6 @@
 flush > /etc/zabbix/zabbix_agent2.conf <<ZABBIX_CONF
 PidFile=/var/run/zabbix/zabbix_agent2.pid
-LogFile=/data/zabbix-log/zabbix_agent2.log
+LogFile=/data/zabbix-logs/zabbix_agent2.log
 LogFileSize=50
 Server={{ getv "/env/conf.zabbix.server.addr" }}
 ListenPort={{ getv "/env/conf.zabbix.agent.port" }}

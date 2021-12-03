@@ -4,6 +4,8 @@
   "Nodes": "节点",
   "Memory": "内存",
   "Vxnet": "私有网络",
+  "Test":"测试环境",
+  "Prod":"生产环境",
   "The vxnet that the Application will join": "应用运行的私有网络环境",
   "Count": "数量",
   "Number of nodes for the replication set to create. MongoDB with only one node is just for test, not for production.": "集群的节点数量，1个节点的 MongoDB 仅供测试使用",
@@ -136,5 +138,5 @@
   "The volume type for each node": "每个节点的磁盘类型",
   "The volume size for each instance": "每个节点的磁盘大小, 用于数据持久化,生产环境建议最小设置为内存的 3 倍",
   "Express Configuration": "快速配置",
-  "Test: Replica Node * 1</br>Prod: Replica Node * 3": "测试环境：Replica Node * 1</br>生产环境: Replica Node * 3"
+  "Test: Node * 1, 2c8g, 200G</br>Prod: Node * 3, 1c2g, 50G": "测试环境：Node * 1, 1c2g, 50G</br>生产环境: Node * 3, 2c8g, 200G"
 }

@@ -154,6 +154,7 @@ msIsHostHidden() {
   shift
   local tmpstr=$(runMongoCmd "JSON.stringify(rs.conf().members)" $@)
   local pname=$(echo $tmpstr | jq '.[] | select(.hidden==true) | .host' | sed s/\"//g)
+  log "hostinfo=$hostinfo, pname=$pname"
   test "$pname" = "$hostinfo"
 }
 

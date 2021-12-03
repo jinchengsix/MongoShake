@@ -33,7 +33,7 @@
         {
           "key": "resource_group",
           "label": "Express Configuration",
-          "description": "Test: Replica Node * 1, 2c8g, 200G</br>Prod: Replica Node * 3, 1c2g, 50G",
+          "description": "Test: Node * 1, 2c8g, 200G</br>Prod: Node * 3, 1c2g, 50G",
           "type": "string",
           "default": "Prod",
           "range": [
@@ -89,6 +89,7 @@
               "label": "Memory",
               "type": "integer",
               "range": [
+                1024,
                 2048,
                 4096,
                 8192,

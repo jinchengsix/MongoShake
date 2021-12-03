@@ -8,7 +8,7 @@ Type=simple
 User=root
 Group=root
 
-ExecStart=/usr/bin/mongoshake -conf=/opt/app/currrent/conf/mongoshake/mongoshake.conf
+ExecStart=/opt/mongo-shake/current/collector.linux -conf=/opt/app/current/conf/mongoshake/mongoshake.conf
 
 SyslogIdentifier=MongoShake
 Restart=always

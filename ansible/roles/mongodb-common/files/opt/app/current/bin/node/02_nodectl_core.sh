@@ -205,9 +205,21 @@ init() {
   enableHealthCheck
   # except scaleIn and scaleOut
   if [ $ADDING_HOSTS_FLAG = "true" ] || [ $DELETING_HOSTS_FLAG = "true" ] ; then return 0; fi
-  
+  local cnt=${#NODE_LIST[@]}
   local slist=($(getInitNodeList))
-  if [ ! $(getSid ${slist[0]}) = $MY_SID ]; then return 0; fi
+  if [ ! $(getSid ${slist[0]}) = $MY_SID ]; then 
+    # if [ $MONGOSHAKE_ENABLED = "yes" ]; then
+    #   if [ "$cnt" -gt 1 ]; then
+    #     if ! msIsHostHidden "$MY_IP:$MY_PORT" -H $MY_IP -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
+    #       log "Init: Mongoshake must be run on Hidden---$MY_IP:$MY_PORT"
+    #       return 0
+    #     fi
+    #   fi
+    #   systemctl restart mongoshake.service || :
+    #   log "Init: Mongoshake started"
+    # fi
+    return 0; 
+  fi
   log "init replicaset begin ..."
   retry 60 3 0 msInitRepl
   retry 60 3 0 msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT
@@ -221,6 +233,17 @@ init() {
   log "update QingCloudControl database"
   msUpdateQingCloudControl -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
   log "init replicaset done"
+  
+  # if [ $MONGOSHAKE_ENABLED = "yes" ]; then
+  #   if [ "$cnt" -gt 1 ]; then
+  #     if ! msIsHostHidden "$MY_IP:$MY_PORT" -H $MY_IP -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
+  #       log "Init: Mongoshake must be run on Hidden---$MY_IP:$MY_PORT"
+  #       return 0
+  #     fi
+  #   fi
+  #   systemctl restart mongoshake.service || :
+  #   log "Init: Mongoshake started"
+  # fi
 }
 
 ########## stop ##########
@@ -247,4 +270,11 @@ changeVxnetPreCheck() {
   fi
 
   return 0
+}
+
+
+initNode() {
+  _initNode
+  systemctl enable disable-thp.service
+  systemctl start disable-thp.service
 }
