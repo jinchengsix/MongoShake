@@ -91,7 +91,7 @@ upgrade() {
   fi
   log "upgrade: init folders and files"
   clusterPreInit
-  mkdir -p /data/upback34 && cp /data/pitrix.pwd /data/mongod_env /data/upback34
+  mkdir -p /data/upback34 && cp /data/pitrix.pwd /data/mongod_env /data/upback34 || :
   cp /opt/app/current/bin/node/rollback.sh /data/upback34
   rm -rf /data/mongodb-data
   ln -s /data/mongodb /data/mongodb-data
