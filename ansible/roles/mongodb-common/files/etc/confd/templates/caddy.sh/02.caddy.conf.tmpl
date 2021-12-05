@@ -1,5 +1,5 @@
 tmp_caddy_user={{ getv "/env/conf.caddy.user" }}
-tmp_caddy_pwd=$(/opt/caddy/current/caddy hash-password --plaintext "{{ getv "/env/conf.caddy.password"}}")
+tmp_caddy_pwd=$(HOME=/root /opt/caddy/current/caddy hash-password --plaintext "{{ getv "/env/conf.caddy.password"}}")
 flush > /opt/app/current/conf/caddy/Caddyfile <<CADDY_CONF
 :8000 {
     basicauth {

@@ -60,14 +60,15 @@
 - name: create group caddy
   group:
     name: caddy
+    system: yes
     state: present
 
 - name: create user caddy
   user:
     name: caddy
     groups: caddy
-    shell: /sbin/nologin
-    create_home: false
+    shell: /usr/sbin/nologin
+    home: /var/lib/caddy
 
 - name: install caddy binaries
   include_role:
