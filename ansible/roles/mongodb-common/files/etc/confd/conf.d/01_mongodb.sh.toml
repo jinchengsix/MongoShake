@@ -1,0 +1,8 @@
+[template]
+src = "01_mongodb.sh.tmpl"
+dest = "/opt/app/current/bin/tmpl/01_mongodb.sh"
+mode = "0700"
+keys = [
+    "/",
+]
+reload_cmd = "/opt/app/current/bin/tmpl/01_mongodb.sh; appctl checkConfdChange"
