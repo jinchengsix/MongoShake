@@ -3,6 +3,7 @@ if [ ! -d "/data/mongodb-conf" ]; then mkdir -p /data/mongodb-conf; fi
 if [ ! -d "/data/zabbix-logs" ]; then mkdir -p /data/zabbix-logs; fi
 if [ ! -d "/data/mongodb-logs" ]; then mkdir -p /data/mongodb-logs; fi
 if [ ! -d "/data/caddy-logs" ]; then mkdir -p /data/caddy-logs; fi
+if [ ! -d "/data/mongoshake-logs" ]; then mkdir -p /data/mongoshake-logs; fi
 
 flush > /data/appctl/data/hosts.info.new << HOSTS_INFO_NEW
 PORT=$host_port
