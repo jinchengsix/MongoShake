@@ -1,7 +1,7 @@
 scaleInPreCheck() {
   log "scaleInPreCheck step 1, myIp:$MY_IP "
   # health check
-  if ! msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT; then 
+  if ! msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
      return $ERR_HEALTH_CHECK
   fi
 
