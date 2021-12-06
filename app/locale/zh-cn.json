@@ -125,7 +125,7 @@
   "Unit: ms, default value: 100":"慢日志时间阈值, 单位：毫秒, 默认值：100",
   "Unit: MB, defalut value: 2048":"单位：MB, 默认值：2048",
   "Need restart mongod.service if being changed, default value: true":"安全读策略，修改时需重启 mongod.service 服务, 默认值：true",
-  "mongod's listening port, Can NOT be set to 27099, need restart mongod.service if being changed, default value: 27017":"mongod 的监听端口, 不能设置为 27099, 修改时需重启，默认值：27017",
+  "mongod's listening port, Can NOT be set to 27099, need restart mongod.service if being changed, default value: 27017":"不能设置为 27099, 修改时需重启，默认值：27017",
   "User root's Password":"root 用户密码",
   "User qc_monitor's Password":"qc_monitor 用户密码",
   "Storage engine":"存储引擎",
@@ -138,5 +138,6 @@
   "The volume type for each node": "每个节点的磁盘类型",
   "The volume size for each instance": "每个节点的磁盘大小, 用于数据持久化,生产环境建议最小设置为内存的 3 倍",
   "Express Configuration": "快速配置",
-  "Test: Node * 1, 2c8g, 200G</br>Prod: Node * 3, 1c2g, 50G": "测试环境：Node * 1, 1c2g, 50G</br>生产环境: Node * 3, 2c8g, 200G"
+  "Test: Node * 1, 2c8g, 200G</br>Prod: Node * 3, 1c2g, 50G": "测试环境：Node * 1, 1c2g, 50G</br>生产环境: Node * 3, 2c8g, 200G",
+  "net.port":"mongod 的监听端口"
 }

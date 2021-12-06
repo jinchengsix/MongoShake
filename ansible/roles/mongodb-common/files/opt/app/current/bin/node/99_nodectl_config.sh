@@ -1,7 +1,7 @@
 scaleInPreCheck() {
   log "scaleInPreCheck step 1, myIp:$MY_IP "
   # health check
-  if ! msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT; then 
+  if ! msIsReplStatusOk ${#NODE_LIST[@]} -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE); then 
      return $ERR_HEALTH_CHECK
   fi
 
@@ -308,12 +308,14 @@ checkConfdChange() {
     "1") updateHostsInfo; return 0;;
     "2") return 0;;
   esac
-  # net port changed
-  if isNetPortChanged; then
-    stop;start;return 0
-  fi
+
   # replicaset config changed
   doWhenReplConfChanged
+
+  # net port changed
+  if isNetPortChanged; then
+    stop;start;
+  fi
 }
 
 isMongodNeedRestart() {
