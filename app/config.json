@@ -186,7 +186,7 @@
         {
           "key": "conf.net.port",
           "label": "net.port",
-          "description": "Can NOT be set to 27099, default value: 27017",
+          "description": "mongod's listening port, Can NOT be set to 27099, need restart mongod.service if being changed, default value: 27017",
           "type": "integer",
           "default": 27017,
           "pattern": "^(?!27099)(102[4-9]|10[3-9]\\d|1[1-9]\\d\\d|[2-9]\\d{3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$",
