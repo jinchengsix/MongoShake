@@ -88,8 +88,3 @@ EOF
 
   runMongoCmd "$jsstr" $@
 }
-
-isMongodNeedRestart() {
-  local cnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep replication_enableMajorityReadConcern | wc -l) || :
-  if (($cnt > 0)); then return 0; else return 1; fi
-}
