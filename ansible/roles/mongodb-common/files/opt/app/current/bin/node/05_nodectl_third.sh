@@ -1,5 +1,4 @@
 reloadZabbix() {
-  log "start to reload zabbix on host:$MY_IP"
   if [ $ZABBIX_ENABLED = "yes" ]; then
     systemctl restart zabbix-agent2.service || :
     log "zabbix-agent2 restarted"
@@ -11,7 +10,6 @@ reloadZabbix() {
 
 reloadNodeExporter() {
   systemctl daemon-reload
-  log "start to reload node_exporter on host:$MY_IP"
   if [ $NODE_EXPORTER_ENABLED = "yes" ]; then
     systemctl restart node_exporter.service || :
     log "node_exporter restarted"
@@ -23,7 +21,6 @@ reloadNodeExporter() {
 }
 
 reloadCaddy() {
-  log "start to reload caddy on host:$MY_IP"
   if [ $CADDY_ENABLED = "yes" ]; then
     systemctl restart caddy.service || :
     log "caddy restarted"
@@ -35,7 +32,6 @@ reloadCaddy() {
 
 reloadMongoDBExporter () {
   systemctl daemon-reload
-  log "start to reload mongodb_exporter on host:$MY_IP"
   if [ $MONGODB_EXPORTER_ENABLED = "yes" ]; then
     systemctl restart mongodb_exporter.service || :
     log "mongodb_exporter restarted"
