@@ -308,7 +308,10 @@ checkConfdChange() {
     "1") updateHostsInfo; return 0;;
     "2") return 0;;
   esac
-  
+  # net port changed
+  if isNetPortChanged; then
+    stop;start;return 0
+  fi
   # replicaset config changed
   doWhenReplConfChanged
 }

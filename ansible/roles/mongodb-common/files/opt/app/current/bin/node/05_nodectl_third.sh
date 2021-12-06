@@ -17,17 +17,6 @@ reloadNodeExporter() {
     systemctl stop node_exporter.service || :
     log "node_exporter stopped"
   fi
-
-}
-
-reloadCaddy() {
-  if [ $CADDY_ENABLED = "yes" ]; then
-    systemctl restart caddy.service || :
-    log "caddy restarted"
-  else
-    systemctl stop caddy.service || :
-    log "caddy stopped"
-  fi
 }
 
 reloadMongoDBExporter () {

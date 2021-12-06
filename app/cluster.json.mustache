@@ -19,7 +19,11 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
+<<<<<<< HEAD
             "image": "img-x602ay9d"
+=======
+            "image": "img-zbybz6e0"
+>>>>>>> c6ebfd23baac5c0e8b1b9d5a1f33e7efe4f1dd88
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},
@@ -454,6 +458,7 @@
         }
    }],
    "env": {
+        "conf.net.port": {{env.conf.net.port}},
         "conf.userPass": {{env.conf.userPass}},
         "conf.monitor.userPass": {{env.conf.monitor.userPass}},
         "conf.storage.engine": {{env.conf.storage.engine}},
@@ -477,7 +482,7 @@
         "conf.caddy.user": {{env.conf.caddy.user}},
         "conf.caddy.password": {{env.conf.caddy.password}},
         "conf.caddy.enabled": {{env.conf.caddy.enabled}},
-        "replica.conf.net.port": {{env.replica.conf.net.port}},
+        
         "replica.conf.setParameter.cursorTimeoutMillis": {{env.replica.conf.setParameter.cursorTimeoutMillis}},
         "replica.conf.operationProfiling.mode": {{env.replica.conf.operationProfiling.mode}},
         "replica.conf.operationProfiling.slowOpThresholdMs": {{env.replica.conf.operationProfiling.slowOpThresholdMs}},
@@ -506,7 +511,7 @@
    },
    "endpoints": {
         "MongoDB": {
-            "port": {{env.replica.conf.net.port}},
+            "port": {{env.conf.net.port}},
             "protocol": "TCP"
         },
         "Zabbix Agent2": {
