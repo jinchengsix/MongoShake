@@ -239,6 +239,16 @@ msGetServerStatus() {
   echo "$tmpstr"
 }
 
+isNetPortChanged() {
+  if isNodeFirstCreate; then return 1; fi
+  local tmpcnt
+  if ! diff $HOSTS_INFO_FILE $HOSTS_INFO_FILE.new; then
+    tmpcnt=$(diff $HOSTS_INFO_FILE $HOSTS_INFO_FILE.new | grep PORT | wc -l) || :
+    if (($tmpcnt > 0)); then return 0; fi
+  fi
+  return 1
+}
+
 createMongoConf() {
   local replication_replSetName
   local storage_engine
@@ -249,7 +259,7 @@ createMongoConf() {
   local replication_enableMajorityReadConcern
   local read_concern
   
-  net_port=$(getItemFromFile net_port $CONF_INFO_FILE)
+  net_port=$(getItemFromFile PORT $HOSTS_INFO_FILE)
   setParameter_cursorTimeoutMillis=$(getItemFromFile setParameter_cursorTimeoutMillis $CONF_INFO_FILE)
   replication_replSetName=$(getItemFromFile replication_replSetName $CONF_INFO_FILE)
   storage_engine=$(getItemFromFile storage_engine $CONF_INFO_FILE)

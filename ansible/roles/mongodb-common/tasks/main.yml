@@ -167,5 +167,12 @@
     masked: yes
     state: stopped
 
+- name: enable disable-thp.service
+  systemd:
+    name: disable-thp
+    daemon_reload: yes
+    enabled: yes
+    state: stopped
+
 - name: clear syslog
   shell: ": > /var/log/syslog"

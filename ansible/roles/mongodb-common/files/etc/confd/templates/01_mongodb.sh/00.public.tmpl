@@ -1,7 +1,7 @@
 # confd variables and funtions
 {{- $nodeRole := getv "/host/role" }}
 {{- $nodeIp := getv "/host/ip" }}
-{{- $nodePort := getv "/env/replica.conf.net.port" }}
+{{- $nodePort := getv "/env/conf.net.port" }}
 {{- $verticalScalingFlag := "" }}
 {{- $upgradingFlag := "" }}
 {{- $changeVxnetFlag := "" }}
