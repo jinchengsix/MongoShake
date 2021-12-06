@@ -147,12 +147,25 @@
     mode: preserve
     directory_mode: u=rwx,g=rx,o=rx
 
+- name: copy service files
+  copy:
+    src: etc/systemd/
+    dest: /etc/systemd/
+    directory_mode: u=rwx,g=rx,o=rx
+
 - name: modify /opt/app/current/bin/ctl.sh
   shell: sed -i 's/local f; for f in $(find \/opt\/app\/current\/bin\/node\/ -name "$fileNames.sh"); do . $f; done/local f; for f in $(eval echo "{$fileNames}.sh"); do . \/opt\/app\/current\/bin\/node\/$f; done/' /opt/app/current/bin/ctl.sh
   
 - name: install confd files
   include_role:
     name: confd-files-1.1.0
+
+- name: mask irqbalance.service
+  systemd:
+    name: irqbalance
+    enabled: no
+    masked: yes
+    state: stopped
 
 - name: clear syslog
   shell: ": > /var/log/syslog"

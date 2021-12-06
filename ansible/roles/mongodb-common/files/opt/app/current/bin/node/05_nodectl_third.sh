@@ -31,7 +31,6 @@ reloadMongoDBExporter () {
 }
 
 reloadMongoShake() {
-  systemctl daemon-reload
   log "start to reload mongoshake on host:$MY_IP"
   # 当副本数量大于1时， mongoshake只能在hidden节点上开启
   local cnt=${#NODE_LIST[@]}
