@@ -69,6 +69,7 @@
     groups: caddy
     shell: /usr/sbin/nologin
     home: /var/lib/caddy
+    system: yes
 
 - name: install caddy binaries
   include_role:
