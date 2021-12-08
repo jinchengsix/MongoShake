@@ -312,3 +312,7 @@ processManagement:
   fork: true
 MONGO_CONF
 }
+
+msForceStepDown() {
+  runMongoCmd "rs.stepDown()" $@ || :
+}
