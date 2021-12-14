@@ -8,10 +8,8 @@
    "advanced_actions": ["change_vxnet", "scale_horizontal"],
    "upgrading_policy": "parallel",
    "upgrade_policy": [
-        "appv-omli6gvn",
-        "appv-x5gq8om1",
         "appv-7nc8ujnc",
-        "appv-fg61yxt0"
+        "appv-8chbxsau"
     ],
    "nodes":[{
         "role":"replica",
@@ -19,7 +17,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-q5xbism0"
+            "image": "img-oq3fbrvx"
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},
@@ -71,7 +69,8 @@
             },
             "upgrade": {
                 "cmd": "appctl upgrade",
-                "timeout": 86400
+                "timeout": 86400,
+                "pre_check":"appctl upgradePreCheck"
             },
             "rollback": {
                 "cmd": "appctl rollback",
