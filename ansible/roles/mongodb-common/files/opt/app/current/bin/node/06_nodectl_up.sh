@@ -94,7 +94,7 @@ checkFvc() {
   return 1
 }
 
-upgradePreCheck() {
+upgrade() {
   # check disk usage
   log "check disk usage"
   if ! checkDiskUsage; then
@@ -108,9 +108,7 @@ upgradePreCheck() {
     log "Error with the version"
     return $ERR_UPGRADE_VERSION
   fi
-}
 
-upgrade() {
   log "upgrade: init folders and files"
   clusterPreInit
 
