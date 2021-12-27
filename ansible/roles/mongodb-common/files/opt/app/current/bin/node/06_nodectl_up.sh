@@ -88,7 +88,7 @@ checkFvc() {
   local jsstr="JSON.stringify(db.adminCommand({getParameter:1,featureCompatibilityVersion:1}))"
   local res=$(runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE_OLD))
   res=$(echo "$res" | jq '.featureCompatibilityVersion.version' | sed 's/"//g')
-  if [ $res = "3.6" || $res = "4.0" ]; then
+  if [ $res = "3.6" ] || [ $res = "4.0" ]; then
     return 0
   fi
   return 1

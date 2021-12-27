@@ -27,7 +27,7 @@
   "Password": "密码",
   "We'll create two accounts for you: one with readWriteAnyDatabase rights, one with root rights. If you need to use MongoDB admin rights, you can log in with the root account.": "我们会为你创建一个拥有 readWriteAnyDatabase 权限的普通账号，和一个拥有 root 权限的特权账号。如果需要 MongoDB 管理权限，可使用 root 账号登录。",
   "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32":"必须包含大小写字母和数字的组合, 可使用特殊字符(包括 @#%&*()_+-=), 长度在 8-32 之间",
-  "User qc_master is Used for zabbix and mongodb_exporter monitoring. Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32":"qc_master 用户用于 zabbix 和 mongodb_exporter 监控, 必须包含大小写字母和数字的组合, 可使用特殊字符(包括 @#%&*()_+-=), 长度在 8-32 之间",
+  "User qc_monitor is Used for zabbix and mongodb_exporter monitoring. Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32":"qc_monitor 用户用于 zabbix 和 mongodb_exporter 监控, 必须包含大小写字母和数字的组合, 可使用特殊字符(包括 @#%&*()_+-=), 长度在 8-32 之间",
   "Password should have at least eight digits, including uppercase, lowercase letters and numbers. Please keep your password carefully!": "密码至少8位，并包括大小写字母及数字。请妥善保管密码！",
   "specify port number": "指定监听端口",
   "max number of simultaneous connections": "最大连接数",

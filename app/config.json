@@ -206,7 +206,7 @@
         {
           "key": "conf.monitor.userPass",
           "label": "User qc_monitor's Password",
-          "description": "User qc_master is Used for zabbix and mongodb_exporter monitoring. Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
+          "description": "User qc_monitor is Used for zabbix and mongodb_exporter monitoring. Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
           "default": "Change1Pwd",
