@@ -11,6 +11,7 @@
   "Number of nodes for the replication set to create. MongoDB with only one node is just for test, not for production.": "集群的节点数量，1个节点的 MongoDB 仅供测试使用",
   "Resource type": "资源类型",
   "Volume size": "磁盘大小",
+  "Volume Size": "磁盘大小",
   "Volume Class":"磁盘类型",
   "CPUs of each node": "每个节点的 CPU 数量",
   "Memory of each node": "每个节点的内存大小",
