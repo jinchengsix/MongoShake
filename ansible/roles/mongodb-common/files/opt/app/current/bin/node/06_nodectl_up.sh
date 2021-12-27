@@ -86,8 +86,10 @@ checkDiskUsage() {
 checkFvc() {
   # the version should be 3.6 or 4.0
   local jsstr="JSON.stringify(db.adminCommand({getParameter:1,featureCompatibilityVersion:1}))"
-  local res=$(runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE_OLD))
+  local res=$(runMongoCmd "$jsstr" -P $NET_MAINTAIN_PORT)
+  log "res=$res"
   res=$(echo "$res" | jq '.featureCompatibilityVersion.version' | sed 's/"//g')
+  log "res=$res"
   if [ $res = "3.6" ] || [ $res = "4.0" ]; then
     return 0
   fi
@@ -100,13 +102,6 @@ upgrade() {
   if ! checkDiskUsage; then
     log "Not enough disk space"
     return $ERR_UPGRADE_DISK_SPACE
-  fi
-
-  # checkFcv
-  log "check Fvc"
-  if ! checkFvc; then
-    log "Error with the version"
-    return $ERR_UPGRADE_VERSION
   fi
 
   log "upgrade: init folders and files"
@@ -124,6 +119,14 @@ upgrade() {
     log "Can not start mongod in admin mode"
     return $ERR_UPGRADE_MODE_START
   fi
+
+  # checkFcv
+  log "check Fvc"
+  if ! checkFvc; then
+    log "Error with the version"
+    return $ERR_UPGRADE_VERSION
+  fi
+
   retry 60 3 0 msGetHostDbVersion -P $NET_MAINTAIN_PORT
   # change qc_master's password
   if ! msModifyLocalSysUser; then
