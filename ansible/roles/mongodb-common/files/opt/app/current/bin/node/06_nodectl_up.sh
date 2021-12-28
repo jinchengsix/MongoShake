@@ -120,6 +120,8 @@ upgrade() {
     return $ERR_UPGRADE_MODE_START
   fi
 
+  retry 60 3 0 msGetHostDbVersion -P $NET_MAINTAIN_PORT
+
   # checkFcv
   log "check Fvc"
   if ! checkFvc; then
@@ -127,7 +129,6 @@ upgrade() {
     return $ERR_UPGRADE_VERSION
   fi
 
-  retry 60 3 0 msGetHostDbVersion -P $NET_MAINTAIN_PORT
   # change qc_master's password
   if ! msModifyLocalSysUser; then
     log "Can not modify qc_master's password"
