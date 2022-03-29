@@ -207,6 +207,11 @@ msReplChangeConf() {
   local operationProfiling_mode
   local operationProfiling_mode_code
   local operationProfiling_slowOpThresholdMs
+  local commandVerbosity
+  local indexVerbosity
+  local queryVerbosity
+  local networkVerbosity
+  local writeVerbosity
 
   tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep _pass | wc -l) || :
   if (($tmpcnt > 0)); then
@@ -263,6 +268,68 @@ EOF
     runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
     log "operationProfiling changed"
   fi
+
+  # commandVerbosity
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep commandVerbosity | wc -l) || :
+  if (($tmpcnt > 0)); then
+    commandVerbosity=$(getItemFromFile commandVerbosity $CONF_INFO_FILE.new)
+    jsstr=$(cat <<EOF
+      db.setLogLevel($commandVerbosity,"command")
+EOF
+    )
+    runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    log "commandVerbosity changed"
+  fi
+
+
+  # indexVerbosity
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep indexVerbosity | wc -l) || :
+  if (($tmpcnt > 0)); then
+    indexVerbosity=$(getItemFromFile indexVerbosity $CONF_INFO_FILE.new)
+    jsstr=$(cat <<EOF
+      db.setLogLevel($indexVerbosity,"index")
+EOF
+    )
+    runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    log "indexVerbosity changed"
+  fi
+
+  # queryVerbosity
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep queryVerbosity | wc -l) || :
+  if (($tmpcnt > 0)); then
+    queryVerbosity=$(getItemFromFile queryVerbosity $CONF_INFO_FILE.new)
+    jsstr=$(cat <<EOF
+      db.setLogLevel($queryVerbosity,"query")
+EOF
+    )
+    runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    log "queryVerbosity changed"
+  fi
+
+  # networkVerbosity
+    tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep networkVerbosity | wc -l) || :
+  if (($tmpcnt > 0)); then
+    networkVerbosity=$(getItemFromFile networkVerbosity $CONF_INFO_FILE.new)
+    jsstr=$(cat <<EOF
+      db.setLogLevel($networkVerbosity,"network")
+EOF
+    )
+    runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    log "networkVerbosity changed"
+  fi
+
+  # writeVerbosity
+  tmpcnt=$(diff $CONF_INFO_FILE $CONF_INFO_FILE.new | grep writeVerbosity | wc -l) || :
+  if (($tmpcnt > 0)); then
+    writeVerbosity=$(getItemFromFile writeVerbosity $CONF_INFO_FILE.new)
+    jsstr=$(cat <<EOF
+      db.setLogLevel($writeVerbosity,"write")
+EOF
+    )
+    runMongoCmd "$jsstr" -P $MY_PORT -u $DB_QC_USER -p $(cat $DB_QC_LOCAL_PASS_FILE)
+    log "writeVerbosity changed"
+  fi
+
 }
 
 # check if node is scaling

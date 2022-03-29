@@ -3,6 +3,13 @@ replication_replSetName=$host_repl_name
 user_pass={{ getv "/env/conf.userPass" }}
 monitor_pass={{ getv "/env/conf.monitor.userPass" }}
 storage_engine={{ getv "/env/conf.storage.engine" }}
+memory={{ getv "/host/memory" }}
+commandVerbosity={{ getv "/env/replica.conf.replication.commandVerbosity" }}
+indexVerbosity={{ getv "/env/replica.conf.replication.indexVerbosity" }}
+queryVerbosity={{ getv "/env/replica.conf.replication.queryVerbosity" }}
+networkVerbosity={{ getv "/env/replica.conf.replication.networkVerbosity" }}
+writeVerbosity={{ getv "/env/replica.conf.replication.writeVerbosity" }}
+
 {{- range gets (printf "/env/%s.*" $nodeRole) }}
 {{ replace (replace (base .Key) "." "_" -1) (printf "%s_conf_" $nodeRole) "" -1 }}={{ .Value }}
 {{- end }}

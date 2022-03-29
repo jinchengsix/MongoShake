@@ -260,6 +260,12 @@ createMongoConf() {
   local operationProfiling_slowOpThresholdMs
   local replication_enableMajorityReadConcern
   local read_concern
+  local memory
+  local commandVerbosity
+  local indexVerbosity
+  local queryVerbosity
+  local networkVerbosity
+  local writeVerbosity
   
   net_port=$(getItemFromFile PORT $HOSTS_INFO_FILE)
   setParameter_cursorTimeoutMillis=$(getItemFromFile setParameter_cursorTimeoutMillis $CONF_INFO_FILE)
@@ -270,13 +276,30 @@ createMongoConf() {
   replication_enableMajorityReadConcern=$(getItemFromFile replication_enableMajorityReadConcern $CONF_INFO_FILE)
   replication_oplogSizeMB=$(getItemFromFile replication_oplogSizeMB $CONF_INFO_FILE)
   read_concern="enableMajorityReadConcern: $replication_enableMajorityReadConcern"
-  
+  memory=$(getItemFromFile memory $CONF_INFO_FILE)
+  memory=$(echo $memory*0.65/1000|bc)
+  commandVerbosity=$(getItemFromFile commandVerbosity $CONF_INFO_FILE)
+  indexVerbosity=$(getItemFromFile indexVerbosity $CONF_INFO_FILE)
+  queryVerbosity=$(getItemFromFile queryVerbosity $CONF_INFO_FILE)
+  networkVerbosity=$(getItemFromFile networkVerbosity $CONF_INFO_FILE)
+  writeVerbosity=$(getItemFromFile writeVerbosity $CONF_INFO_FILE)
   cat > $MONGODB_CONF_PATH/mongo.conf <<MONGO_CONF
 systemLog:
   destination: file
   path: $MONGODB_LOG_PATH/mongo.log
   logAppend: true
   logRotate: reopen
+  component:
+    command:
+      verbosity: $commandVerbosity
+    index:
+      verbosity: $indexVerbosity
+    query:
+      verbosity: $queryVerbosity
+    network:
+      verbosity: $networkVerbosity
+    write:
+      verbosity: $writeVerbosity
 net:
   port: $net_port
   bindIp: 0.0.0.0
@@ -287,6 +310,12 @@ storage:
   dbPath: $MONGODB_DATA_PATH
   journal:
     enabled: true
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: $memory
+      journalCompressor: zlib
+    collectionConfig:
+      blockCompressor: zlib
   engine: $storage_engine
 operationProfiling:
   mode: $operationProfiling_mode
@@ -310,6 +339,11 @@ storage:
   journal:
     enabled: true
   engine: $storage_engine
+  wiredTiger:
+    engineConfig:
+      journalCompressor: zlib
+    collectionConfig:
+      blockCompressor: zlib
 processManagement:
   fork: true
 MONGO_CONF

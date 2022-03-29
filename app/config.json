@@ -301,7 +301,7 @@
 
         {
             "key": "conf.mongoshake.enabled",
-            "label": "Enabled mongoshake or not",
+            "label": "Enabled sync tools or not",
             "description": "Default value false",
             "default": "no",
             "type": "string",
@@ -313,7 +313,7 @@
         },
         {
           "key": "conf.mongoshake.type",
-          "label": "Mongoshake: sync type",
+          "label": "Sync: type",
           "description": "[all, full, incr], default value all",
           "default": "all",
           "type": "string",
@@ -326,7 +326,7 @@
         },
         {
           "key": "conf.mongoshake.source",
-          "label": "Mongoshake: source address of MongoDB",
+          "label": "Sync: source address of MongoDB",
           "description": "Format: ip:port, for example: 1.1.1.1:27017",
           "type": "string",
           "default": "127.0.0.1:27017",
@@ -334,7 +334,7 @@
         },
         {
           "key": "conf.mongoshake.source.user",
-          "label": "Mongoshake: source's user of MongoDB",
+          "label": "Sync: source's user of MongoDB",
           "description": "Source's user",
           "type": "string",
           "default": "root",
@@ -342,7 +342,7 @@
         },
         {
           "key": "conf.mongoshake.source.password",
-          "label": "Mongoshake: source user's password of MongoDB",
+          "label": "Sync: source user's password of MongoDB",
           "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
@@ -351,7 +351,7 @@
         },
         {
           "key": "conf.mongoshake.destination",
-          "label": "Mongoshake: destination address of MongoDB",
+          "label": "Sync: destination address of MongoDB",
           "description": "Format: ip:port, for example: 1.1.1.1:27017",
           "type": "string",
           "default": "127.0.0.1:27017",
@@ -359,7 +359,7 @@
         },
         {
           "key": "conf.mongoshake.destination.user",
-          "label": "Mongoshake: destination's user of MongoDB",
+          "label": "Sync: destination's user of MongoDB",
           "description": "Destination's user",
           "type": "string",
           "default": "root",
@@ -367,7 +367,7 @@
         },
         {
           "key": "conf.mongoshake.destination.password",
-          "label": "Mongoshake: destination user's password of MongoDB",
+          "label": "Sync: destination user's password of MongoDB",
           "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
@@ -455,6 +455,51 @@
               "type": "string",
               "default": "true",
               "range": ["true", "false"],
+              "required": "no"
+            },
+            {
+              "key": "conf.replication.commandVerbosity",
+              "label": "replication.commandVerbosity",
+              "description": "Command log level, 0:Information, 1:Debug, default 0",
+              "type": "integer",
+              "default": 0,
+              "range": [0,1],
+              "required": "no"
+            },
+            {
+              "key": "conf.replication.indexVerbosity",
+              "label": "replication.indexVerbosity",
+              "description": "Index log level, 0:Information, 1:Debug, default 0",
+              "type": "integer",
+              "default": 0,
+              "range": [0,1],
+              "required": "no"
+            },
+            {
+              "key": "conf.replication.queryVerbosity",
+              "label": "replication.queryVerbosity",
+              "description": "Query log level, 0:Information, 1:Debug, default 0",
+              "type": "integer",
+              "default": 0,
+              "range": [0,1],
+              "required": "no"
+            },
+            {
+              "key": "conf.replication.networkVerbosity",
+              "label": "replication.networkVerbosity",
+              "description": "Network log level, 0:Information, 1:Debug, default 0",
+              "type": "integer",
+              "default": 0,
+              "range": [0,1],
+              "required": "no"
+            },
+            {
+              "key": "conf.replication.writeVerbosity",
+              "label": "replication.writeVerbosity",
+              "description": "Write log level, 0:Information, 1:Debug, default 0",
+              "type": "integer",
+              "default": 0,
+              "range": [0,1],
               "required": "no"
             }
           ]

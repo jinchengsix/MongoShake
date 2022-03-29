@@ -8,8 +8,6 @@
    "advanced_actions": ["change_vxnet", "scale_horizontal"],
    "upgrading_policy": "parallel",
    "upgrade_policy": [
-        "appv-7nc8ujnc",
-        "appv-8chbxsau"
     ],
    "nodes":[{
         "role":"replica",
@@ -17,7 +15,7 @@
             "type":"kvm",
             "sriov_nic": true,
             "zone": "pek3",
-            "image": "img-hdgpgcny"
+            "image": "img-ksmexh1s"
         },
         "instance_class":{{cluster.replica.instance_class}},
         "count":{{cluster.replica.count}},
@@ -27,7 +25,7 @@
             "size":{{cluster.replica.volume_size}},
             "class":{{cluster.replica.volume_class}},
             "mount_point":"/data",
-            "filesystem":"ext4"
+            "filesystem":"xfs"
         },
         "passphraseless":"ssh-rsa",
         "vertical_scaling_policy":"sequential",
@@ -481,7 +479,12 @@
         "replica.conf.operationProfiling.mode": {{env.replica.conf.operationProfiling.mode}},
         "replica.conf.operationProfiling.slowOpThresholdMs": {{env.replica.conf.operationProfiling.slowOpThresholdMs}},
         "replica.conf.replication.enableMajorityReadConcern": {{env.replica.conf.replication.enableMajorityReadConcern}},
-        "replica.conf.replication.oplogSizeMB": {{env.replica.conf.replication.oplogSizeMB}}
+        "replica.conf.replication.oplogSizeMB": {{env.replica.conf.replication.oplogSizeMB}},
+        "replica.conf.replication.commandVerbosity": {{env.replica.conf.replication.commandVerbosity}},
+        "replica.conf.replication.indexVerbosity": {{env.replica.conf.replication.indexVerbosity}},
+        "replica.conf.replication.queryVerbosity": {{env.replica.conf.replication.queryVerbosity}},
+        "replica.conf.replication.networkVerbosity": {{env.replica.conf.replication.networkVerbosity}},
+        "replica.conf.replication.writeVerbosity": {{env.replica.conf.replication.writeVerbosity}}
    },
    "advanced_services": {
         "update_nodes_names": {

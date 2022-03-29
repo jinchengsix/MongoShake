@@ -96,20 +96,21 @@
   "Mongodb exporter's port":"Mongodb Exporter: 监听端口",
   "Default value 9001":"默认值 9001",
   "Default value false": "默认值 false",
-  "Enabled mongoshake or not":"Mongoshake: 是否开启",
+  "Enabled synchronization tools or not":"启用同步工具",
 
-  "Mongoshake: sync type":"Mongoshake: 同步方式",
+  "Enabled sync tools or not": "开启同步",
+  "Sync: type":"同步方式",
   "[all, full, incr], default value all": "[all (全量+增量), full (仅全量), incr (仅增量)], 默认值 all.",
 
-  "Mongoshake: source address of MongoDB":"Mongoshake: 源 MongoDB 地址",
-  "Mongoshake: source's user of MongoDB":"Mongoshake: 源 MongoDB 用户",
-  "Source's user":"Mongoshake: 源 MongoDB 用户",
-  "Mongoshake: source user's password of MongoDB":"Mongoshake: 源 MongoDB 用户密码",
+  "Sync: source address of MongoDB":"源 MongoDB 地址",
+  "Sync: source's user of MongoDB":"源 MongoDB 用户",
+  "Source's user":"源 MongoDB 用户",
+  "Sync: source user's password of MongoDB":"源 MongoDB 用户密码",
   "Format: ip:port, for example: 1.1.1.1:27017":"格式：ip:port ,例如：1.1.1.1:27017",
-  "Mongoshake: destination address of MongoDB":"Mongoshake: 目标 MongoDB 地址",
-  "Mongoshake: destination's user of MongoDB":"Mongoshake: 目标 MongoDB 用户",
-  "Destination's user":"Mongoshake: 目标 MongoDB 用户",
-  "Mongoshake: destination user's password of MongoDB":"Mongoshake: 目标 MongoDB 用户密码",
+  "Sync: destination address of MongoDB":"目标 MongoDB 地址",
+  "Sync: destination's user of MongoDB":"目标 MongoDB 用户",
+  "Destination's user":"目标 MongoDB 用户",
+  "Sync: destination user's password of MongoDB":" 目标 MongoDB 用户密码",
 
 
   "wiredTiger-cache-usage": "wiredTiger 内存使用率",
@@ -140,5 +141,10 @@
   "The volume size for each instance": "每个节点的磁盘大小, 用于数据持久化,生产环境建议最小设置为内存的 3 倍",
   "Express Configuration": "快速配置",
   "Test: Node * 1, 2c8g, 200G</br>Prod: Node * 3, 1c2g, 50G": "测试环境：Node * 1, 1c2g, 50G</br>生产环境: Node * 3, 2c8g, 200G",
-  "net.port":"mongod 的监听端口"
+  "net.port":"mongod 的监听端口",
+  "Command log level, 0:Information, 1:Debug, default 0":"Command 日志级别，0：info，1：Debug，默认为 0",
+  "Index log level, 0:Information, 1:Debug, default 0":"Index 日志级别，0：info，1：Debug，默认为 0",
+  "Query log level, 0:Information, 1:Debug, default 0":"Query 日志级别，0：info，1：Debug，默认为 0",
+  "Network log level, 0:Information, 1:Debug, default 0":"Network 日志级别，0：info，1：Debug，默认为 0",
+  "Write log level, 0:Information, 1:Debug, default 0":"Write 日志级别，0：info，1：Debug，默认为 0"
 }
