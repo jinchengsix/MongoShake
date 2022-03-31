@@ -1,7 +1,6 @@
 {
   "type": "array",
-  "properties": [
-    {
+  "properties": [{
       "key": "cluster",
       "description": "cluster properties",
       "type": "array",
@@ -11,7 +10,7 @@
           "type": "string",
           "label": "Name",
           "description": "The name of the application",
-          "default": "MongoDB Replica",
+          "default": "MongoDB Sync",
           "required": "no"
         },
         {
@@ -31,289 +30,102 @@
           "required": "yes"
         },
         {
-          "key": "resource_group",
-          "label": "Express Configuration",
-          "description": "Test: Node * 1, 2c8g, 200G</br>Prod: Node * 3, 1c2g, 50G",
-          "type": "string",
-          "default": "Prod",
-          "range": [
-            "Test",
-            "Prod"
-          ]
-        },
-        {
           "key": "replica",
           "description": "Properties for config server node",
           "label": "Replica Node",
           "type": "array",
-          "properties": [
-            {
-              "key": "instance_class",
-              "label": "Instance Class",
-              "description": "The instance type for the Replica Node",
-              "type": "integer",
-              "default": 203,
-              "range": [
-                101,
-                203
-              ],
-              "required": "yes",
-              "resource_group": [
-                101,
-                203
-              ]
-            },
-            {
-              "key": "cpu",
-              "label": "CPU",
-              "description": "CPUs of each node",
-              "type": "integer",
-              "range": [
-                1,
-                2,
-                4,
-                8,
-                16,
-                32
-              ],
-              "default": 2,
-              "required": "yes",
-              "resource_group": [
-                1,
-                2
-              ]
-            },
-            {
-              "key": "memory",
-              "description": "Memory of each node",
-              "label": "Memory",
-              "type": "integer",
-              "range": [
-                1024,
-                2048,
-                4096,
-                8192,
-                16384,
-                32768,
-                65536,
-                131072,
-                262144
-              ],
-              "default": 8192,
-              "required": "yes",
-              "resource_group": [
-                2048,
-                8192
-              ]
-            },
-            {
-              "key": "volume_class",
-              "label": "Volume Class",
-              "description": "The volume type for each node",
-              "type": "integer",
-              "range": [
-                2,
-                5,
-                100,
-                200
-              ],
-              "default": 200,
-              "required": "yes",
-              "resource_group": [
-                100,
-                200
-              ]
-            },
-            {
-              "key": "volume_size",
-              "label": "Volume Size",
-              "description": "The volume size for each instance",
-              "type": "integer",
-              "default": 200,
-              "min": 30,
-              "step": 10,
-              "required": "yes",
-              "resource_group": [
-                50,
-                200
-              ]
-            },
-            {
-              "key": "count",
-              "label": "Node Count",
-              "description": "Node Count",
-              "type": "integer",
-              "min": 1,
-              "max": 7,
-              "default": 3,
-              "range": [
-                1,
-                3,
-                5,
-                7
-              ],
-              "required": "yes",
-              "resource_group": [
-                1,
-                3
-              ]
-            }
-          ]
+          "properties": [{
+            "key": "instance_class",
+            "label": "instance_class_label",
+            "description": "",
+            "type": "integer",
+            "default": 203,
+            "range": [101, 202, 203, 301],
+            "required": "yes"
+          }, {
+            "key": "cpu",
+            "label": "cpu_label",
+            "description": "cpu_description",
+            "type": "integer",
+            "default": 2,
+            "range": [1, 2, 4, 8],
+            "required": "yes"
+          }, {
+            "key": "memory",
+            "label": "memory_label",
+            "description": "memory_description",
+            "type": "integer",
+            "default": 2048,
+            "range": [1024, 2048, 4096, 8192], 
+            "required": "yes"
+          }]
         }
       ]
     },
     {
-      "key": "service_params",
-      "description": "Custom service configuration properties",
+      "key": "global",
+      "description": "global configuration",
       "type": "array",
       "properties": [
         {
-          "key": "fcv",
-          "label": "Feature compatibility version",
-          "description": "if you upgrade your cluster from 3.6 to current version, fcv remains 3.6. Please test your server&client thoroughly before changing fcv to 4.0!",
-          "default": "3.6",
-          "range": ["3.6","4.0"],
+          "key": "mongoshake.id",
+          "label": "mongoshake.id",
+          "description": "",
           "type": "string",
-          "required": "yes"
-        }
-      ]
-    },
-    {
-      "key": "env",
-      "description": "Application configuration properties",
-      "type": "array",
-      "properties": [
+          "default": "mongoshake",
+          "required": "no"
+        },
         {
-          "key": "conf.net.port",
-          "label": "net.port",
-          "description": "mongod's listening port, Can NOT be set to 27099, need restart mongod.service if being changed, default value: 27017",
+          "key": "master_quorum",
+          "label": "master_quorum.label",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        {
+          "key": "full_sync_port",
+          "label": "full_sync_port.label",
+          "description": "",
           "type": "integer",
-          "default": 27017,
-          "pattern": "^(?!27099)(102[4-9]|10[3-9]\\d|1[1-9]\\d\\d|[2-9]\\d{3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$",
-          "required": "yes",
+          "default": 9101,
+          "required": "no",
           "min": 1025,
           "max": 65535
         },
         {
-          "key": "conf.userPass",
-          "label": "User root's Password",
-          "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
-          "type": "password",
-          "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
-          "default": "Change1Pwd",
-          "required": "yes"
-        },
-        {
-          "key": "conf.monitor.userPass",
-          "label": "User qc_monitor's Password",
-          "description": "User qc_monitor is Used for zabbix and mongodb_exporter monitoring. Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
-          "type": "password",
-          "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
-          "default": "Change1Pwd",
-          "required": "yes"
-        },
-        {
-          "key": "conf.storage.engine",
-          "label": "Storage engine",
-          "description": "The storage engine used by MongoDB, can NOT be changed",
-          "type": "string",
-          "default": "wiredTiger",
-          "range": [
-            "wiredTiger"
-          ],
-          "changeable": false,
-          "required": "no"
-        },
-        {
-          "key": "conf.zabbix.server.addr",
-          "label": "Zabbix server's ip address",
-          "description": "Zabbix server's ip address",
-          "type": "string",
-          "default": "127.0.0.1",
-          "required": "no"
-        },
-        {
-          "key": "conf.zabbix.agent.port",
-          "label": "Zabbix agent2's listening port",
-          "description": "Default value: 10050",
+          "key": "incr_sync_port",
+          "label": "incr_sync_port.label",
+          "description": "",
           "type": "integer",
-          "default": 10050,
+          "default": 9100,
+          "required": "no",
           "min": 1025,
-          "max": 65535,
-          "required": "no"
+          "max": 65535
         },
         {
-          "key": "conf.zabbix.agent.enabled",
-          "label": "Enable zabbix agent or not",
-          "description": "Default value false",
-          "default": "no",
+          "key": "system_profile_port",
+          "label": "system_profile_port.label",
+          "description": "",
+          "type": "integer",
+          "default": 9200,
+          "required": "no",
+          "min": 1025,
+          "max": 65535
+        },
+        {
+          "key": "log.level",
+          "label": "log.level.label",
+          "description": "",
           "type": "string",
-          "range": [
-            "yes",
-            "no"
-          ],
-          "required": "no"
+          "default": "info",
+          "range": ["debug", "info", "warning", "error"],
+          "required": "yes"
         },
         {
-          "key": "conf.node.exporter.enabled",
-          "label": "Enable node exporter or not",
-          "description": "Default value false",
-          "default": "no",
-          "type": "string",
-          "range": [
-            "yes",
-            "no"
-          ],
-          "required": "no"
-        },
-        {
-            "key": "conf.node.exporter.port",
-            "label": "Node exporter's port",
-            "description": "Default value 9500",
-            "default": 9500,
-            "type": "integer",
-            "min": 1025,
-            "max": 65535,
-            "required": "no"
-        },
-        {
-          "key": "conf.mongodb.exporter.enabled",
-          "label": "Enabled mongodb exporter or not",
-          "description": "Default value false",
-          "default": "no",
-          "type": "string",
-          "range": [
-            "yes",
-            "no"
-          ],
-          "required": "no"
-        },
-        {
-            "key": "conf.mongodb.exporter.port",
-            "label": "Mongodb exporter's port",
-            "description": "Default value 9001",
-            "default": 9001,
-            "type": "integer",
-            "min": 1025,
-            "max": 65535,
-            "required": "no"
-        },
-
-        {
-            "key": "conf.mongoshake.enabled",
-            "label": "Enabled sync tools or not",
-            "description": "Default value false",
-            "default": "no",
-            "type": "string",
-            "range": [
-              "yes",
-              "no"
-            ],
-            "required": "no"
-        },
-        {
-          "key": "conf.mongoshake.type",
-          "label": "Sync: type",
+          "key": "sync_mode",
+          "label": "sync_mode",
           "description": "[all, full, incr], default value all",
           "default": "all",
           "type": "string",
@@ -322,187 +134,382 @@
             "full",
             "incr"
           ],
-          "required": "no"
+          "required": "yes"
         },
+
         {
-          "key": "conf.mongoshake.source",
+          "key": "source.address",
           "label": "Sync: source address of MongoDB",
           "description": "Format: ip:port, for example: 1.1.1.1:27017",
           "type": "string",
           "default": "127.0.0.1:27017",
-          "required": "no"
+          "required": "yes"
         },
         {
-          "key": "conf.mongoshake.source.user",
+          "key": "source.user",
           "label": "Sync: source's user of MongoDB",
           "description": "Source's user",
           "type": "string",
           "default": "root",
-          "required": "no"
+          "required": "yes"
         },
         {
-          "key": "conf.mongoshake.source.password",
+          "key": "source.password",
           "label": "Sync: source user's password of MongoDB",
           "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
           "default": "Change1Pwd",
-          "required": "no"
+          "required": "yes"
         },
         {
-          "key": "conf.mongoshake.destination",
+          "key": "destination.address",
           "label": "Sync: destination address of MongoDB",
           "description": "Format: ip:port, for example: 1.1.1.1:27017",
           "type": "string",
           "default": "127.0.0.1:27017",
-          "required": "no"
+          "required": "yes"
         },
         {
-          "key": "conf.mongoshake.destination.user",
+          "key": "destination.user",
           "label": "Sync: destination's user of MongoDB",
           "description": "Destination's user",
           "type": "string",
           "default": "root",
-          "required": "no"
+          "required": "yes"
         },
         {
-          "key": "conf.mongoshake.destination.password",
+          "key": "destination.password",
           "label": "Sync: destination user's password of MongoDB",
           "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
           "type": "password",
           "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
           "default": "Change1Pwd",
-          "required": "no"
+          "required": "yes"
         },
         {
-          "key": "conf.caddy.user",
-          "label": "caddy-user",
-          "description": "username for caddy-server",
-          "type": "string",
-          "pattern": "^[^\\x20\\x22\\x27]*$",
-          "default": "caddy",
-          "required": "no"
-        },
-        {
-          "key": "conf.caddy.password",
-          "label": "caddy-password",
-          "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
-          "type": "password",
-          "default": "Change1Pwd",
-          "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
-          "required": "no"
-        },
-        {
-          "key": "conf.caddy.enabled",
-          "label": "Enabled caddy or not",
-          "description": "Default value false",
-          "default": "no",
+          "key": "tunnel",
+          "label": "tunnel",
+          "description": "[direct, rpc, tcp, file, kafka], default value direct",
+          "default": "direct",
           "type": "string",
           "range": [
-            "yes",
-            "no"
+            "kafka.",
+            "rpc",
+            "tcp",
+            "file",
+            "kafka"
           ],
           "required": "no"
         },
         {
-          "key": "replica",
-          "description": "The role configuration properties of the application",
-          "type": "array",
-          "properties": [
-            {
-              "key": "conf.setParameter.cursorTimeoutMillis",
-              "label": "setParameter.cursorTimeoutMillis",
-              "description": "Unit: ms, default value: 600000",
-              "type": "integer",
-              "default": 600000,
-              "required": "no"
-            },
-            {
-              "key": "conf.operationProfiling.mode",
-              "label": "operationProfiling.mode",
-              "description": "[off, slowOp, all], default value: off",
-              "type": "string",
-              "range": [
-                "off",
-                "slowOp",
-                "all"
-              ],
-              "default": "off",
-              "required": "no"
-            },
-            {
-              "key": "conf.operationProfiling.slowOpThresholdMs",
-              "label": "operationProfiling.slowOpThresholdMs",
-              "description": "Unit: ms, default value: 100",
-              "type": "integer",
-              "default": 100,
-              "required": "no"
-            },
-            {
-              "key": "conf.replication.oplogSizeMB",
-              "label": "replication.oplogSizeMB",
-              "description": "Unit: MB, defalut value: 2048",
-              "type": "integer",
-              "default": 20480,
-              "required": "no",
-              "min": 990,
-              "max": 51200
-            },
-            {
-              "key": "conf.replication.enableMajorityReadConcern",
-              "label": "replication.enableMajorityReadConcern",
-              "description": "Need restart mongod.service if being changed, default value: true",
-              "type": "string",
-              "default": "true",
-              "range": ["true", "false"],
-              "required": "no"
-            },
-            {
-              "key": "conf.replication.commandVerbosity",
-              "label": "replication.commandVerbosity",
-              "description": "Command log level, 0:Information, 1:Debug, default 0",
-              "type": "integer",
-              "default": 0,
-              "range": [0,1],
-              "required": "no"
-            },
-            {
-              "key": "conf.replication.indexVerbosity",
-              "label": "replication.indexVerbosity",
-              "description": "Index log level, 0:Information, 1:Debug, default 0",
-              "type": "integer",
-              "default": 0,
-              "range": [0,1],
-              "required": "no"
-            },
-            {
-              "key": "conf.replication.queryVerbosity",
-              "label": "replication.queryVerbosity",
-              "description": "Query log level, 0:Information, 1:Debug, default 0",
-              "type": "integer",
-              "default": 0,
-              "range": [0,1],
-              "required": "no"
-            },
-            {
-              "key": "conf.replication.networkVerbosity",
-              "label": "replication.networkVerbosity",
-              "description": "Network log level, 0:Information, 1:Debug, default 0",
-              "type": "integer",
-              "default": 0,
-              "range": [0,1],
-              "required": "no"
-            },
-            {
-              "key": "conf.replication.writeVerbosity",
-              "label": "replication.writeVerbosity",
-              "description": "Write log level, 0:Information, 1:Debug, default 0",
-              "type": "integer",
-              "default": 0,
-              "range": [0,1],
-              "required": "no"
-            }
-          ]
+          "key": "mongo_connect_mode",
+          "label": "mongo_connect_mode",
+          "description": "[primary, secondaryPreferred, standalone], default value secondaryPreferred",
+          "default": "direct",
+          "type": "string",
+          "range": [
+            "primary.",
+            "secondaryPreferred",
+            "standalone"
+          ],
+          "required": "no"
+        },
+        {
+          "key": "filter.namespace.black",
+          "label": "filter.namespace.black",
+          "description": "",
+          "default": "",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "filter.namespace.white",
+          "label": "filter.namespace.white",
+          "description": "",
+          "default": "",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "filter.pass.special.db",
+          "label": "filter.pass.special.db",
+          "description": "",
+          "default": "",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "filter.ddl_enable",
+          "label": "filter.ddl_enable",
+          "description": "",
+          "default": "false",
+          "range": ["true", "false"],
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "filter.oplog.gids",
+          "label": "filter.oplog.gids",
+          "description": "",
+          "default": "false",
+          "range": ["true", "false"],
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "checkpoint.storage.url",
+          "label": "checkpoint.storage.url",
+          "description": "",
+          "default": "",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "checkpoint.storage.db",
+          "label": "checkpoint.storage.db",
+          "description": "",
+          "default": "mongoshake",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "checkpoint.storage.collection",
+          "label": "checkpoint.storage.collection",
+          "description": "",
+          "default": "ckpt_default",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "checkpoint.start_position",
+          "label": "checkpoint.start_position",
+          "description": "",
+          "default": "1970-01-01T00:00:00Z",
+          "type": "string",
+          "required": "no"
+        },
+        {
+          "key": "transform.namespace",
+          "label": "transform.namespace",
+          "description": "",
+          "default": "",
+          "type": "string",
+          "required": "no"
+        }
+      ]
+    },
+
+    {
+      "key": "full_sync",
+      "description": "full sync configuration",
+      "type": "array",
+      "properties": [
+        {
+          "key": "reader.collection_parallel",
+          "label": "reader.collection_parallel",
+          "description": "",
+          "type": "integer",
+          "default": 6,
+          "required": "no",
+          "max": 10
+        },
+        {
+          "key": "reader.write_document_parallel",
+          "label": "reader.write_document_parallel",
+          "description": "",
+          "type": "integer",
+          "default": 8,
+          "required": "no",
+          "max": 10
+        },
+        {
+          "key": "reader.read_document_count",
+          "label": "reader.read_document_count",
+          "description": "",
+          "type": "integer",
+          "default": 0,
+          "required": "no"
+        },
+        {
+          "key": "collection_exist_drop",
+          "label": "collection_exist_drop",
+          "description": "",
+          "type": "string",
+          "default": "true",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        
+        {
+          "key": "create_index",
+          "label": "create_index",
+          "description": "",
+          "type": "string",
+          "default": "none",
+          "range": ["none", "foreground","background"],
+          "required": "no"
+        },
+        
+        {
+          "key": "executor.insert_on_dup_update",
+          "label": "executor.insert_on_dup_update",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        
+        {
+          "key": "executor.filter.orphan_document",
+          "label": "executor.filter.orphan_document",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        {
+          "key": "executor.majority_enable",
+          "label": "executor.majority_enable",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        }
+      ]
+    },
+    {
+      "key": "incr_sync",
+      "description": "incrmental sync configuration",
+      "type": "array",
+      "properties": [
+        {
+          "key": "mongo_fetch_method",
+          "label": "mongo_fetch_method",
+          "description": "",
+          "type": "string",
+          "default": "oplog",
+          "range": ["oplog", "change_stream"],
+          "required": "yes"
+        },
+        {
+          "key": "change_stream.watch_full_document",
+          "label": "change_stream.watch_full_document",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        {
+          "key": "shard_key",
+          "label": "shard_key",
+          "description": "",
+          "type": "string",
+          "default": "collection",
+          "range": ["auto", "id","collection"],
+          "required": "no"
+        },
+        {
+          "key": "shard_by_object_id_whitelist",
+          "label": "shard_by_object_id_whitelist",
+          "description": "",
+          "type": "string",
+          "default": "",
+          "required": "no"
+        },
+        {
+          "key": "worker",
+          "label": "worker",
+          "description": "",
+          "type": "integer",
+          "default": 8,
+          "required": "no"
+        },
+        {
+          "key": "tunnel.write_thread",
+          "label": "tunnel.write_thread",
+          "description": "",
+          "type": "integer",
+          "default": 8,
+          "required": "no"
+        },
+        {
+          "key": "target_delay",
+          "label": "target_delay",
+          "description": "",
+          "type": "integer",
+          "default": 0,
+          "required": "no"
+        },
+        {
+          "key": "worker.batch_queue_size",
+          "label": "worker.batch_queue_size",
+          "description": "",
+          "type": "integer",
+          "default": 64,
+          "required": "no"
+        },
+        {
+          "key": "adaptive.batching_max_size",
+          "label": "adaptive.batching_max_size",
+          "description": "",
+          "type": "integer",
+          "default": 1024,
+          "required": "no"
+        },
+        {
+          "key": "fetcher.buffer_capacity",
+          "label": "fetcher.buffer_capacity",
+          "description": "",
+          "type": "integer",
+          "default": 256,
+          "required": "no"
+        }
+      ]
+    },
+    {
+      "key": "direct_tunnel",
+      "description": "direct tunnel configuration",
+      "type": "array",
+      "properties": [
+        {
+          "key": "incr_sync.executor.upsert",
+          "label": "incr_sync.executor.upsert",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        {
+          "key": "incr_sync.executor.insert_on_dup_update",
+          "label": "incr_sync.executor.insert_on_dup_update",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
+        },
+        {
+          "key": "incr_sync.conflict_write_to",
+          "label": "incr_sync.conflict_write_to",
+          "description": "",
+          "type": "string",
+          "default": "none",
+          "required": "no"
+        },
+        {
+          "key": "incr_sync.majority_enable",
+          "label": "incr_sync.majority_enable",
+          "description": "",
+          "type": "string",
+          "default": "false",
+          "range": ["true", "false"],
+          "required": "no"
         }
       ]
     }

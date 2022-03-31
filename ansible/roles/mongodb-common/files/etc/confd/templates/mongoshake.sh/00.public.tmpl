@@ -1,0 +1,36 @@
+# confd variables and funtions
+{{- $nodeRole := getv "/host/role" }}
+{{- $nodeIp := getv "/host/ip" }}
+{{- $verticalScalingFlag := "" }}
+{{- $changeVxnetFlag := "" }}
+{{- $tmpval := "" }}
+{{- $replList := "" }}
+
+{{- if len (ls "/vertical-scaling-roles") }}
+  {{- $verticalScalingFlag = "true" }}
+{{- else }}
+  {{- $verticalScalingFlag = "false" }}
+{{- end }}
+{{- if len (ls "/change-vxnet-audit") }}
+  {{- $changeVxnetFlag = "true" }}
+{{- else }}
+  {{- $changeVxnetFlag = "false" }}
+{{- end }}
+
+
+# repl_node
+{{- $tmpval = "" }}
+{{- range lsdir "/hosts/replica" -}}
+  {{- $ip := getv (printf "/hosts/replica/%s/ip" .) -}}
+  {{- $sid := getv (printf "/hosts/replica/%s/sid" .) -}}
+  {{- $node_id := getv (printf "/hosts/replica/%s/node_id" .) -}}
+  {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
+{{- end }}
+{{- $replList = $tmpval }}
+
+# cluster
+cluster_global_uuid={{ getv "/cluster/global_uuid" }}
+cluster_id={{ getv "/cluster/cluster_id" }}
+
+# host
+host_node_list=({{ $replList }})

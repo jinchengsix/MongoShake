@@ -1,8 +1,0 @@
-[template]
-src = "node_exporter.sh.tmpl"
-dest = "/opt/app/current/bin/tmpl/node_exporter.sh"
-mode = "0700"
-keys = [
-    "/",
-]
-reload_cmd = "/opt/app/current/bin/tmpl/node_exporter.sh; appctl reloadNodeExporter"

@@ -1,31 +1,9 @@
 ---
-- name: create user mongod
-  user:
-    name: mongod
-    groups: svc
-    shell: /sbin/nologin
-    create_home: false
-
 - name: re-install ca-certificates,jq,bc
   apt:
     update_cache: yes
     name: ['ca-certificates','jq','bc']
     state: latest
-
-- name: add zabbix repo config
-  shell: curl -o - https://mirrors.aliyun.com/zabbix/zabbix-official-repo.key | apt-key add -; echo deb https://mirrors.aliyun.com/zabbix/zabbix/5.4/ubuntu $(lsb_release -cs) main > /etc/apt/sources.list.d/zabbix-aliyun.list; apt update
-
-- name: apt install zabbix-agent2
-  apt:
-    update_cache: yes
-    name: ['zabbix-agent2', 'zabbix-get', 'zabbix-sender']
-    state: present
-
-- name: stop zabbix-agent
-  systemd:
-    name: zabbix-agent2
-    enabled: no
-    state: stopped
 
 - name: download app-agent
   include_role:
@@ -57,32 +35,6 @@
     chdir: /tmp/app-agent-linux-{{ arch1 }}/
     creates: /opt/qingcloud/app-agent
 
-- name: create group caddy
-  group:
-    name: caddy
-    system: yes
-    state: present
-
-- name: create user caddy
-  user:
-    name: caddy
-    groups: caddy
-    shell: /usr/sbin/nologin
-    home: /var/lib/caddy
-    system: yes
-
-- name: install caddy binaries
-  include_role:
-    name: install-1.0.6
-  vars:
-    opts:
-      pkg_name: caddy
-      pkg_version: "{{ caddy_version }}"
-      pkg_url: https://github.com/caddyserver/caddy/releases/download/v{{ caddy_version }}/caddy_{{ caddy_version }}_linux_{{ arch1 }}.tar.gz
-      pkg_type: tar.gz
-      creates: bin
-      extracts: yes
-
 - name: install mongoshake binaries
   include_role:
     name: install-1.0.6
@@ -92,48 +44,6 @@
       pkg_version: "{{ mongo_shake_version }}"
       pkg_url: https://github.com/alibaba/MongoShake/releases/download/release-v{{ mongo_shake_version }}-20210723-1/mongo-shake-v{{ mongo_shake_version }}.tar.gz
       pkg_type: tar.gz
-      creates: bin
-      extracts: yes
-      extra_opts:
-        - "--strip-components=1"
-
-- name: install mongodb exporter binaries
-  include_role:
-    name: install-1.0.6
-  vars:
-    opts:
-      pkg_name: mongodb_exporter
-      pkg_version: "{{ mongodb_exporter_version }}"
-      pkg_url: https://github.com/percona/mongodb_exporter/releases/download/v{{ mongodb_exporter_version }}/mongodb_exporter-{{ mongodb_exporter_version }}.linux-{{ arch1 }}.tar.gz
-      pkg_type: tar.gz
-      creates: bin
-      extracts: yes
-      extra_opts:
-        - "--strip-components=1"
-
-- name: install node exporter binaries
-  include_role:
-    name: install-1.0.6
-  vars:
-    opts:
-      pkg_name: node_exporter
-      pkg_version: "{{ node_exporter_version }}"
-      pkg_url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-{{ arch1 }}.tar.gz
-      pkg_type: tar.gz
-      creates: bin
-      extracts: yes
-      extra_opts:
-        - "--strip-components=1"
-
-- name: install mongodb binaries
-  include_role:
-    name: install-1.0.6
-  vars:
-    opts:
-      pkg_name: mongodb
-      pkg_version: "{{ mongodb_version }}"
-      pkg_url: https://fastdl.mongodb.org/linux/mongodb-linux-{{ arch2 }}-{{ mongodb_version }}.tgz
-      pkg_type: tgz
       creates: bin
       extracts: yes
       extra_opts:
@@ -166,13 +76,6 @@
     name: irqbalance
     enabled: no
     masked: yes
-    state: stopped
-
-- name: enable disable-thp.service
-  systemd:
-    name: disable-thp
-    daemon_reload: yes
-    enabled: yes
     state: stopped
 
 - name: clear syslog
