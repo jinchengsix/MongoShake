@@ -3,3 +3,5 @@ local_cache_path: "~/.ansible/cache"
 app_version: 2.0.0
 mongo_shake_version: 2.6.5
 appagent_version: 1.0.7
+arch1: amd64
+arch2: x86_64

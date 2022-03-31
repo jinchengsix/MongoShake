@@ -1,5 +1,0 @@
-{{- $nodeRole := getv "/host/role" }}
-{{- $tmpval := printf "/hosts/%s/*/pub_key" $nodeRole }}
-{{ range gets $tmpval }}
-{{.Value}}
-{{ end}}

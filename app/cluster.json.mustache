@@ -15,24 +15,15 @@
       "type": "kvm",
       "sriov_nic": true,
       "zone": "pek3",
-      "image": "  "
+      "image": "img-il26ut75"
     },
-    "instance_class": {{cluster.node.instance_class}},
+    "instance_class": {{cluster.replica.instance_class}},
     "count": 1,
-    "cpu": {{cluster.node.cpu}},
-    "memory": {{cluster.node.memory}},
+    "cpu": {{cluster.replica.cpu}},
+    "memory": {{cluster.replica.memory}},
     "services": {
       "start": {
         "cmd": "appctl start"
-      },
-      "stop": {
-        "cmd": "appctl stop"
-      },
-      "monitor": {
-        "cmd": "appctl stop"
-      },
-      "stop": {
-        "cmd": "appctl stop"
       },
       "stop": {
         "cmd": "appctl stop"
@@ -41,68 +32,68 @@
   }],
 
    "env": {
-        "global.mongoshake.id": {{global.mongoshake.id}},
-        "global.master_quorum": {{global.master_quorum}},
-        "global.full_sync_port": {{global.full_sync_port}},
-        "global.incr_sync_port": {{global.incr_sync_port}},
-        "global.system_profile_port": {{global.system_profile_port}},
-        "global.log.level": {{global.log.level}},
-        "global.sync_mode": {{global.sync_mode}},
-        "global.source.address": {{global.source.address}},
-        "global.source.user": {{global.source.user}},
-        "global.source.password": {{global.source.password}},
-        "global.destination.address": {{global.destination.address}},
-        "global.destination.user": {{global.destination.user}},
-        "global.destination.password": {{global.destination.password}},
-        "global.tunnel": {{global.tunnel}},
-        "global.mongo_connect_mode": {{global.mongo_connect_mode}},
-        "global.filter.namespace.black": {{global.filter.namespace.black}},
-        "global.filter.namespace.white": {{global.filter.namespace.white}},
-        "global.filter.pass.special.db": {{global.filter.pass.special.db}},
-        "global.filter.ddl_enable": {{global.filter.ddl_enable}},
-        "global.filter.oplog.gids": {{global.filter.oplog.gids}},
-        "global.checkpoint.storage.url": {{global.checkpoint.storage.url}},
-        "global.checkpoint.storage.db": {{global.checkpoint.storage.db}},
-        "global.checkpoint.storage.collection": {{global.checkpoint.storage.collection}},
-        "global.checkpoint.start_position": {{global.checkpoint.start_position}},
-        "global.transform.namespace": {{global.transform.namespace}},
+        "global.mongoshake.id": {{env.global.mongoshake.id}},
+        "global.master_quorum": {{env.global.master_quorum}},
+        "global.full_sync_port": {{env.global.full_sync_port}},
+        "global.incr_sync_port": {{env.global.incr_sync_port}},
+        "global.system_profile_port": {{env.global.system_profile_port}},
+        "global.log.level": {{env.global.log.level}},
+        "global.sync_mode": {{env.global.sync_mode}},
+        "global.source.address": {{env.global.source.address}},
+        "global.source.user": {{env.global.source.user}},
+        "global.source.password": {{env.global.source.password}},
+        "global.destination.address": {{env.global.destination.address}},
+        "global.destination.user": {{env.global.destination.user}},
+        "global.destination.password": {{env.global.destination.password}},
+        "global.tunnel": {{env.global.tunnel}},
+        "global.mongo_connect_mode": {{env.global.mongo_connect_mode}},
+        "global.filter.namespace.black": {{env.global.filter.namespace.black}},
+        "global.filter.namespace.white": {{env.global.filter.namespace.white}},
+        "global.filter.pass.special.db": {{env.global.filter.pass.special.db}},
+        "global.filter.ddl_enable": {{env.global.filter.ddl_enable}},
+        "global.filter.oplog.gids": {{env.global.filter.oplog.gids}},
+        "global.checkpoint.storage.url": {{env.global.checkpoint.storage.url}},
+        "global.checkpoint.storage.db": {{env.global.checkpoint.storage.db}},
+        "global.checkpoint.storage.collection": {{env.global.checkpoint.storage.collection}},
+        "global.checkpoint.start_position": {{env.global.checkpoint.start_position}},
+        "global.transform.namespace": {{env.global.transform.namespace}},
 
-        "full_sync.reader.collection_parallel": {{full_sync.reader.collection_parallel}},
-        "full_sync.reader.write_document_parallel": {{full_sync.reader.write_document_parallel}},
-        "full_sync.reader.read_document_count": {{full_sync.reader.read_document_count}},
-        "full_sync.collection_exist_drop": {{full_sync.collection_exist_drop}},
-        "full_sync.create_index": {{full_sync.create_index}},
-        "full_sync.executor.insert_on_dup_update": {{full_sync.executor.insert_on_dup_update}},
-        "full_sync.executor.filter.orphan_document": {{full_sync.executor.filter.orphan_document}},
-        "full_sync.executor.majority_enable": {{full_sync.executor.majority_enable}},
+        "full_sync.reader.collection_parallel": {{env.full_sync.reader.collection_parallel}},
+        "full_sync.reader.write_document_parallel": {{env.full_sync.reader.write_document_parallel}},
+        "full_sync.reader.read_document_count": {{env.full_sync.reader.read_document_count}},
+        "full_sync.collection_exist_drop": {{env.full_sync.collection_exist_drop}},
+        "full_sync.create_index": {{env.full_sync.create_index}},
+        "full_sync.executor.insert_on_dup_update": {{env.full_sync.executor.insert_on_dup_update}},
+        "full_sync.executor.filter.orphan_document": {{env.full_sync.executor.filter.orphan_document}},
+        "full_sync.executor.majority_enable": {{env.full_sync.executor.majority_enable}},
         
-        "incr_sync.mongo_fetch_method": {{incr_sync.mongo_fetch_method}},
-        "incr_sync.change_stream.watch_full_document": {{incr_sync.change_stream.watch_full_document}},
-        "incr_sync.shard_key": {{incr_sync.shard_key}},
-        "incr_sync.shard_by_object_id_whitelist": {{incr_sync.shard_by_object_id_whitelist}},
-        "incr_sync.worker": {{incr_sync.worker}},
-        "incr_sync.tunnel.write_thread": {{incr_sync.tunnel.write_thread}},
-        "incr_sync.target_delay": {{incr_sync.target_delay}},
-        "incr_sync.worker.batch_queue_size": {{incr_sync.worker.batch_queue_size}},
-        "incr_sync.adaptive.batching_max_size": {{incr_sync.adaptive.batching_max_size}},
-        "incr_sync.fetcher.buffer_capacity": {{incr_sync.fetcher.buffer_capacity}},
+        "incr_sync.mongo_fetch_method": {{env.incr_sync.mongo_fetch_method}},
+        "incr_sync.change_stream.watch_full_document": {{env.incr_sync.change_stream.watch_full_document}},
+        "incr_sync.shard_key": {{env.incr_sync.shard_key}},
+        "incr_sync.shard_by_object_id_whitelist": {{env.incr_sync.shard_by_object_id_whitelist}},
+        "incr_sync.worker": {{env.incr_sync.worker}},
+        "incr_sync.tunnel.write_thread": {{env.incr_sync.tunnel.write_thread}},
+        "incr_sync.target_delay": {{env.incr_sync.target_delay}},
+        "incr_sync.worker.batch_queue_size": {{env.incr_sync.worker.batch_queue_size}},
+        "incr_sync.adaptive.batching_max_size": {{env.incr_sync.adaptive.batching_max_size}},
+        "incr_sync.fetcher.buffer_capacity": {{env.incr_sync.fetcher.buffer_capacity}},
        
-        "direct_tunnel.incr_sync.executor.upsert": {{direct_tunnel.incr_sync.executor.upsert}},
-        "direct_tunnel.incr_sync.executor.insert_on_dup_update": {{direct_tunnel.incr_sync.executor.insert_on_dup_update}},
-        "direct_tunnel.incr_sync.conflict_write_to": {{direct_tunnel.incr_sync.conflict_write_to}},
-        "direct_tunnel.incr_sync.majority_enable": {{direct_tunnel.incr_sync.majority_enable}}
+        "direct_tunnel.incr_sync.executor.upsert": {{env.direct_tunnel.incr_sync.executor.upsert}},
+        "direct_tunnel.incr_sync.executor.insert_on_dup_update": {{env.direct_tunnel.incr_sync.executor.insert_on_dup_update}},
+        "direct_tunnel.incr_sync.conflict_write_to": {{env.direct_tunnel.incr_sync.conflict_write_to}},
+        "direct_tunnel.incr_sync.majority_enable": {{env.direct_tunnel.incr_sync.majority_enable}}
    },
    "endpoints": {
         "Full Sync Port": {
-            "port": {{global.full_sync_port}},
+            "port": {{env.global.full_sync_port}},
             "protocol": "TCP"
         },
         "Incr Sync Port": {
-            "port": {{global.incr_sync_port}},
+            "port": {{env.global.incr_sync_port}},
             "protocol": "TCP"
         },
         "System Profile Port": {
-            "port": {{global.system_profile_port}},
+            "port": {{env.global.system_profile_port}},
             "protocol": "TCP"
         }
    },
@@ -115,14 +106,14 @@
         "unhealthy_threshold": 2,
         "check_cmd": "appctl healthCheck",
         "action_cmd": "appctl revive"
-   }
+   },
 
   "monitor":{
     "enable":true,
-    "cmd":"",
-    "items": {}
-    "groups": {}
-    "display": []
+    "cmd":"appctl monitor",
+    "items": {},
+    "groups": {},
+    "display": [],
     "alarm": []
   }
 }

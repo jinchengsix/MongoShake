@@ -1,10 +1,12 @@
 # confd variables and funtions
-{{- $nodeRole := getv "/host/role" }}
+{{- $nodeId := getv "/host/node_id" }}
 {{- $nodeIp := getv "/host/ip" }}
+{{- $sid := getv "/host/sid" }}
 {{- $verticalScalingFlag := "" }}
 {{- $changeVxnetFlag := "" }}
 {{- $tmpval := "" }}
 {{- $replList := "" }}
+
 
 {{- if len (ls "/vertical-scaling-roles") }}
   {{- $verticalScalingFlag = "true" }}
@@ -20,13 +22,9 @@
 
 # repl_node
 {{- $tmpval = "" }}
-{{- range lsdir "/hosts/replica" -}}
-  {{- $ip := getv (printf "/hosts/replica/%s/ip" .) -}}
-  {{- $sid := getv (printf "/hosts/replica/%s/sid" .) -}}
-  {{- $node_id := getv (printf "/hosts/replica/%s/node_id" .) -}}
-  {{- $tmpval = printf "%s%s/%s/%s " $tmpval $sid $ip $node_id }}
-{{- end }}
+{{- $tmpval = printf "%s/%s/%s" $sid $ip $node_id }}
 {{- $replList = $tmpval }}
+{{- $tmpval := "" }}
 
 # cluster
 cluster_global_uuid={{ getv "/cluster/global_uuid" }}

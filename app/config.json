@@ -63,455 +63,463 @@
       ]
     },
     {
-      "key": "global",
-      "description": "global configuration",
+      "key": "env",
+      "description": "Application configuration properties",
       "type": "array",
       "properties": [
         {
-          "key": "mongoshake.id",
-          "label": "mongoshake.id",
-          "description": "",
-          "type": "string",
-          "default": "mongoshake",
-          "required": "no"
+          "key": "global",
+          "description": "global configuration",
+          "type": "array",
+          "properties": [
+            {
+              "key": "mongoshake.id",
+              "label": "mongoshake.id",
+              "description": "",
+              "type": "string",
+              "default": "mongoshake",
+              "required": "no"
+            },
+            {
+              "key": "master_quorum",
+              "label": "master_quorum.label",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            {
+              "key": "full_sync_port",
+              "label": "full_sync_port.label",
+              "description": "",
+              "type": "integer",
+              "default": 9101,
+              "required": "no",
+              "min": 1025,
+              "max": 65535
+            },
+            {
+              "key": "incr_sync_port",
+              "label": "incr_sync_port.label",
+              "description": "",
+              "type": "integer",
+              "default": 9100,
+              "required": "no",
+              "min": 1025,
+              "max": 65535
+            },
+            {
+              "key": "system_profile_port",
+              "label": "system_profile_port.label",
+              "description": "",
+              "type": "integer",
+              "default": 9200,
+              "required": "no",
+              "min": 1025,
+              "max": 65535
+            },
+            {
+              "key": "log.level",
+              "label": "log.level.label",
+              "description": "",
+              "type": "string",
+              "default": "info",
+              "range": ["debug", "info", "warning", "error"],
+              "required": "yes"
+            },
+            {
+              "key": "sync_mode",
+              "label": "sync_mode",
+              "description": "[all, full, incr], default value all",
+              "default": "all",
+              "type": "string",
+              "range": [
+                "all",
+                "full",
+                "incr"
+              ],
+              "required": "yes"
+            },
+    
+            {
+              "key": "source.address",
+              "label": "Sync: source address of MongoDB",
+              "description": "Format: ip:port, for example: 1.1.1.1:27017",
+              "type": "string",
+              "default": "127.0.0.1:27017",
+              "required": "yes"
+            },
+            {
+              "key": "source.user",
+              "label": "Sync: source's user of MongoDB",
+              "description": "Source's user",
+              "type": "string",
+              "default": "root",
+              "required": "yes"
+            },
+            {
+              "key": "source.password",
+              "label": "Sync: source user's password of MongoDB",
+              "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
+              "type": "password",
+              "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
+              "default": "Change1Pwd",
+              "required": "yes"
+            },
+            {
+              "key": "destination.address",
+              "label": "Sync: destination address of MongoDB",
+              "description": "Format: ip:port, for example: 1.1.1.1:27017",
+              "type": "string",
+              "default": "127.0.0.1:27017",
+              "required": "yes"
+            },
+            {
+              "key": "destination.user",
+              "label": "Sync: destination's user of MongoDB",
+              "description": "Destination's user",
+              "type": "string",
+              "default": "root",
+              "required": "yes"
+            },
+            {
+              "key": "destination.password",
+              "label": "Sync: destination user's password of MongoDB",
+              "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
+              "type": "password",
+              "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
+              "default": "Change1Pwd",
+              "required": "yes"
+            },
+            {
+              "key": "tunnel",
+              "label": "tunnel",
+              "description": "[direct, rpc, tcp, file, kafka], default value direct",
+              "default": "direct",
+              "type": "string",
+              "range": [
+                "direct",
+                "rpc",
+                "tcp",
+                "file",
+                "kafka"
+              ],
+              "required": "no"
+            },
+            {
+              "key": "mongo_connect_mode",
+              "label": "mongo_connect_mode",
+              "description": "[primary, secondaryPreferred, standalone], default value secondaryPreferred",
+              "default": "secondaryPreferred",
+              "type": "string",
+              "range": [
+                "primary.",
+                "secondaryPreferred",
+                "standalone"
+              ],
+              "required": "no"
+            },
+            {
+              "key": "filter.namespace.black",
+              "label": "filter.namespace.black",
+              "description": "",
+              "default": "",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "filter.namespace.white",
+              "label": "filter.namespace.white",
+              "description": "",
+              "default": "",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "filter.pass.special.db",
+              "label": "filter.pass.special.db",
+              "description": "",
+              "default": "",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "filter.ddl_enable",
+              "label": "filter.ddl_enable",
+              "description": "",
+              "default": "false",
+              "range": ["true", "false"],
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "filter.oplog.gids",
+              "label": "filter.oplog.gids",
+              "description": "",
+              "default": "false",
+              "range": ["true", "false"],
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "checkpoint.storage.url",
+              "label": "checkpoint.storage.url",
+              "description": "",
+              "default": "",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "checkpoint.storage.db",
+              "label": "checkpoint.storage.db",
+              "description": "",
+              "default": "mongoshake",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "checkpoint.storage.collection",
+              "label": "checkpoint.storage.collection",
+              "description": "",
+              "default": "ckpt_default",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "checkpoint.start_position",
+              "label": "checkpoint.start_position",
+              "description": "",
+              "default": "1970-01-01T00:00:00Z",
+              "type": "string",
+              "required": "no"
+            },
+            {
+              "key": "transform.namespace",
+              "label": "transform.namespace",
+              "description": "",
+              "default": "",
+              "type": "string",
+              "required": "no"
+            }
+          ]
+        },
+    
+        {
+          "key": "full_sync",
+          "description": "full sync configuration",
+          "type": "array",
+          "properties": [
+            {
+              "key": "reader.collection_parallel",
+              "label": "reader.collection_parallel",
+              "description": "",
+              "type": "integer",
+              "default": 6,
+              "required": "no",
+              "max": 10
+            },
+            {
+              "key": "reader.write_document_parallel",
+              "label": "reader.write_document_parallel",
+              "description": "",
+              "type": "integer",
+              "default": 8,
+              "required": "no",
+              "max": 10
+            },
+            {
+              "key": "reader.read_document_count",
+              "label": "reader.read_document_count",
+              "description": "",
+              "type": "integer",
+              "default": 0,
+              "required": "no"
+            },
+            {
+              "key": "collection_exist_drop",
+              "label": "collection_exist_drop",
+              "description": "",
+              "type": "string",
+              "default": "true",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            
+            {
+              "key": "create_index",
+              "label": "create_index",
+              "description": "",
+              "type": "string",
+              "default": "none",
+              "range": ["none", "foreground","background"],
+              "required": "no"
+            },
+            
+            {
+              "key": "executor.insert_on_dup_update",
+              "label": "executor.insert_on_dup_update",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            
+            {
+              "key": "executor.filter.orphan_document",
+              "label": "executor.filter.orphan_document",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            {
+              "key": "executor.majority_enable",
+              "label": "executor.majority_enable",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            }
+          ]
         },
         {
-          "key": "master_quorum",
-          "label": "master_quorum.label",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
+          "key": "incr_sync",
+          "description": "incrmental sync configuration",
+          "type": "array",
+          "properties": [
+            {
+              "key": "mongo_fetch_method",
+              "label": "mongo_fetch_method",
+              "description": "",
+              "type": "string",
+              "default": "oplog",
+              "range": ["oplog", "change_stream"],
+              "required": "yes"
+            },
+            {
+              "key": "change_stream.watch_full_document",
+              "label": "change_stream.watch_full_document",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            {
+              "key": "shard_key",
+              "label": "shard_key",
+              "description": "",
+              "type": "string",
+              "default": "collection",
+              "range": ["auto", "id","collection"],
+              "required": "no"
+            },
+            {
+              "key": "shard_by_object_id_whitelist",
+              "label": "shard_by_object_id_whitelist",
+              "description": "",
+              "type": "string",
+              "default": "",
+              "required": "no"
+            },
+            {
+              "key": "worker",
+              "label": "worker",
+              "description": "",
+              "type": "integer",
+              "default": 8,
+              "required": "no"
+            },
+            {
+              "key": "tunnel.write_thread",
+              "label": "tunnel.write_thread",
+              "description": "",
+              "type": "integer",
+              "default": 8,
+              "required": "no"
+            },
+            {
+              "key": "target_delay",
+              "label": "target_delay",
+              "description": "",
+              "type": "integer",
+              "default": 0,
+              "required": "no"
+            },
+            {
+              "key": "worker.batch_queue_size",
+              "label": "worker.batch_queue_size",
+              "description": "",
+              "type": "integer",
+              "default": 64,
+              "required": "no"
+            },
+            {
+              "key": "adaptive.batching_max_size",
+              "label": "adaptive.batching_max_size",
+              "description": "",
+              "type": "integer",
+              "default": 1024,
+              "required": "no"
+            },
+            {
+              "key": "fetcher.buffer_capacity",
+              "label": "fetcher.buffer_capacity",
+              "description": "",
+              "type": "integer",
+              "default": 256,
+              "required": "no"
+            }
+          ]
         },
         {
-          "key": "full_sync_port",
-          "label": "full_sync_port.label",
-          "description": "",
-          "type": "integer",
-          "default": 9101,
-          "required": "no",
-          "min": 1025,
-          "max": 65535
-        },
-        {
-          "key": "incr_sync_port",
-          "label": "incr_sync_port.label",
-          "description": "",
-          "type": "integer",
-          "default": 9100,
-          "required": "no",
-          "min": 1025,
-          "max": 65535
-        },
-        {
-          "key": "system_profile_port",
-          "label": "system_profile_port.label",
-          "description": "",
-          "type": "integer",
-          "default": 9200,
-          "required": "no",
-          "min": 1025,
-          "max": 65535
-        },
-        {
-          "key": "log.level",
-          "label": "log.level.label",
-          "description": "",
-          "type": "string",
-          "default": "info",
-          "range": ["debug", "info", "warning", "error"],
-          "required": "yes"
-        },
-        {
-          "key": "sync_mode",
-          "label": "sync_mode",
-          "description": "[all, full, incr], default value all",
-          "default": "all",
-          "type": "string",
-          "range": [
-            "all",
-            "full",
-            "incr"
-          ],
-          "required": "yes"
-        },
-
-        {
-          "key": "source.address",
-          "label": "Sync: source address of MongoDB",
-          "description": "Format: ip:port, for example: 1.1.1.1:27017",
-          "type": "string",
-          "default": "127.0.0.1:27017",
-          "required": "yes"
-        },
-        {
-          "key": "source.user",
-          "label": "Sync: source's user of MongoDB",
-          "description": "Source's user",
-          "type": "string",
-          "default": "root",
-          "required": "yes"
-        },
-        {
-          "key": "source.password",
-          "label": "Sync: source user's password of MongoDB",
-          "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
-          "type": "password",
-          "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
-          "default": "Change1Pwd",
-          "required": "yes"
-        },
-        {
-          "key": "destination.address",
-          "label": "Sync: destination address of MongoDB",
-          "description": "Format: ip:port, for example: 1.1.1.1:27017",
-          "type": "string",
-          "default": "127.0.0.1:27017",
-          "required": "yes"
-        },
-        {
-          "key": "destination.user",
-          "label": "Sync: destination's user of MongoDB",
-          "description": "Destination's user",
-          "type": "string",
-          "default": "root",
-          "required": "yes"
-        },
-        {
-          "key": "destination.password",
-          "label": "Sync: destination user's password of MongoDB",
-          "description": "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32",
-          "type": "password",
-          "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
-          "default": "Change1Pwd",
-          "required": "yes"
-        },
-        {
-          "key": "tunnel",
-          "label": "tunnel",
-          "description": "[direct, rpc, tcp, file, kafka], default value direct",
-          "default": "direct",
-          "type": "string",
-          "range": [
-            "kafka.",
-            "rpc",
-            "tcp",
-            "file",
-            "kafka"
-          ],
-          "required": "no"
-        },
-        {
-          "key": "mongo_connect_mode",
-          "label": "mongo_connect_mode",
-          "description": "[primary, secondaryPreferred, standalone], default value secondaryPreferred",
-          "default": "direct",
-          "type": "string",
-          "range": [
-            "primary.",
-            "secondaryPreferred",
-            "standalone"
-          ],
-          "required": "no"
-        },
-        {
-          "key": "filter.namespace.black",
-          "label": "filter.namespace.black",
-          "description": "",
-          "default": "",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "filter.namespace.white",
-          "label": "filter.namespace.white",
-          "description": "",
-          "default": "",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "filter.pass.special.db",
-          "label": "filter.pass.special.db",
-          "description": "",
-          "default": "",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "filter.ddl_enable",
-          "label": "filter.ddl_enable",
-          "description": "",
-          "default": "false",
-          "range": ["true", "false"],
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "filter.oplog.gids",
-          "label": "filter.oplog.gids",
-          "description": "",
-          "default": "false",
-          "range": ["true", "false"],
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "checkpoint.storage.url",
-          "label": "checkpoint.storage.url",
-          "description": "",
-          "default": "",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "checkpoint.storage.db",
-          "label": "checkpoint.storage.db",
-          "description": "",
-          "default": "mongoshake",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "checkpoint.storage.collection",
-          "label": "checkpoint.storage.collection",
-          "description": "",
-          "default": "ckpt_default",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "checkpoint.start_position",
-          "label": "checkpoint.start_position",
-          "description": "",
-          "default": "1970-01-01T00:00:00Z",
-          "type": "string",
-          "required": "no"
-        },
-        {
-          "key": "transform.namespace",
-          "label": "transform.namespace",
-          "description": "",
-          "default": "",
-          "type": "string",
-          "required": "no"
-        }
-      ]
-    },
-
-    {
-      "key": "full_sync",
-      "description": "full sync configuration",
-      "type": "array",
-      "properties": [
-        {
-          "key": "reader.collection_parallel",
-          "label": "reader.collection_parallel",
-          "description": "",
-          "type": "integer",
-          "default": 6,
-          "required": "no",
-          "max": 10
-        },
-        {
-          "key": "reader.write_document_parallel",
-          "label": "reader.write_document_parallel",
-          "description": "",
-          "type": "integer",
-          "default": 8,
-          "required": "no",
-          "max": 10
-        },
-        {
-          "key": "reader.read_document_count",
-          "label": "reader.read_document_count",
-          "description": "",
-          "type": "integer",
-          "default": 0,
-          "required": "no"
-        },
-        {
-          "key": "collection_exist_drop",
-          "label": "collection_exist_drop",
-          "description": "",
-          "type": "string",
-          "default": "true",
-          "range": ["true", "false"],
-          "required": "no"
-        },
-        
-        {
-          "key": "create_index",
-          "label": "create_index",
-          "description": "",
-          "type": "string",
-          "default": "none",
-          "range": ["none", "foreground","background"],
-          "required": "no"
-        },
-        
-        {
-          "key": "executor.insert_on_dup_update",
-          "label": "executor.insert_on_dup_update",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
-        },
-        
-        {
-          "key": "executor.filter.orphan_document",
-          "label": "executor.filter.orphan_document",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
-        },
-        {
-          "key": "executor.majority_enable",
-          "label": "executor.majority_enable",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
-        }
-      ]
-    },
-    {
-      "key": "incr_sync",
-      "description": "incrmental sync configuration",
-      "type": "array",
-      "properties": [
-        {
-          "key": "mongo_fetch_method",
-          "label": "mongo_fetch_method",
-          "description": "",
-          "type": "string",
-          "default": "oplog",
-          "range": ["oplog", "change_stream"],
-          "required": "yes"
-        },
-        {
-          "key": "change_stream.watch_full_document",
-          "label": "change_stream.watch_full_document",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
-        },
-        {
-          "key": "shard_key",
-          "label": "shard_key",
-          "description": "",
-          "type": "string",
-          "default": "collection",
-          "range": ["auto", "id","collection"],
-          "required": "no"
-        },
-        {
-          "key": "shard_by_object_id_whitelist",
-          "label": "shard_by_object_id_whitelist",
-          "description": "",
-          "type": "string",
-          "default": "",
-          "required": "no"
-        },
-        {
-          "key": "worker",
-          "label": "worker",
-          "description": "",
-          "type": "integer",
-          "default": 8,
-          "required": "no"
-        },
-        {
-          "key": "tunnel.write_thread",
-          "label": "tunnel.write_thread",
-          "description": "",
-          "type": "integer",
-          "default": 8,
-          "required": "no"
-        },
-        {
-          "key": "target_delay",
-          "label": "target_delay",
-          "description": "",
-          "type": "integer",
-          "default": 0,
-          "required": "no"
-        },
-        {
-          "key": "worker.batch_queue_size",
-          "label": "worker.batch_queue_size",
-          "description": "",
-          "type": "integer",
-          "default": 64,
-          "required": "no"
-        },
-        {
-          "key": "adaptive.batching_max_size",
-          "label": "adaptive.batching_max_size",
-          "description": "",
-          "type": "integer",
-          "default": 1024,
-          "required": "no"
-        },
-        {
-          "key": "fetcher.buffer_capacity",
-          "label": "fetcher.buffer_capacity",
-          "description": "",
-          "type": "integer",
-          "default": 256,
-          "required": "no"
-        }
-      ]
-    },
-    {
-      "key": "direct_tunnel",
-      "description": "direct tunnel configuration",
-      "type": "array",
-      "properties": [
-        {
-          "key": "incr_sync.executor.upsert",
-          "label": "incr_sync.executor.upsert",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
-        },
-        {
-          "key": "incr_sync.executor.insert_on_dup_update",
-          "label": "incr_sync.executor.insert_on_dup_update",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
-        },
-        {
-          "key": "incr_sync.conflict_write_to",
-          "label": "incr_sync.conflict_write_to",
-          "description": "",
-          "type": "string",
-          "default": "none",
-          "required": "no"
-        },
-        {
-          "key": "incr_sync.majority_enable",
-          "label": "incr_sync.majority_enable",
-          "description": "",
-          "type": "string",
-          "default": "false",
-          "range": ["true", "false"],
-          "required": "no"
+          "key": "direct_tunnel",
+          "description": "direct tunnel configuration",
+          "type": "array",
+          "properties": [
+            {
+              "key": "incr_sync.executor.upsert",
+              "label": "incr_sync.executor.upsert",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            {
+              "key": "incr_sync.executor.insert_on_dup_update",
+              "label": "incr_sync.executor.insert_on_dup_update",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            },
+            {
+              "key": "incr_sync.conflict_write_to",
+              "label": "incr_sync.conflict_write_to",
+              "description": "",
+              "type": "string",
+              "default": "none",
+              "required": "no"
+            },
+            {
+              "key": "incr_sync.majority_enable",
+              "label": "incr_sync.majority_enable",
+              "description": "",
+              "type": "string",
+              "default": "false",
+              "range": ["true", "false"],
+              "required": "no"
+            }
+          ]
         }
       ]
     }
+    
   ]
 }
