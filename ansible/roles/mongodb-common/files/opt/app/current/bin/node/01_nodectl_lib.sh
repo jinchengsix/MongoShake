@@ -16,6 +16,8 @@ MONITOR_ITEM_REPL=/opt/mongo-shake/metrics/repl.metrics
 MONITOR_ITEM_SENTINEL=/opt/mongo-shake/metrics/sentinel.metrics
 MONITOR_ITEM_SENTINEL_OPTIONS=/opt/mongo-shake/metrics/sentinel_options.metrics
 MONITOR_ITEM_WORKER=/opt/mongo-shake/metrics/worker.metrics
+MONITOR_ITEM_TMP=/opt/mongo-shake/metrics/tmp.metrics
+MONITOR_TEMPLATE=/opt/app/current/bin/node/item.monitor
 
 
 start(){
@@ -39,9 +41,13 @@ monitor(){
         mkdir -p $MONITOR_DIR 
     fi
     local res
+    local group
     local title
     local value
     local port=$(getItemFromFile incr_sync.http_port $MONGOSHAKE_CONF)
+    if [ -z $port ]; then 
+        log "port is empty, please check"
+    fi
     getMonitorItem $MONITOR_ITEM_EXECUTOR "executor"
     getMonitorItem $MONITOR_ITEM_PERSIST "persist"
     getMonitorItem $MONITOR_ITEM_QUEUE "queue"
@@ -50,38 +56,34 @@ monitor(){
     getMonitorItem $MONITOR_ITEM_SENTINEL_OPTIONS "sentinel_options"
     getMonitorItem $MONITOR_ITEM_WORKER "worker"
 
-
-    if [ ! -s $MONITOR_ITEM_EXECUTOR ]; then
-        res=$(outputItem $MONITOR_ITEM_EXECUTOR "executor")
-    fi
-
-
-}
-
-outputItem() {
-    local group
-    local title
-    local value
     while read line; do
         group=$(echo $line | cut -d'/' -f1)
         title=$(echo $line | cut -d'/' -f2)
-        if [ "$group" = "$2" ]; then
-            if [ "$2" = "executor" ]; then
-                
-            else
-                value=$(cat $1 |jq "$title")
-            fi
+        pipestr=$(echo $line | cut -d'/' -f3)
+        if [ "$group" = "persist" ]; then
+            value=$(cat $MONITOR_ITEM_PERSIST | jq "$pipestr")
+        fi
+
+        if [ "$group" = "repl" ]; then
+            value=$(cat $MONITOR_ITEM_REPL | jq "$pipestr")
+        fi
+
+        if [ "$group" = "sentinel" ]; then
+            value=$(cat $MONITOR_ITEM_SENTINEL | jq "$pipestr")
+        fi
+
+        if [ "$group" = "executor" ]; then
+            cat $MONITOR_ITEM_EXECUTOR | jq "$pipestr" > $MONITOR_ITEM_TMP
+            value=$(echo $(echo -n `cat $MONITOR_ITEM_TMP` | tr ' ' '+') | bc)
         fi
         res="$res,\"$title\":$value"
-    done < $1
-    echo $res
+        done < $MONITOR_TEMPLATE
+    echo "{${res:1}}"
 }
 
 getMonitorItem(){
     curl 127.0.0.1:$port/$2 > $1
 }
-
-
 
 healthCheck(){
     log ">>>>> healthCheck begin <<<<<"
