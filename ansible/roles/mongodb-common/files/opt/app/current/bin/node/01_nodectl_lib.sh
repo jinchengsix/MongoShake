@@ -16,6 +16,7 @@ MONITOR_ITEM_REPL=/opt/mongo-shake/metrics/repl.metrics
 MONITOR_ITEM_SENTINEL=/opt/mongo-shake/metrics/sentinel.metrics
 MONITOR_ITEM_SENTINEL_OPTIONS=/opt/mongo-shake/metrics/sentinel_options.metrics
 MONITOR_ITEM_WORKER=/opt/mongo-shake/metrics/worker.metrics
+MONITOR_ITEM_PROGRESS=/opt/mongo-shake/metrics/progress.metrics
 MONITOR_ITEM_TMP=/opt/mongo-shake/metrics/tmp.metrics
 MONITOR_TEMPLATE=/opt/app/current/bin/node/item.monitor
 
@@ -44,17 +45,23 @@ monitor(){
     local group
     local title
     local value
-    local port=$(getItemFromFile incr_sync.http_port $MONGOSHAKE_CONF)
-    if [ -z $port ]; then 
-        log "port is empty, please check"
+    local sync_mode=$(getItemFromFile sync_mode.http_port $MONGOSHAKE_CONF)
+    local incr_port=$(getItemFromFile incr_sync.http_port $MONGOSHAKE_CONF)
+    local full_port=$(getItemFromFile full_sync.http_port $MONGOSHAKE_CONF)
+
+    if [ ! -z getPidByNetstat $incr_port ]; then 
+        getMonitorItem $incr_port $MONITOR_ITEM_EXECUTOR "executor"
+        getMonitorItem $incr_port $MONITOR_ITEM_PERSIST "persist"
+        getMonitorItem $incr_port $MONITOR_ITEM_QUEUE "queue"
+        getMonitorItem $incr_port $MONITOR_ITEM_REPL "repl"
+        getMonitorItem $incr_port $MONITOR_ITEM_SENTINEL "sentinel"
+        getMonitorItem $incr_port $MONITOR_ITEM_SENTINEL_OPTIONS "sentinel_options"
+        getMonitorItem $incr_port $MONITOR_ITEM_WORKER "worker"
     fi
-    getMonitorItem $MONITOR_ITEM_EXECUTOR "executor"
-    getMonitorItem $MONITOR_ITEM_PERSIST "persist"
-    getMonitorItem $MONITOR_ITEM_QUEUE "queue"
-    getMonitorItem $MONITOR_ITEM_REPL "repl"
-    getMonitorItem $MONITOR_ITEM_SENTINEL "sentinel"
-    getMonitorItem $MONITOR_ITEM_SENTINEL_OPTIONS "sentinel_options"
-    getMonitorItem $MONITOR_ITEM_WORKER "worker"
+
+    if [ ! -z getPidByNetstat $full_port ]; then 
+        getMonitorItem $full_port $MONITOR_ITEM_PROGRESS "progress"
+    fi
 
     while read line; do
         group=$(echo $line | cut -d'/' -f1)
@@ -72,9 +79,16 @@ monitor(){
             value=$(cat $MONITOR_ITEM_SENTINEL | jq "$pipestr")
         fi
 
+        if [ "$group" = "progress" ]; then
+            value=$(cat $MONITOR_ITEM_PROGRESS | jq "$pipestr")
+        fi
+
         if [ "$group" = "executor" ]; then
             cat $MONITOR_ITEM_EXECUTOR | jq "$pipestr" > $MONITOR_ITEM_TMP
             value=$(echo $(echo -n `cat $MONITOR_ITEM_TMP` | tr ' ' '+') | bc)
+        fi
+        if [ -z $value ]; then 
+            value=0
         fi
         res="$res,\"$title\":$value"
         done < $MONITOR_TEMPLATE
@@ -82,12 +96,19 @@ monitor(){
 }
 
 getMonitorItem(){
-    curl 127.0.0.1:$port/$2 > $1
+    curl 127.0.0.1:$1/$3 > $2
+}
+
+initIncrFile(){
+
+}
+initFullFile(){
+
 }
 
 healthCheck(){
     log ">>>>> healthCheck begin <<<<<"
-    if [ -f isSingleThread $BEING_HEALTH_CHECKED_FLAG ]; then 
+    if [ -f $BEING_HEALTH_CHECKED_FLAG ]; then 
         log "a health check is already running!"
         return 1
     fi
@@ -120,7 +141,7 @@ healthCheck(){
 
 revive() {
     log ">>>>> revive begin <<<<<"
-    if [ -f isSingleThread $BEING_REVIVED_FLAG ]; then 
+    if [ -f $BEING_REVIVED_FLAG ]; then 
         log "a revive process is already running!"
         return 1
     fi

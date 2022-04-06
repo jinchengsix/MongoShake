@@ -15,7 +15,7 @@
       "type": "kvm",
       "sriov_nic": true,
       "zone": "pek3",
-      "image": "img-il26ut75"
+      "image": "img-qjjn17k9"
     },
     "instance_class": {{cluster.replica.instance_class}},
     "count": 1,
@@ -115,98 +115,119 @@
       "tps":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "buffer_used":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "buffer_size":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "disk_write_count":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "disk_read_count":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "logs_get":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "logs_repl":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "logs_success":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
-        "scale_factor_when_display":1
-      },
-      "OplogDump":{
-        "unit":"",
-        "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "insert":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "update":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "delete":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "ddl":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "unknow":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       },
       "error":{
         "unit":"",
         "value_type":"int",
-        "statistics_type":"delta",
+        "statistics_type":"latest",
+        "scale_factor_when_display":1
+      },
+      "progress":{
+        "unit":"",
+        "value_type":"int",
+        "statistics_type":"latest",
+        "scale_factor_when_display":1
+      },
+      "total_collection_number":{
+        "unit":"",
+        "value_type":"int",
+        "statistics_type":"latest",
+        "scale_factor_when_display":1
+      },
+      "finished_collection_number":{
+        "unit":"",
+        "value_type":"int",
+        "statistics_type":"latest",
+        "scale_factor_when_display":1
+      },
+      "processing_collection_number":{
+        "unit":"",
+        "value_type":"int",
+        "statistics_type":"latest",
+        "scale_factor_when_display":1
+      },
+      "wait_collection_number":{
+        "unit":"",
+        "value_type":"int",
+        "statistics_type":"latest",
         "scale_factor_when_display":1
       }
     },
     "groups": {
-      "tps":[
-        "tps"
-      ]
       "buffer":[
         "buffer_used",
         "buffer_size"
@@ -220,26 +241,32 @@
         "logs_repl",
         "logs_success"
       ],
-      "OplogDump":[
-        "OplogDump"
-      ],
       "executor": [
-        "insert",
-        "update",
-        "delete",
         "ddl",
         "unknow",
         "error"
+      ],
+      "executor_ops": [
+        "insert",
+        "update",
+        "delete"
+      ],
+      "collection_progress":[
+        "total_collection_number",
+        "finished_collection_number",
+        "processing_collection_number",
+        "wait_collection_number"
       ]
     },
     "display": [
+      "progress",
+      "collection_progress",
       "tps",
       "buffer",
       "disk_count",
       "logs",
-      "log_size",
-      "OplogDump",
-      "executor"
+      "executor",
+      "executor_ops"
     ],
     "alarm": []
   }
