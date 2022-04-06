@@ -2,7 +2,7 @@
 - name: re-install ca-certificates,jq,bc
   apt:
     update_cache: yes
-    name: ['ca-certificates','jq','bc']
+    name: ['ca-certificates','jq','bc','net-tools']
     state: latest
 
 - name: download app-agent
