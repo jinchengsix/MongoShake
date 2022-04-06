@@ -112,110 +112,101 @@
     "enable":true,
     "cmd":"appctl monitor",
     "items": {
+      "tps":{
+        "unit":"",
+        "value_type":"int",
+        "statistics_type":"delta",
+        "scale_factor_when_display":1
+      },
       "buffer_used":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "buffer_size":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "disk_write_count":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "disk_read_count":{
-        "unit":"times",
-        "value_type":"int",
-        "statistics_type":"delta",
-        "scale_factor_when_display":1
-      },
-      "tps":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "logs_get":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "logs_repl":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "logs_success":{
-        "unit":"times",
-        "value_type":"int",
-        "statistics_type":"delta",
-        "scale_factor_when_display":1
-      },
-      "log_size_avg":{
-        "unit":"times",
-        "value_type":"int",
-        "statistics_type":"delta",
-        "scale_factor_when_display":1
-      },
-      "log_size_max":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "OplogDump":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "insert":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "update":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "delete":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "ddl":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "unknow":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       },
       "error":{
-        "unit":"times",
+        "unit":"",
         "value_type":"int",
         "statistics_type":"delta",
         "scale_factor_when_display":1
       }
     },
     "groups": {
+      "tps":[
+        "tps"
+      ]
       "buffer":[
         "buffer_used",
         "buffer_size"
@@ -224,17 +215,10 @@
         "disk_write_count",
         "disk_read_count"
       ],
-      "tps":[
-        "tps"
-      ]
       "logs":[
         "logs_get",
         "logs_repl",
         "logs_success"
-      ],
-      "log_size":[
-        "log_size_avg",
-        "log_size_max"
       ],
       "OplogDump":[
         "OplogDump"
@@ -249,9 +233,9 @@
       ]
     },
     "display": [
+      "tps",
       "buffer",
       "disk_count",
-      "tps",
       "logs",
       "log_size",
       "OplogDump",
