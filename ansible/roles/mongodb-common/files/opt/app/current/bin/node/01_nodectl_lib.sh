@@ -45,21 +45,19 @@ monitor(){
     local group
     local title
     local value
-    local sync_mode=$(getItemFromFile sync_mode.http_port $MONGOSHAKE_CONF)
+    
     local incr_port=$(getItemFromFile incr_sync.http_port $MONGOSHAKE_CONF)
     local full_port=$(getItemFromFile full_sync.http_port $MONGOSHAKE_CONF)
+    initIncrFile
+    initFullFile
 
-    if [ ! -z getPidByNetstat $incr_port ]; then 
+    if [ ! -z "$(getPidByNetstat $incr_port)" ]; then 
         getMonitorItem $incr_port $MONITOR_ITEM_EXECUTOR "executor"
         getMonitorItem $incr_port $MONITOR_ITEM_PERSIST "persist"
-        getMonitorItem $incr_port $MONITOR_ITEM_QUEUE "queue"
         getMonitorItem $incr_port $MONITOR_ITEM_REPL "repl"
-        getMonitorItem $incr_port $MONITOR_ITEM_SENTINEL "sentinel"
-        getMonitorItem $incr_port $MONITOR_ITEM_SENTINEL_OPTIONS "sentinel_options"
-        getMonitorItem $incr_port $MONITOR_ITEM_WORKER "worker"
     fi
 
-    if [ ! -z getPidByNetstat $full_port ]; then 
+    if [ ! -z "$(getPidByNetstat $full_port)" ]; then 
         getMonitorItem $full_port $MONITOR_ITEM_PROGRESS "progress"
     fi
 
@@ -75,10 +73,6 @@ monitor(){
             value=$(cat $MONITOR_ITEM_REPL | jq "$pipestr")
         fi
 
-        if [ "$group" = "sentinel" ]; then
-            value=$(cat $MONITOR_ITEM_SENTINEL | jq "$pipestr")
-        fi
-
         if [ "$group" = "progress" ]; then
             value=$(cat $MONITOR_ITEM_PROGRESS | jq "$pipestr")
         fi
@@ -86,9 +80,6 @@ monitor(){
         if [ "$group" = "executor" ]; then
             cat $MONITOR_ITEM_EXECUTOR | jq "$pipestr" > $MONITOR_ITEM_TMP
             value=$(echo $(echo -n `cat $MONITOR_ITEM_TMP` | tr ' ' '+') | bc)
-        fi
-        if [ -z $value ]; then 
-            value=0
         fi
         res="$res,\"$title\":$value"
         done < $MONITOR_TEMPLATE
@@ -100,10 +91,53 @@ getMonitorItem(){
 }
 
 initIncrFile(){
+    cat > $MONITOR_ITEM_EXECUTOR <<end 
+[{
+    "id": 0,
+    "insert": 0,
+    "update": 0,
+    "delete": 0,
+    "ddl": 0,
+    "unknown": 0,
+    "error": 0,
+    "insert_ns_top_3": [],
+    "update_ns_top_3": [],
+    "delete_ns_top_3": [],
+    "ddl_ns_top_3": [],
+    "unknown_ns_top_3": [],
+    "error_ns_top_3": []
+  }]
+end
+    cat > $MONITOR_ITEM_PERSIST <<end 
+{
+  "buffer_used": 0,
+  "buffer_size": 0,
+  "enable_disk_persist": false,
+  "fetch_stage": "store memory and apply",
+  "disk_write_count": 0,
+  "disk_read_count": 0
+}
+end
+    cat > $MONITOR_ITEM_REPL <<end 
+{
+  "logs_get": 0,
+  "logs_repl": 0,
+  "logs_success": 0,
+  "tps": 0
+}
+end
 
 }
 initFullFile(){
-
+    cat > $MONITOR_ITEM_PROGRESS <<end 
+{
+  "progress": "0.00%",
+  "total_collection_number": 0,
+  "finished_collection_number": 0,
+  "processing_collection_number": 0,
+  "wait_collection_number": 0
+}
+end
 }
 
 healthCheck(){
@@ -122,7 +156,7 @@ healthCheck(){
 
     local full_port=$(getItemFromFile full_sync.http_port $MONGOSHAKE_CONF)
     local incr_port=$(getItemFromFile incr_sync.http_port $MONGOSHAKE_CONF)
-    if [ -z getPidByNetstat $full_port ] && [ -z getPidByNetstat $incr_port ] ; then
+    if [ -z "$(getPidByNetstat $full_port)" ] && [ -z "$(getPidByNetstat $incr_port)" ] ; then
         log "port not listen, please check!"
         rm -f $BEING_HEALTH_CHECKED_FLAG
         return $ERR_PORT_NOT_LISTEN
