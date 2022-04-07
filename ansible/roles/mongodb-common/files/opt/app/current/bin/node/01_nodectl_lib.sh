@@ -75,6 +75,10 @@ monitor(){
 
         if [ "$group" = "progress" ]; then
             value=$(cat $MONITOR_ITEM_PROGRESS | jq "$pipestr")
+            if [ "$title" = "progress" ]; then
+                # convert string to int
+                value=$(echo ${value:1:-5})
+            fi
         fi
 
         if [ "$group" = "executor" ]; then
