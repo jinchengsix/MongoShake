@@ -42,7 +42,7 @@
     opts:
       pkg_name: mongo-shake
       pkg_version: "{{ mongo_shake_version }}"
-      pkg_url: https://github.com/alibaba/MongoShake/releases/download/release-v{{ mongo_shake_version }}-20210723-1/mongo-shake-v{{ mongo_shake_version }}.tar.gz
+      pkg_url: https://github.com/alibaba/MongoShake/releases/download/release-v{{ mongo_shake_version }}-20220323/mongo-shake-v{{ mongo_shake_version }}.tar.gz
       pkg_type: tar.gz
       creates: bin
       extracts: yes

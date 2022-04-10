@@ -36,7 +36,7 @@
           "type": "array",
           "properties": [{
             "key": "instance_class",
-            "label": "instance_class_label",
+            "label": "Instance class",
             "description": "",
             "type": "integer",
             "default": 203,
@@ -44,16 +44,16 @@
             "required": "yes"
           }, {
             "key": "cpu",
-            "label": "cpu_label",
-            "description": "cpu_description",
+            "label": "CPU",
+            "description": "CPUs of each node",
             "type": "integer",
             "default": 2,
             "range": [1, 2, 4, 8],
             "required": "yes"
           }, {
             "key": "memory",
-            "label": "memory_label",
-            "description": "memory_description",
+            "label": "Memory",
+            "description": "Memory of each node",
             "type": "integer",
             "default": 2048,
             "range": [1024, 2048, 4096, 8192], 
@@ -75,15 +75,15 @@
             {
               "key": "mongoshake.id",
               "label": "mongoshake.id",
-              "description": "",
+              "description": "Mongoshake's unique id",
               "type": "string",
               "default": "mongoshake",
               "required": "no"
             },
             {
               "key": "master_quorum",
-              "label": "master_quorum.label",
-              "description": "",
+              "label": "master_quorum",
+              "description": "Whether to enable master/slave mode, default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
@@ -91,8 +91,8 @@
             },
             {
               "key": "full_sync_port",
-              "label": "full_sync_port.label",
-              "description": "",
+              "label": "full_sync_port",
+              "description": "Full stage listening port, default 9101",
               "type": "integer",
               "default": 9101,
               "required": "no",
@@ -101,8 +101,8 @@
             },
             {
               "key": "incr_sync_port",
-              "label": "incr_sync_port.label",
-              "description": "",
+              "label": "incr_sync_port",
+              "description": "Increment stage listening port, default 9100",
               "type": "integer",
               "default": 9100,
               "required": "no",
@@ -111,8 +111,8 @@
             },
             {
               "key": "system_profile_port",
-              "label": "system_profile_port.label",
-              "description": "",
+              "label": "system_profile_port",
+              "description": "pprof listening port, Users can view internal running stack information. default 9200",
               "type": "integer",
               "default": 9200,
               "required": "no",
@@ -121,8 +121,8 @@
             },
             {
               "key": "log.level",
-              "label": "log.level.label",
-              "description": "",
+              "label": "log.level",
+              "description": "Log level, 【debug, info, warning, error】, default info",
               "type": "string",
               "default": "info",
               "range": ["debug", "info", "warning", "error"],
@@ -131,13 +131,11 @@
             {
               "key": "sync_mode",
               "label": "sync_mode",
-              "description": "[all, full, incr], default value all",
+              "description": "Sync mode, default full + incr",
               "default": "all",
               "type": "string",
               "range": [
-                "all",
-                "full",
-                "incr"
+                "all"
               ],
               "required": "yes"
             },
@@ -145,7 +143,7 @@
             {
               "key": "source.address",
               "label": "Sync: source address of MongoDB",
-              "description": "Format: ip:port, for example: 1.1.1.1:27017",
+              "description": "Source address, Format: ip:port, for example: 1.1.1.1:27017",
               "type": "string",
               "default": "127.0.0.1:27017",
               "required": "yes"
@@ -170,7 +168,7 @@
             {
               "key": "destination.address",
               "label": "Sync: destination address of MongoDB",
-              "description": "Format: ip:port, for example: 1.1.1.1:27017",
+              "description": "Destination address, Format: ip:port, for example: 1.1.1.1:27017",
               "type": "string",
               "default": "127.0.0.1:27017",
               "required": "yes"
@@ -214,7 +212,7 @@
               "default": "secondaryPreferred",
               "type": "string",
               "range": [
-                "primary.",
+                "primary",
                 "secondaryPreferred",
                 "standalone"
               ],
@@ -223,7 +221,7 @@
             {
               "key": "filter.namespace.black",
               "label": "filter.namespace.black",
-              "description": "",
+              "description": "Blacklist filter",
               "default": "",
               "type": "string",
               "required": "no"
@@ -231,7 +229,7 @@
             {
               "key": "filter.namespace.white",
               "label": "filter.namespace.white",
-              "description": "",
+              "description": "Whitelist filter",
               "default": "",
               "type": "string",
               "required": "no"
@@ -239,7 +237,7 @@
             {
               "key": "filter.pass.special.db",
               "label": "filter.pass.special.db",
-              "description": "",
+              "description": "Specify a special namespace through, such as admin, system.views, mongoshake, config",
               "default": "",
               "type": "string",
               "required": "no"
@@ -247,16 +245,7 @@
             {
               "key": "filter.ddl_enable",
               "label": "filter.ddl_enable",
-              "description": "",
-              "default": "false",
-              "range": ["true", "false"],
-              "type": "string",
-              "required": "no"
-            },
-            {
-              "key": "filter.oplog.gids",
-              "label": "filter.oplog.gids",
-              "description": "",
+              "description": "Whether to synchronize DDL",
               "default": "false",
               "range": ["true", "false"],
               "type": "string",
@@ -265,7 +254,7 @@
             {
               "key": "checkpoint.storage.url",
               "label": "checkpoint.storage.url",
-              "description": "",
+              "description": "Identifies where checkpoints are stored",
               "default": "",
               "type": "string",
               "required": "no"
@@ -273,7 +262,7 @@
             {
               "key": "checkpoint.storage.db",
               "label": "checkpoint.storage.db",
-              "description": "",
+              "description": "The database name of checkpoint store, the default is mongoshake",
               "default": "mongoshake",
               "type": "string",
               "required": "no"
@@ -281,7 +270,7 @@
             {
               "key": "checkpoint.storage.collection",
               "label": "checkpoint.storage.collection",
-              "description": "",
+              "description": "The collection name of checkpoint store, the default is ckpt_default",
               "default": "ckpt_default",
               "type": "string",
               "required": "no"
@@ -289,7 +278,7 @@
             {
               "key": "checkpoint.start_position",
               "label": "checkpoint.start_position",
-              "description": "",
+              "description": "Specify the location to start pulling oplogs",
               "default": "1970-01-01T00:00:00Z",
               "type": "string",
               "required": "no"
@@ -297,7 +286,7 @@
             {
               "key": "transform.namespace",
               "label": "transform.namespace",
-              "description": "",
+              "description": "Whether to enable namespace conversion, such as a.b of the source library, converted to c.d in the destination library. Not enabled by default",
               "default": "",
               "type": "string",
               "required": "no"
@@ -313,7 +302,7 @@
             {
               "key": "reader.collection_parallel",
               "label": "reader.collection_parallel",
-              "description": "",
+              "description": "The maximum number of collections to pull concurrently at one time. Default 6",
               "type": "integer",
               "default": 6,
               "required": "no",
@@ -322,24 +311,16 @@
             {
               "key": "reader.write_document_parallel",
               "label": "reader.write_document_parallel",
-              "description": "",
+              "description": "Inside a collection, how many threads are started for concurrent writing. Default is 8.",
               "type": "integer",
               "default": 8,
               "required": "no",
               "max": 10
             },
             {
-              "key": "reader.read_document_count",
-              "label": "reader.read_document_count",
-              "description": "",
-              "type": "integer",
-              "default": 0,
-              "required": "no"
-            },
-            {
               "key": "collection_exist_drop",
               "label": "collection_exist_drop",
-              "description": "",
+              "description": "If the same collection exists at the destination, whether it needs to be deleted first and then synchronized, it is enabled by default",
               "type": "string",
               "default": "true",
               "range": ["true", "false"],
@@ -349,7 +330,7 @@
             {
               "key": "create_index",
               "label": "create_index",
-              "description": "",
+              "description": "Whether to create an index after the data synchronization is complete during the full period, it is not created by default",
               "type": "string",
               "default": "none",
               "range": ["none", "foreground","background"],
@@ -359,7 +340,7 @@
             {
               "key": "executor.insert_on_dup_update",
               "label": "executor.insert_on_dup_update",
-              "description": "",
+              "description": "If _id exists in the destination library, whether to change the insert statement to an update statement. Not enabled by default",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
@@ -369,7 +350,7 @@
             {
               "key": "executor.filter.orphan_document",
               "label": "executor.filter.orphan_document",
-              "description": "",
+              "description": "The source is sharding, do you need to filter orphan documents. Default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
@@ -378,7 +359,7 @@
             {
               "key": "executor.majority_enable",
               "label": "executor.majority_enable",
-              "description": "",
+              "description": "Whether to enable majority write on the write side of the full stage. Default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
@@ -394,25 +375,16 @@
             {
               "key": "mongo_fetch_method",
               "label": "mongo_fetch_method",
-              "description": "",
+              "description": "The way to pull increments from the source MongoDB, the default oplog",
               "type": "string",
               "default": "oplog",
               "range": ["oplog", "change_stream"],
               "required": "yes"
             },
             {
-              "key": "change_stream.watch_full_document",
-              "label": "change_stream.watch_full_document",
-              "description": "",
-              "type": "string",
-              "default": "false",
-              "range": ["true", "false"],
-              "required": "no"
-            },
-            {
               "key": "shard_key",
               "label": "shard_key",
-              "description": "",
+              "description": "The way to internally distribute concurrently to worker threads. id means hash by primary key _id, collection means hash by table, auto means automatic identification",
               "type": "string",
               "default": "collection",
               "range": ["auto", "id","collection"],
@@ -421,7 +393,7 @@
             {
               "key": "shard_by_object_id_whitelist",
               "label": "shard_by_object_id_whitelist",
-              "description": "",
+              "description": "Concurrent whitelist by _id",
               "type": "string",
               "default": "",
               "required": "no"
@@ -429,7 +401,7 @@
             {
               "key": "worker",
               "label": "worker",
-              "description": "",
+              "description": "The number of worker threads, the default is 8",
               "type": "integer",
               "default": 8,
               "required": "no"
@@ -437,7 +409,7 @@
             {
               "key": "tunnel.write_thread",
               "label": "tunnel.write_thread",
-              "description": "",
+              "description": "Controls the number of serialized threads, the default is 1 tunnel (worker) corresponds to 1.",
               "type": "integer",
               "default": 8,
               "required": "no"
@@ -445,33 +417,9 @@
             {
               "key": "target_delay",
               "label": "target_delay",
-              "description": "",
+              "description": "Controls the time to delay synchronization, the destination can lag behind the source by a specified number of seconds",
               "type": "integer",
               "default": 0,
-              "required": "no"
-            },
-            {
-              "key": "worker.batch_queue_size",
-              "label": "worker.batch_queue_size",
-              "description": "",
-              "type": "integer",
-              "default": 64,
-              "required": "no"
-            },
-            {
-              "key": "adaptive.batching_max_size",
-              "label": "adaptive.batching_max_size",
-              "description": "",
-              "type": "integer",
-              "default": 1024,
-              "required": "no"
-            },
-            {
-              "key": "fetcher.buffer_capacity",
-              "label": "fetcher.buffer_capacity",
-              "description": "",
-              "type": "integer",
-              "default": 256,
               "required": "no"
             }
           ]
@@ -484,7 +432,7 @@
             {
               "key": "incr_sync.executor.upsert",
               "label": "incr_sync.executor.upsert",
-              "description": "",
+              "description": "If _id does not exist in the destination library, whether to change the update statement to an insert statement. Default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
@@ -493,7 +441,7 @@
             {
               "key": "incr_sync.executor.insert_on_dup_update",
               "label": "incr_sync.executor.insert_on_dup_update",
-              "description": "",
+              "description": "If _id exists in the destination library, whether to change the insert statement to an update statement. Default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
@@ -502,7 +450,7 @@
             {
               "key": "incr_sync.conflict_write_to",
               "label": "incr_sync.conflict_write_to",
-              "description": "",
+              "description": "If there is a conflict in writing, record the conflicting document. db means to record the conflict in the db corresponding to the checkpoint url. sdk means write to sdk (open source is useless). The default is none.",
               "type": "string",
               "default": "none",
               "required": "no"
@@ -510,7 +458,7 @@
             {
               "key": "incr_sync.majority_enable",
               "label": "incr_sync.majority_enable",
-              "description": "",
+              "description": "Whether to enable majority write on the write side in the incremental phase. Default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],

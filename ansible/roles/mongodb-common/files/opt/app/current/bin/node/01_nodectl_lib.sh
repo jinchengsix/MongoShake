@@ -53,7 +53,6 @@ monitor(){
 
     if [ ! -z "$(getPidByNetstat $incr_port)" ]; then 
         getMonitorItem $incr_port $MONITOR_ITEM_EXECUTOR "executor"
-        getMonitorItem $incr_port $MONITOR_ITEM_PERSIST "persist"
         getMonitorItem $incr_port $MONITOR_ITEM_REPL "repl"
     fi
 
@@ -65,10 +64,6 @@ monitor(){
         group=$(echo $line | cut -d'/' -f1)
         title=$(echo $line | cut -d'/' -f2)
         pipestr=$(echo $line | cut -d'/' -f3)
-        if [ "$group" = "persist" ]; then
-            value=$(cat $MONITOR_ITEM_PERSIST | jq "$pipestr")
-        fi
-
         if [ "$group" = "repl" ]; then
             value=$(cat $MONITOR_ITEM_REPL | jq "$pipestr")
         fi
@@ -111,16 +106,6 @@ initIncrFile(){
     "unknown_ns_top_3": [],
     "error_ns_top_3": []
   }]
-end
-    cat > $MONITOR_ITEM_PERSIST <<end 
-{
-  "buffer_used": 0,
-  "buffer_size": 0,
-  "enable_disk_persist": false,
-  "fetch_stage": "store memory and apply",
-  "disk_write_count": 0,
-  "disk_read_count": 0
-}
 end
     cat > $MONITOR_ITEM_REPL <<end 
 {
