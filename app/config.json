@@ -37,7 +37,7 @@
           "properties": [{
             "key": "instance_class",
             "label": "Instance class",
-            "description": "",
+            "description": "Instance clase of each node",
             "type": "integer",
             "default": 203,
             "range": [101, 202, 203, 301],

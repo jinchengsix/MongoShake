@@ -14,6 +14,7 @@
   "Volume size": "磁盘大小",
   "Volume Size": "磁盘大小",
   "Volume Class":"磁盘类型",
+  "Instance clase of each node": "每个节点的主机类型",
   "CPUs of each node": "每个节点的 CPU 数量",
   "Memory of each node": "每个节点的内存大小",
   "The volume size of each node": "每个节点的磁盘大小,用于数据持久化,生产环境建议最小设置为内存的 3 倍",
