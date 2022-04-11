@@ -67,7 +67,8 @@
   "If _id exists in the destination library, whether to change the insert statement to an update statement. Default false":"如果 _id 存在在目的库,是否将 insert 语句修改为 update 语句.默认 false",
   "If there is a conflict in writing, record the conflicting document. db means to record the conflict in the db corresponding to the checkpoint url. sdk means write to sdk (open source is useless). The default is none.":"如果写入存在冲突,记录冲突的文档.db 表示将冲突记录到 checkpoint url 对应的 db 里面.sdk 表示写入 sdk（开源没有用）.默认 none",
   "Whether to enable majority write on the write side in the incremental phase. Default false":"增量阶段写入端是否启用 majority write.默认false",
-  
+  "Must contain a combination of uppercase and lowercase letters and numbers, special characters can be used (including @#%&*()_+-=), and the length is between 8-32":"必须包含大小写字母和数字的组合, 可使用特殊字符(包括 @#%&*()_+-=), 长度在 8-32 之间",
+
   "progress":"全量同步进度",
   "COLLECTION_PROGRESS":"表数量同步进度",
   "total_collection_number":"总计",
