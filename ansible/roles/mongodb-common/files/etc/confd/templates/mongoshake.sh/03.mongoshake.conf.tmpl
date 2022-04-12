@@ -1,7 +1,7 @@
 flush > /opt/app/current/conf/mongoshake/mongoshake.conf <<MONGOSHAKE_CONF
 conf.version=10
-id={{ getv "/env/global.mongoshake.id" }}
-master_quorum={{ getv "/env/global.master_quorum" }}
+id=mongoshake
+master_quorum=false
 full_sync.http_port={{ getv "/env/global.full_sync_port" }}
 incr_sync.http_port={{ getv "/env/global.incr_sync_port" }}
 system_profile_port={{ getv "/env/global.system_profile_port" }}
@@ -40,8 +40,8 @@ full_sync.executor.majority_enable={{ getv "/env/full_sync.executor.majority_ena
 incr_sync.mongo_fetch_method={{ getv "/env/incr_sync.mongo_fetch_method" }}
 incr_sync.change_stream.watch_full_document=false
 incr_sync.oplog.gids=
-incr_sync.shard_key={{ getv "/env/incr_sync.shard_key" }}
-incr_sync.shard_by_object_id_whitelist={{ getv "/env/incr_sync.shard_by_object_id_whitelist" }} 
+incr_sync.shard_key=1
+incr_sync.shard_by_object_id_whitelist=
 incr_sync.worker={{ getv "/env/incr_sync.worker" }}
 incr_sync.tunnel.write_thread={{ getv "/env/incr_sync.tunnel.write_thread" }}
 incr_sync.target_delay={{ getv "/env/incr_sync.target_delay" }}

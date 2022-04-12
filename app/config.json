@@ -32,7 +32,7 @@
         {
           "key": "replica",
           "description": "Properties for config server node",
-          "label": "Replica Node",
+          "label": "Node",
           "type": "array",
           "properties": [{
             "key": "instance_class",
@@ -72,23 +72,6 @@
           "description": "global configuration",
           "type": "array",
           "properties": [
-            {
-              "key": "mongoshake.id",
-              "label": "mongoshake.id",
-              "description": "Mongoshake's unique id",
-              "type": "string",
-              "default": "mongoshake",
-              "required": "no"
-            },
-            {
-              "key": "master_quorum",
-              "label": "master_quorum",
-              "description": "Whether to enable master/slave mode, default false",
-              "type": "string",
-              "default": "false",
-              "range": ["true", "false"],
-              "required": "no"
-            },
             {
               "key": "full_sync_port",
               "label": "full_sync_port",
@@ -139,7 +122,6 @@
               ],
               "required": "yes"
             },
-    
             {
               "key": "source.address",
               "label": "Sync: source address of MongoDB",
@@ -150,7 +132,7 @@
             },
             {
               "key": "source.user",
-              "label": "Sync: source's user of MongoDB",
+              "label": "Sync: source user of MongoDB",
               "description": "Source's user",
               "type": "string",
               "default": "root",
@@ -175,7 +157,7 @@
             },
             {
               "key": "destination.user",
-              "label": "Sync: destination's user of MongoDB",
+              "label": "Sync: destination user of MongoDB",
               "description": "Destination's user",
               "type": "string",
               "default": "root",
@@ -193,15 +175,11 @@
             {
               "key": "tunnel",
               "label": "tunnel",
-              "description": "[direct, rpc, tcp, file, kafka], default value direct",
+              "description": "[direct, rpc, tcp, file, kafka], default value direct, the current version only supports direct",
               "default": "direct",
               "type": "string",
               "range": [
-                "direct",
-                "rpc",
-                "tcp",
-                "file",
-                "kafka"
+                "direct"
               ],
               "required": "no"
             },
@@ -330,9 +308,9 @@
             {
               "key": "create_index",
               "label": "create_index",
-              "description": "Whether to create an index after the data synchronization is complete during the full period, it is not created by default",
+              "description": "Whether to create an index after the data synchronization is complete during the full period, background by default",
               "type": "string",
-              "default": "none",
+              "default": "background",
               "range": ["none", "foreground","background"],
               "required": "no"
             },
@@ -346,7 +324,6 @@
               "range": ["true", "false"],
               "required": "no"
             },
-            
             {
               "key": "executor.filter.orphan_document",
               "label": "executor.filter.orphan_document",
@@ -380,23 +357,6 @@
               "default": "oplog",
               "range": ["oplog", "change_stream"],
               "required": "yes"
-            },
-            {
-              "key": "shard_key",
-              "label": "shard_key",
-              "description": "The way to internally distribute concurrently to worker threads. id means hash by primary key _id, collection means hash by table, auto means automatic identification",
-              "type": "string",
-              "default": "collection",
-              "range": ["auto", "id","collection"],
-              "required": "no"
-            },
-            {
-              "key": "shard_by_object_id_whitelist",
-              "label": "shard_by_object_id_whitelist",
-              "description": "Concurrent whitelist by _id",
-              "type": "string",
-              "default": "",
-              "required": "no"
             },
             {
               "key": "worker",
