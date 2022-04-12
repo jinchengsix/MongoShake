@@ -73,36 +73,6 @@
           "type": "array",
           "properties": [
             {
-              "key": "full_sync_port",
-              "label": "full_sync_port",
-              "description": "Full stage listening port, default 9101",
-              "type": "integer",
-              "default": 9101,
-              "required": "no",
-              "min": 1025,
-              "max": 65535
-            },
-            {
-              "key": "incr_sync_port",
-              "label": "incr_sync_port",
-              "description": "Increment stage listening port, default 9100",
-              "type": "integer",
-              "default": 9100,
-              "required": "no",
-              "min": 1025,
-              "max": 65535
-            },
-            {
-              "key": "system_profile_port",
-              "label": "system_profile_port",
-              "description": "pprof listening port, Users can view internal running stack information. default 9200",
-              "type": "integer",
-              "default": 9200,
-              "required": "no",
-              "min": 1025,
-              "max": 65535
-            },
-            {
               "key": "log.level",
               "label": "log.level",
               "description": "Log level, 【debug, info, warning, error】, default info",
@@ -171,6 +141,36 @@
               "pattern": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@#\\%\\&\\*\\(\\)\\_\\+\\-\\=]{8,32}$",
               "default": "Change1Pwd",
               "required": "yes"
+            },
+            {
+              "key": "full_sync_port",
+              "label": "full_sync_port",
+              "description": "Full stage listening port, default 9101",
+              "type": "integer",
+              "default": 9101,
+              "required": "no",
+              "min": 1025,
+              "max": 65535
+            },
+            {
+              "key": "incr_sync_port",
+              "label": "incr_sync_port",
+              "description": "Increment stage listening port, default 9100",
+              "type": "integer",
+              "default": 9100,
+              "required": "no",
+              "min": 1025,
+              "max": 65535
+            },
+            {
+              "key": "system_profile_port",
+              "label": "system_profile_port",
+              "description": "pprof listening port, Users can view internal running stack information. default 9200",
+              "type": "integer",
+              "default": 9200,
+              "required": "no",
+              "min": 1025,
+              "max": 65535
             },
             {
               "key": "tunnel",
@@ -319,15 +319,6 @@
               "key": "executor.insert_on_dup_update",
               "label": "executor.insert_on_dup_update",
               "description": "If _id exists in the destination library, whether to change the insert statement to an update statement. Not enabled by default",
-              "type": "string",
-              "default": "false",
-              "range": ["true", "false"],
-              "required": "no"
-            },
-            {
-              "key": "executor.filter.orphan_document",
-              "label": "executor.filter.orphan_document",
-              "description": "The source is sharding, do you need to filter orphan documents. Default false",
               "type": "string",
               "default": "false",
               "range": ["true", "false"],
