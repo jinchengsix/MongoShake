@@ -347,7 +347,7 @@
               "type": "string",
               "default": "oplog",
               "range": ["oplog", "change_stream"],
-              "required": "yes"
+              "required": "no"
             },
             {
               "key": "worker",
