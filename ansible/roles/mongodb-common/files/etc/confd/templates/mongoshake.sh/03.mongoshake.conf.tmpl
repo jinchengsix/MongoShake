@@ -1,7 +1,7 @@
 flush > /opt/app/current/conf/mongoshake/mongoshake.conf <<MONGOSHAKE_CONF
 conf.version=10
 id=mongoshake
-master_quorum=false
+master_quorum={{ getv "/env/global.master_quorum" }}
 full_sync.http_port={{ getv "/env/global.full_sync_port" }}
 incr_sync.http_port={{ getv "/env/global.incr_sync_port" }}
 system_profile_port={{ getv "/env/global.system_profile_port" }}

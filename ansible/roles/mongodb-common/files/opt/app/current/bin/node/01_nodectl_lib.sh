@@ -141,6 +141,13 @@ healthCheck(){
         return 0
     fi
 
+    local source=$(getItemFromFile mongo_urls $MONGOSHAKE_CONF)
+    local dest=$(getItemFromFile tunnel.address $MONGOSHAKE_CONF)
+    if [ "$source" = "$dest" ]; then
+        log "source and destination are the same, skip healthCheck"
+        return 0
+    fi
+
     touch $BEING_HEALTH_CHECKED_FLAG
 
     local full_port=$(getItemFromFile full_sync.http_port $MONGOSHAKE_CONF)

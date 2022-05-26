@@ -10,7 +10,7 @@
           "type": "string",
           "label": "Name",
           "description": "The name of the application",
-          "default": "MongoDB Sync",
+          "default": "MongoShake",
           "required": "no"
         },
         {
@@ -72,6 +72,15 @@
           "description": "global configuration",
           "type": "array",
           "properties": [
+            {
+              "key": "master_quorum",
+              "label": "master_quorum",
+              "description": "Whether to enable master/slave mode, default false",
+              "type": "string",
+              "default": "false",
+              "range": ["false", "true"],
+              "required": "yes"
+            },
             {
               "key": "log.level",
               "label": "log.level",
